@@ -332,10 +332,16 @@
       (load "term/w32-win")
       (load "disp-table")
       (when (eq system-type 'windows-nt)
-        (load "ls-lisp"))
+        (load "term/w32-nt")
+        (load "w32-fns")
+        (load "ls-lisp")
+        (load "dos-w32"))
       (load "touch-screen")))
 (if (eq system-type 'ms-dos)
     (progn
+      (load "dos-w32")
+      (load "dos-fns")
+      (load "dos-vars")
       ;; Don't load term/common-win: it isn't appropriate for the `pc'
       ;; ``window system'', which generally behaves like a terminal.
       (load "term/internal")
