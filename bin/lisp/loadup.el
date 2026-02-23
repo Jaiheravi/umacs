@@ -283,42 +283,6 @@
       (load "term/common-win")
       (load "term/x-win")))
 
-(if (featurep 'haiku)
-    (progn
-      (load "term/common-win")
-      (load "term/haiku-win")))
-
-(if (featurep 'android)
-    (progn
-      (load "ls-lisp")
-      (load "touch-screen")
-      (load "term/common-win")
-      (load "term/android-win")))
-
-(if (or (eq system-type 'windows-nt)
-        (featurep 'w32))
-    (progn
-      (load "term/common-win")
-      (load "w32-vars")
-      (load "term/w32-win")
-      (load "disp-table")
-      (when (eq system-type 'windows-nt)
-        (load "term/w32-nt")
-        (load "w32-fns")
-        (load "ls-lisp")
-        (load "dos-w32"))
-      (load "touch-screen")))
-(if (eq system-type 'ms-dos)
-    (progn
-      (load "dos-w32")
-      (load "dos-fns")
-      (load "dos-vars")
-      ;; Don't load term/common-win: it isn't appropriate for the `pc'
-      ;; ``window system'', which generally behaves like a terminal.
-      (load "term/internal")
-      (load "term/pc-win")
-      (load "ls-lisp")
-      (load "disp-table"))) ; needed to setup ibm-pc char set, see internal.el
 (if (featurep 'ns)
     (progn
       (load "term/common-win")
@@ -329,12 +293,6 @@
         (load "international/mule-util")
         (load "international/ucs-normalize")
         (load "term/ns-win"))))
-(if (featurep 'pgtk)
-    (progn
-      (load "pgtk-dnd")
-      (load "touch-screen")
-      (load "term/common-win")
-      (load "term/pgtk-win")))
 (if (fboundp 'x-create-frame)
     ;; Do it after loading term/foo-win.el since the value of the
     ;; mouse-wheel-*-event vars depends on those files being loaded or not.
