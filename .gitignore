@@ -5,3 +5,5 @@ deps/
 *.o
 a.out
 .idea
+bin/
+cmake-build-debug/

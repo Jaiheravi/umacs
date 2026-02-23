@@ -20,6 +20,8 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #define INLINE EXTERN_INLINE
 #include <config.h>
+#include <string.h>
+#include <compat.h>
 
 #include <errno.h>
 #include <fcntl.h>
@@ -115,7 +117,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "systime.h"
 
 #include "getpagesize.h"
-#include "gnutls.h"
 
 #ifdef HAVE_HAIKU
 #include <kernel/OS.h>
@@ -143,10 +144,6 @@ extern char etext;
 #if defined HAVE_ANDROID && !defined ANDROID_STUBIFY
 #include "android.h"
 #endif
-
-/* We don't guard this with HAVE_TREE_SITTER because treesit.o is
-   always compiled (to provide treesit-available-p).  */
-#include "treesit.h"
 
 #include "pdumper.h"
 #include "fingerprint.h"
@@ -2336,9 +2333,7 @@ Using an Emacs configured with --with-x-toolkit=lucid does not have this problem
 #ifdef HAVE_MODULES
       syms_of_module ();
 #endif
-      /* We don't guard this with HAVE_TREE_SITTER because treesit.o
-	 is always compiled (to provide treesit-available-p).  */
-      syms_of_treesit ();
+
 #ifdef HAVE_SOUND
       syms_of_sound ();
 #endif
@@ -2452,8 +2447,6 @@ Using an Emacs configured with --with-x-toolkit=lucid does not have this problem
       syms_of_sfntfont_android ();
 #endif /* !ANDROID_STUBIFY */
 #endif /* HAVE_ANDROID */
-
-      syms_of_gnutls ();
 
 #ifdef HAVE_INOTIFY
       syms_of_inotify ();
