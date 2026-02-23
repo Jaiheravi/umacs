@@ -33,7 +33,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "keymap.h"
 #include "lisp.h"
 #include "process.h"
-#include <compat.h>
 
 static void swap_in_symval_forwarding(struct Lisp_Symbol*,
                                       struct Lisp_Buffer_Local_Value*);
@@ -225,11 +224,8 @@ a fixed set of types.  */)
     case PVEC_WINDOW:
       return Qwindow;
     case PVEC_SUBR:
-      // return XSUBR (object)->max_args == UNEVALLED ? Qspecial_form
-      //        : NATIVE_COMP_FUNCTIONP (object) ? Qnative_comp_function
-      //        : Qprimitive_function;
-
       return XSUBR(object)->max_args == UNEVALLED ? Qspecial_form
+          : NATIVE_COMP_FUNCTIONP(object)         ? Qnative_comp_function
                                                   : Qprimitive_function;
     case PVEC_CLOSURE:
       return CONSP(AREF(object, CLOSURE_CODE)) ? Qinterpreted_function
@@ -1041,12 +1037,11 @@ SUBR must be a built-in function.  */)
   return build_string(name);
 }
 
-DEFUN ("native-comp-function-p", Fnative_comp_function_p, Snative_comp_function_p, 1, 1,
-       0, doc: /* Return t if the object is native-compiled Lisp function, nil otherwise.  */)
-  (Lisp_Object object)
-{
-  return NATIVE_COMP_FUNCTIONP (object) ? Qt : Qnil;
-}
+DEFUN("native-comp-function-p", Fnative_comp_function_p,
+      Snative_comp_function_p, 1, 1, 0,
+      doc
+:/* Return t if the object is native-compiled Lisp function, nil otherwise.  */)
+(Lisp_Object object) { return NATIVE_COMP_FUNCTIONP(object) ? Qt : Qnil; }
 
 DEFUN ("subr-native-lambda-list", Fsubr_native_lambda_list,
        Ssubr_native_lambda_list, 1, 1, 0,
@@ -1131,7 +1126,7 @@ Value, if non-nil, is a list (interactive SPEC).  */)
 
   if (SUBRP(fun))
   {
-    if (!NILP(XSUBR(fun)->intspec.native))
+    if (NATIVE_COMP_FUNCTIONP(fun) && !NILP(XSUBR(fun)->intspec.native))
       return XSUBR(fun)->intspec.native;
 
     const char* spec = XSUBR(fun)->intspec.string;
@@ -4339,6 +4334,7 @@ void syms_of_data(void)
   defsubr(&Sbyteorder);
   defsubr(&Ssubr_arity);
   defsubr(&Ssubr_name);
+  defsubr(&Snative_comp_function_p);
   defsubr(&Ssubr_native_lambda_list);
   defsubr(&Ssubr_type);
 #ifdef HAVE_NATIVE_COMP
