@@ -271,8 +271,7 @@
       (load "emacs-lisp/regexp-opt")
       (load "image")
       (load "international/fontset")
-      (load "dnd")
-      (load "tool-bar")))
+      (load "dnd")))
 
 (if (featurep 'dynamic-setting)
     (load "dynamic-setting"))
