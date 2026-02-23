@@ -310,7 +310,6 @@
 
 (load "emacs-lisp/shorthands")
 
-(load "emacs-lisp/eldoc")
 (load "emacs-lisp/cconv")
 ;; It should be safe to set `internal-make-interpreted-closure-function'
 ;; unconditionally, but if cconv and friends haven't been compiled yet,
