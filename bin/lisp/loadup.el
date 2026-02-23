@@ -73,8 +73,7 @@
                        "progmodes"
                        "language"
                        "international"
-                       "textmodes"
-                       "vc"))
+                       "textmodes"))
             (iter load-path))
         (while iter
           (let ((dir (car iter))
@@ -307,8 +306,6 @@
 ;; Preload some constants and floating point functions.
 (load "emacs-lisp/float-sup")
 
-(load "vc/vc-hooks")
-(load "vc/ediff-hook")
 (load "uniquify")
 (load "electric")
 (load "paren")
