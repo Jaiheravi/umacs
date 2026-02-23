@@ -307,8 +307,6 @@
 (load "emacs-lisp/float-sup")
 
 (load "uniquify")
-(load "electric")
-(load "paren")
 
 (load "emacs-lisp/shorthands")
 
