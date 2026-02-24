@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # find-refs.zsh — find references to/from a feature/module
 # Disclaimer: This script was AI generated so all the effort goes to the actual
-# work, which is the µmacs editor.
+# work, which is the emacs-zero editor.
 
 if [[ -z "$1" ]]; then
     echo "Usage: find-refs.zsh <feature-name>"

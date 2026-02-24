@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(umacs C)
+project(uform C)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -8,7 +8,7 @@ find_package(LibXml2 REQUIRED)
 find_package(Curses REQUIRED)
 find_package(SQLite3 REQUIRED)
 find_package(ZLIB REQUIRED)
-add_executable(umacs
+add_executable(uform
         src/compat.c
         src/emacs.c
         src/emacs-module.c
@@ -108,17 +108,17 @@ add_executable(umacs
         src/allocator.c
         src/boot-time.c
 )
-target_link_libraries(umacs PRIVATE
+target_link_libraries(uform PRIVATE
         LibXml2::LibXml2
         SQLite::SQLite3
         ${CURSES_LIBRARIES}
         ZLIB::ZLIB
 )
-target_include_directories(umacs
+target_include_directories(uform
         PRIVATE src
         PRIVATE ${CURSES_INCLUDE_DIRS}
 )
-target_compile_options(umacs PRIVATE -include config.h
+target_compile_options(uform PRIVATE -include config.h
         -Wno-deprecated-declarations
         -Wno-tautological-constant-out-of-range-compare
         -Wno-initializer-overrides)

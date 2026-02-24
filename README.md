@@ -1,19 +1,27 @@
-# µmacs (micro-macs)
+# Emacs-zero
 
-I want to build an editor that is the exact same Emacs setup I use day to day, but without the baggage of the past to allow faster development and higher quality. Elisp is nice but Scheme is better. And I want to see how small and simple this can be.
+I'm trying to strip down Emacs to the bare minimum and then replace elisp 
+with Scheme. I want to see how small and efficient it can get with modern 
+practices, and without all the things that are unnecessary for a text editor.
+To make this happen, I will temporarily remove compatibility with all platforms 
+except macOS on Apple Silicon.
+
+This project is meant to be a proof of concept for a new text editor that 
+I'm calling µform (microform) which won't share any of Emacs' source code 
+but will be functionally equivalent to it—at least the reasonable parts.
 
 ## Naive Roadmap
 
 This is the high-level plan—it doesn't contain all the difficulties and pain I'll face.
 
-1. DONE—Delete everything from Emacs except the C core.
-2. DONE—Gradually add back things needed by the C core to compile.
-3. DONE—Continue bringing back files until we have a text 
-   editor that doesn't crash on start.
-4. Remove dead code.
-5. Replace elisp with µlisp, a Scheme dialect for µmacs.
-6. Rewrite everything again.
-7. Put the new codebase in a new fresh repository and release it under a BSD license instead of GPL.
+1. [DONE] Delete everything from Emacs except the C core.
+2. [DONE] Gradually add back things needed by the core to compile and run.
+3. Remove dead code to get a clean overview for the different parts of the 
+   codebase.
+4. Embed a Scheme interpreter.
+5. Rewrite all existing elisp code with µlisp.
+6. Rewrite the C core and release everything as µform, under a BSD license 
+   instead of GPL.
 
 ---
 
