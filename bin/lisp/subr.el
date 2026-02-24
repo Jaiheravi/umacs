@@ -7698,7 +7698,7 @@ sentence (see Info node `(elisp) Documentation Tips')."
 
 (defun json-available-p ()
   "Return non-nil if Emacs has native JSON support."
-  nil)
+  t)
 
 (defun ensure-list (object)
   "Return OBJECT as a list.

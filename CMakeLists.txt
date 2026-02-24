@@ -86,6 +86,7 @@ add_executable(ez
         src/category.c
         src/profiler.c
         src/kqueue.c
+        src/json.c
         src/floatfns.c
         src/doc.c
         src/decompress.c
