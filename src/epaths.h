@@ -26,12 +26,12 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
    ${standardlisppath}, which typically has a value like:
    <datadir>/emacs/VERSION/lisp where datadir is eg /usr/local/share.
 */
-#define PATH_LOADSEARCH "/Users/jaime/umacs-zero/bin/lisp"
+#define PATH_LOADSEARCH "./lisp"
 
 /* Like PATH_LOADSEARCH, but contains the relative path from the
    installation directory.
 */
-#define PATH_REL_LOADSEARCH "bin/lisp"
+#define PATH_REL_LOADSEARCH "lisp"
 
 /* Like PATH_LOADSEARCH, but contains the non-standard pieces.
    These are the site-lisp directories.  Configure sets this to
@@ -41,26 +41,26 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
    This is combined with PATH_LOADSEARCH to make the default load-path.
    If the --no-site-lisp option is used, this piece is excluded.
 */
-#define PATH_SITELOADSEARCH "Contents/Resources/site-lisp"
+#define PATH_SITELOADSEARCH "./site-lisp"
 
 
 /* Like PATH_LOADSEARCH, but used only during the build process
    when Emacs is dumping.  Configure (using "make epaths-force") sets
    this to $buildlisppath, which normally has the value: <srcdir>/lisp.
 */
-#define PATH_DUMPLOADSEARCH "/Users/jaime/Developer/emacs/lisp"
+#define PATH_DUMPLOADSEARCH "./lisp"
 
 /* The extra search path for programs to invoke.  This is appended to
    whatever the PATH environment variable says to set the Lisp
    variable exec-path and the first file name in it sets the Lisp
    variable exec-directory.  exec-directory is used for finding
    executables and other architecture-dependent files.  */
-#define PATH_EXEC "/Users/jaime/umacs-zero/bin/libexec"
+#define PATH_EXEC "./libexec"
 
 /* Where Emacs should look for its architecture-independent data
    files, like the NEWS file.  The lisp variable data-directory
    is set to this value.  */
-#define PATH_DATA "Contents/Resources/etc"
+#define PATH_DATA "./etc"
 
 /* Where Emacs should look for X bitmap files.
    The lisp variable x-bitmap-file-path is set based on this value.  */
@@ -68,12 +68,12 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* Where Emacs should look for its docstring file.  The lisp variable
    doc-directory is set to this value.  */
-#define PATH_DOC "Contents/Resources/etc"
+#define PATH_DOC "./etc"
 
 /* Where the configuration process believes the info tree lives.  The
    lisp variable configure-info-directory gets its value from this
    macro, and is then used to set the Info-default-directory-list.  */
-#define PATH_INFO "Contents/Resources/info"
+#define PATH_INFO "./info"
 
 /* Where Emacs should store game score files.  */
 #define PATH_GAME ((char const *) 0)
