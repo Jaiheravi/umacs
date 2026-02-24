@@ -4,21 +4,16 @@ I want to build an editor that is the exact same Emacs setup I use day to day, b
 
 ## Naive Roadmap
 
-This is the high-level plan—it doesn't contain all the difficulties and pain I'll face. I might skip some steps, like doing 4 after 2, and skip 3.
+This is the high-level plan—it doesn't contain all the difficulties and pain I'll face.
 
-1. Delete everything from Emacs except the C core.
-2. Gradually add back things needed by the C core to compile.
-3. Continue bringing back files until we have a minimally usable text editor, as little code as possible.
-4. Replace elisp with µlisp, a Scheme dialect for µmacs.
-5. Clean up the C core.
+1. DONE—Delete everything from Emacs except the C core.
+2. DONE—Gradually add back things needed by the C core to compile.
+3. DONE—Continue bringing back files until we have a text 
+   editor that doesn't crash on start.
+4. Remove dead code.
+5. Replace elisp with µlisp, a Scheme dialect for µmacs.
 6. Rewrite everything again.
 7. Put the new codebase in a new fresh repository and release it under a BSD license instead of GPL.
-
-## Moving forward without looking back
-
-µmacs won't support any other OS/architecture other than macOS on Apple Silicon. Also, it won't have GUI support; it's going to be a terminal-only editor, and if required, it will be compatible only with Kitty. At least at first.
-
-I'll implement support for Linux if I start using PCs more. A GUI would require especial care, so I'll only work on that if it turns out to be worth it, it would be nice to have visuals for things like technical notebooks using µlisp. Or for typesetting documents, which is actually high priority for me. We will see how it goes.
 
 ---
 
