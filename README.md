@@ -23,3 +23,15 @@ I'll implement support for Linux if I start using PCs more. A GUI would require 
 ---
 
 Original Emacs codebase ended here: https://github.com/Jaiheravi/umacs-zero/tree/9176826f41d562f42159b402d8b1d3a676ed99a3
+
+---
+
+## Stats at the time of writing<sup>1</sup>
+
+**Size**: 190.79 MB → 37.38 MB `(-80.4%)`
+
+**Files**: 5518 → 736 `(-86.7%)`
+
+**LOC (source)**: 3,454,588 → 665,182 `(-80.7%)`
+
+<sup>1</sup> Commit SHA: `2c3491a8a8648e97afd8cdd25f119843b7141f70`
