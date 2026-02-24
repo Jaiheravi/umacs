@@ -1779,8 +1779,6 @@ See Info node `(elisp) Integer Basics'."
          tool-bar-pixel-width window-system
          ;; fringe.c
          fringe-bitmaps-at-pos
-         ;; json.c
-         json-serialize json-parse-string
          ;; keyboard.c
          posn-at-point posn-at-x-y
          ;; keymap.c
