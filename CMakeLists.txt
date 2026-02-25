@@ -97,7 +97,6 @@ add_executable(ez
         src/comp.c
         src/sig2str.c
         src/allocator.c
-        src/boot-time.c
 )
 target_link_libraries(ez PRIVATE
         ${CURSES_LIBRARIES}

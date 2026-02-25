@@ -40,7 +40,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include <unistd.h>
 #include <errno.h>
 
-#include <boot-time.h>
 #include <c-ctype.h>
 
 #include "lisp.h"
@@ -116,15 +115,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 static time_t
 get_boot_sec (void)
 {
-  /* get_boot_time maintains static state.  Don't touch that state
-     if we are going to dump, since it might not survive dumping.  */
-  if (will_dump_p ())
-    return 0;
-
-  struct timespec boot_time;
-  boot_time.tv_sec = 0;
-  get_boot_time (&boot_time);
-  return boot_time.tv_sec;
+  return 0;
 }
 
 /* An arbitrary limit on lock contents length.  8 K should be plenty
