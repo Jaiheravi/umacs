@@ -1,12 +1,3 @@
-/* src/config.h.  Generated from config.in by configure.  */
-/* src/config.in.  Generated from configure.ac by autoheader.  */
-
-#if defined __GNUC__ && __GNUC__ >= 15 && !defined __clang__
-# pragma GCC diagnostic push
-# pragma GCC diagnostic ignored "-Wtrailing-whitespace"
-#endif
-
-
 /* GNU Emacs site configuration template file.
 
 Copyright (C) 1988-2026 Free Software Foundation, Inc.
@@ -30,13 +21,10 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 /* No code in Emacs #includes config.h twice, but some bits of code
    intended to work with other packages as well (like gmalloc.c)
    think they can include it as many times as they like.  */
-#ifndef EMACS_CONFIG_H
-#define EMACS_CONFIG_H
-
+#pragma once
 
 /* Witness that <config.h> has been included.  */
 #define _GL_CONFIG_H_INCLUDED 1
-
 
 /* Define if building universal (internal helper macro) */
 /* #undef AC_APPLE_UNIVERSAL_BUILD */
@@ -62,7 +50,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 /* #undef ANDROID_STUBIFY */
 
 /* Executables directory. */
-#define BINDIR "/Users/jaime/Developer/emacs/nextstep/Emacs.app/Contents/Resources/bin/"
+#define BINDIR "/Users/jaime/emacs-zero/bin/"
 
 /* Define to the number of bits in type 'ptrdiff_t'. */
 /* #undef BITSIZEOF_PTRDIFF_T */
@@ -111,7 +99,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #define DARWIN_OS /**/
 
 /* Name of the default sound device. */
-#define DEFAULT_SOUND_DEVICE "/dev/dsp"
+/* #undef DEFAULT_SOUND_DEVICE "/dev/dsp" */
 
 /* Define to 1 for DGUX with <sys/dg_sys_info.h>. */
 /* #undef DGUX */
@@ -2429,42 +2417,42 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #define USE_SELINUX_SELINUX_H 0
 
 /* Enable extensions on AIX, Interix, z/OS.  */
-#ifndef _ALL_SOURCE
-# define _ALL_SOURCE 1
-#endif
+// #ifndef _ALL_SOURCE
+// # define _ALL_SOURCE 1
+// #endif
 /* Enable general extensions on macOS.  */
 #ifndef _DARWIN_C_SOURCE
 # define _DARWIN_C_SOURCE 1
 #endif
 /* Enable general extensions on Solaris.  */
-#ifndef __EXTENSIONS__
-# define __EXTENSIONS__ 1
-#endif
+// #ifndef __EXTENSIONS__
+// # define __EXTENSIONS__ 1
+// #endif
 /* Enable GNU extensions on systems that have them.  */
-#ifndef _GNU_SOURCE
-# define _GNU_SOURCE 1
-#endif
+// #ifndef _GNU_SOURCE
+// # define _GNU_SOURCE 0
+// #endif
 /* Enable X/Open compliant socket functions that do not require linking
    with -lxnet on HP-UX 11.11.  */
-#ifndef _HPUX_ALT_XOPEN_SOCKET_API
-# define _HPUX_ALT_XOPEN_SOCKET_API 1
-#endif
+// #ifndef _HPUX_ALT_XOPEN_SOCKET_API
+// # define _HPUX_ALT_XOPEN_SOCKET_API 1
+// #endif
 /* Identify the host operating system as Minix.
    This macro does not affect the system headers' behavior.
    A future release of Autoconf may stop defining this macro.  */
-#ifndef _MINIX
+// #ifndef _MINIX
 /* # undef _MINIX */
-#endif
+// #endif
 /* Enable general extensions on NetBSD.
    Enable NetBSD compatibility extensions on Minix.  */
-#ifndef _NETBSD_SOURCE
-# define _NETBSD_SOURCE 1
-#endif
+// #ifndef _NETBSD_SOURCE
+// # define _NETBSD_SOURCE 1
+// #endif
 /* Enable OpenBSD compatibility extensions on NetBSD.
    Oddly enough, this does nothing on OpenBSD.  */
-#ifndef _OPENBSD_SOURCE
-# define _OPENBSD_SOURCE 1
-#endif
+// #ifndef _OPENBSD_SOURCE
+// # define _OPENBSD_SOURCE 1
+// #endif
 /* Define to 1 if needed for POSIX-compatible behavior.  */
 #ifndef _POSIX_SOURCE
 /* # undef _POSIX_SOURCE */
@@ -2510,9 +2498,9 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 # define __STDC_WANT_MATH_SPEC_FUNCS__ 1
 #endif
 /* Enable extensions on HP NonStop.  */
-#ifndef _TANDEM_SOURCE
-# define _TANDEM_SOURCE 1
-#endif
+// #ifndef _TANDEM_SOURCE
+// # define _TANDEM_SOURCE 1
+// #endif
 /* Enable X/Open extensions.  Define to 500 only if necessary
    to make mbstate_t available.  */
 #ifndef _XOPEN_SOURCE
@@ -2521,7 +2509,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 
 /* Define to 1 if we should use toolkit scroll bars. */
-#define USE_TOOLKIT_SCROLL_BARS 1
+// #define USE_TOOLKIT_SCROLL_BARS
 
 /* An alias of GNULIB_STDIO_SINGLE_THREAD. */
 #define USE_UNLOCKED_IO GNULIB_STDIO_SINGLE_THREAD
@@ -3605,19 +3593,19 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 /* #undef pid_t */
 
 /* Define to rpl_re_comp if the replacement should be used. */
-#define re_comp rpl_re_comp
+// #define re_comp rpl_re_comp
 
 /* Define to rpl_re_compile_fastmap if the replacement should be used. */
-#define re_compile_fastmap rpl_re_compile_fastmap
+// #define re_compile_fastmap rpl_re_compile_fastmap
 
 /* Define to rpl_re_compile_pattern if the replacement should be used. */
 // #define re_compile_pattern rpl_re_compile_pattern
 
 /* Define to rpl_re_exec if the replacement should be used. */
-#define re_exec rpl_re_exec
+// #define re_exec rpl_re_exec
 
 /* Define to rpl_re_match if the replacement should be used. */
-#define re_match rpl_re_match
+// #define re_match rpl_re_match
 
 /* Define to rpl_re_match_2 if the replacement should be used. */
 // #define re_match_2 rpl_re_match_2
@@ -3632,22 +3620,22 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 // #define re_set_registers rpl_re_set_registers
 
 /* Define to rpl_re_set_syntax if the replacement should be used. */
-#define re_set_syntax rpl_re_set_syntax
+// #define re_set_syntax rpl_re_set_syntax
 
 /* Define to rpl_re_syntax_options if the replacement should be used. */
-#define re_syntax_options rpl_re_syntax_options
+// #define re_syntax_options rpl_re_syntax_options
 
 /* Define to rpl_regcomp if the replacement should be used. */
-#define regcomp rpl_regcomp
+// #define regcomp rpl_regcomp
 
 /* Define to rpl_regerror if the replacement should be used. */
-#define regerror rpl_regerror
+// #define regerror rpl_regerror
 
 /* Define to rpl_regexec if the replacement should be used. */
-#define regexec rpl_regexec
+// #define regexec rpl_regexec
 
 /* Define to rpl_regfree if the replacement should be used. */
-#define regfree rpl_regfree
+// #define regfree rpl_regfree
 
 /* Define to the equivalent of the C99 'restrict' keyword, or to
    nothing if this is not supported.  Do not define if restrict is
@@ -3864,8 +3852,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 
 #include <conf_post.h>
-
-#endif /* EMACS_CONFIG_H */
 
 /*
 Local Variables:
