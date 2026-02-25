@@ -1651,7 +1651,6 @@ int main(int argc, char** argv)
     syms_of_composite();
     syms_of_window();
     syms_of_xdisp();
-    syms_of_sqlite();
     syms_of_font();
     syms_of_xml();
 

@@ -6,7 +6,6 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 find_package(LibXml2 REQUIRED)
 find_package(Curses REQUIRED)
-find_package(SQLite3 REQUIRED)
 find_package(ZLIB REQUIRED)
 add_executable(ez
         src/compat.c
@@ -82,7 +81,6 @@ add_executable(ez
         src/memrchr.c
         src/syntax.c
         src/xdisp.c
-        src/sqlite.c
         src/category.c
         src/profiler.c
         src/kqueue.c
@@ -109,7 +107,6 @@ add_executable(ez
 )
 target_link_libraries(ez PRIVATE
         LibXml2::LibXml2
-        SQLite::SQLite3
         ${CURSES_LIBRARIES}
         ZLIB::ZLIB
 )
