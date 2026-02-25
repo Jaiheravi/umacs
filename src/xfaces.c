@@ -46,7 +46,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
    10. Whether or not characters should be displayed in inverse video.
 
-   11. A background stipple, a bitmap.
+   11. A background stipple, a bitmap. JH: Removed
 
    12. Whether or not characters should be overlined, and in what color.
 
@@ -855,7 +855,6 @@ static int font_sort_order[4];
 #define LFACE_INVERSE(LFACE) AREF(LFACE, LFACE_INVERSE_INDEX)
 #define LFACE_FOREGROUND(LFACE) AREF(LFACE, LFACE_FOREGROUND_INDEX)
 #define LFACE_BACKGROUND(LFACE) AREF(LFACE, LFACE_BACKGROUND_INDEX)
-#define LFACE_STIPPLE(LFACE) AREF(LFACE, LFACE_STIPPLE_INDEX)
 #define LFACE_SWIDTH(LFACE) AREF(LFACE, LFACE_SWIDTH_INDEX)
 #define LFACE_OVERLINE(LFACE) AREF(LFACE, LFACE_OVERLINE_INDEX)
 #define LFACE_STRIKE_THROUGH(LFACE) AREF(LFACE, LFACE_STRIKE_THROUGH_INDEX)
@@ -2660,8 +2659,6 @@ frames).  If FRAME is omitted or nil, use the selected frame.  */)
     value = LFACE_DISTANT_FOREGROUND(lface);
   else if (EQ(keyword, QCbackground))
     value = LFACE_BACKGROUND(lface);
-  else if (EQ(keyword, QCstipple))
-    value = LFACE_STIPPLE(lface);
   else if (EQ(keyword, QCwidth))
     value = LFACE_SWIDTH(lface);
   else if (EQ(keyword, QCinherit))
@@ -3518,7 +3515,6 @@ static bool tty_supports_face_attributes_p(struct frame* f,
      specifies.  */
   if (!UNSPECIFIEDP(attrs[LFACE_FAMILY_INDEX]) ||
       !UNSPECIFIEDP(attrs[LFACE_FOUNDRY_INDEX]) ||
-      !UNSPECIFIEDP(attrs[LFACE_STIPPLE_INDEX]) ||
       !UNSPECIFIEDP(attrs[LFACE_HEIGHT_INDEX]) ||
       !UNSPECIFIEDP(attrs[LFACE_SWIDTH_INDEX]) ||
       !UNSPECIFIEDP(attrs[LFACE_OVERLINE_INDEX]) ||
@@ -4014,9 +4010,6 @@ static bool realize_default_face(struct frame* f)
     else
       emacs_abort();
   }
-
-  if (UNSPECIFIEDP(LFACE_STIPPLE(lface)))
-    ASET(lface, LFACE_STIPPLE_INDEX, Qnil);
 
   /* Realize the face; it must be fully-specified now.  */
   eassert(lface_fully_specified_p(XVECTOR(lface)->contents));
@@ -4809,7 +4802,6 @@ void init_xfaces(void)
   face_attr_sym[LFACE_INVERSE_INDEX] = QCinverse_video;
   face_attr_sym[LFACE_FOREGROUND_INDEX] = QCforeground;
   face_attr_sym[LFACE_BACKGROUND_INDEX] = QCbackground;
-  face_attr_sym[LFACE_STIPPLE_INDEX] = QCstipple;
   face_attr_sym[LFACE_OVERLINE_INDEX] = QCoverline;
   face_attr_sym[LFACE_STRIKE_THROUGH_INDEX] = QCstrike_through;
   face_attr_sym[LFACE_BOX_INDEX] = QCbox;
@@ -4844,7 +4836,6 @@ void syms_of_xfaces(void)
   DEFSYM(QCinverse_video, ":inverse-video");
   DEFSYM(QCforeground, ":foreground");
   DEFSYM(QCbackground, ":background");
-  DEFSYM(QCstipple, ":stipple");
   DEFSYM(QCwidth, ":width");
   DEFSYM(QCfont, ":font");
   DEFSYM(QCfontset, ":fontset");
@@ -4981,13 +4972,6 @@ only for this purpose.  */);
   Vface_new_frame_defaults =
       /* 33 entries is enough to fit all basic faces */
       make_hash_table(&hashtest_eq, 33, Weak_None);
-
-  DEFVAR_LISP ("face-default-stipple", Vface_default_stipple,
-    doc: /* Default stipple pattern used on monochrome displays.
-This stipple pattern is used on monochrome displays
-instead of shades of gray for a face background color.
-See `set-face-stipple' for possible values for this variable.  */);
-  Vface_default_stipple = build_string("gray3");
 
   DEFVAR_LISP ("tty-defined-color-alist", Vtty_defined_color_alist,
    doc: /* An alist of defined terminal colors and their RGB values.

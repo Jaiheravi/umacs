@@ -369,9 +369,6 @@ is either `foreground-color', `background-color', or a keyword."
     (:underline (".attributeUnderline" . "Face.AttributeUnderline"))
     (:inverse-video (".attributeInverse" . "Face.AttributeInverse"))
     (:extend (".attributeExtend" . "Face.AttributeExtend"))
-    (:stipple
-     (".attributeStipple" . "Face.AttributeStipple")
-     (".attributeBackgroundPixmap" . "Face.AttributeBackgroundPixmap"))
     (:bold (".attributeBold" . "Face.AttributeBold"))
     (:italic (".attributeItalic" . "Face.AttributeItalic"))
     (:font (".attributeFont" . "Face.AttributeFont"))
@@ -569,27 +566,6 @@ To ensure that a valid color is always returned, use a value of
 merging with the `default' face (which is always completely specified)."
   (face-attribute-specified-or (face-attribute face :background frame inherit)
 			       nil))
-
-(defun face-stipple (face &optional frame inherit)
- "Return the stipple pixmap name of FACE, or nil if unspecified.
-If the optional argument FRAME is given, report on face FACE in that frame.
-If FRAME is t, report on the defaults for face FACE (for new frames).
-If FRAME is omitted or nil, use the selected frame.
-
-If INHERIT is nil, only a stipple directly defined by FACE is
-  considered, so the return value may be nil.
-If INHERIT is t, and FACE doesn't define a stipple, then any stipple
-  that FACE inherits through its `:inherit' attribute is considered as
-  well; however the return value may still be nil.
-If INHERIT is a face or a list of faces, then it is used to try to
-  resolve an unspecified stipple.
-
-To ensure that a valid stipple or nil is always returned, use a value of
-`default' for INHERIT; this will resolve any unspecified values by merging
-with the `default' face (which is always completely specified)."
-  (face-attribute-specified-or (face-attribute face :stipple frame inherit)
-			       nil))
-
 
 (defun face-underline-p (face &optional frame inherit)
  "Return non-nil if FACE specifies a non-nil underlining.
@@ -817,15 +793,6 @@ button.  If STYLE is nil, `flat-button', or omitted, draw a 2D box.
 VALUE specifies whether characters in FACE should be displayed in
 inverse video.  VALUE must be one of t or nil.
 
-`:stipple'
-
-If VALUE is a string, it must be the name of a file of pixmap data.
-The directories listed in the `x-bitmap-file-path' variable are
-searched.  Alternatively, VALUE may be a list of the form (WIDTH
-HEIGHT DATA) where WIDTH and HEIGHT are the size in pixels, and DATA
-is a string containing the raw bits of the bitmap.  VALUE nil means
-explicitly don't use a stipple pattern.
-
 For convenience, attributes `:family', `:foundry', `:width',
 `:height', `:weight', and `:slant' may also be set in one step
 from an X font name:
@@ -962,10 +929,6 @@ prompt for the face and font."
   (set-face-attribute face frame :font font))
 
 
-;; Implementation note: Emulating gray background colors with a
-;; stipple pattern is now part of the face realization process, and is
-;; done in C depending on the frame on which the face is realized.
-
 (defun set-face-background (face color &optional frame)
   "Change the background color of face FACE to COLOR (a string).
 FRAME nil or not specified means change face on all frames.
@@ -984,20 +947,6 @@ or a hex spec of the form #RRGGBB.
 When called interactively, prompts for the face and color."
   (interactive (read-face-and-attribute :foreground))
   (set-face-attribute face frame :foreground (or color 'unspecified)))
-
-
-(defun set-face-stipple (face stipple &optional frame)
-  "Change the stipple pixmap of face FACE to STIPPLE.
-FRAME nil or not specified means change face on all frames.
-STIPPLE should be a string, the name of a file of pixmap data.
-The directories listed in the `x-bitmap-file-path' variable are searched.
-
-Alternatively, STIPPLE may be a list of the form (WIDTH HEIGHT DATA)
-where WIDTH and HEIGHT are the size in pixels,
-and DATA is a string, containing the raw bits of the bitmap."
-  (interactive (read-face-and-attribute :stipple))
-  (set-face-attribute face frame :stipple (or stipple 'unspecified)))
-
 
 (defun set-face-underline (face underline &optional frame)
   "Specify whether face FACE is underlined.
@@ -1221,16 +1170,6 @@ an integer value."
                     (defined-colors frame)))
            (:height
             'integerp)
-           (:stipple
-            (and (memq (window-system frame) '(x ns pgtk haiku)) ; No stipple on w32
-                 (mapcar (lambda (item)
-                           (cons item item))
-                         (apply #'nconc
-                                (mapcar (lambda (dir)
-                                          (and (file-readable-p dir)
-                                               (file-directory-p dir)
-                                               (directory-files dir 'full)))
-                                        x-bitmap-file-path)))))
            (:inherit
             (cons '("none" . nil)
                   (mapcar (lambda (c) (cons (symbol-name c) c))
@@ -1257,7 +1196,6 @@ an integer value."
     (:inverse-video . "inverse-video display")
     (:foreground . "foreground color")
     (:background . "background color")
-    (:stipple . "background stipple")
     (:inherit . "inheritance"))
   "An alist of descriptive names for face attributes.
 Each element has the form (ATTRIBUTE-NAME . DESCRIPTION) where
@@ -1307,8 +1245,8 @@ name of the attribute for prompting.  Value is the new attribute value."
 	   (string-to-number new-value)))))
 
 
-;; FIXME this does allow you to enter the list forms of :box,
-;; :stipple, or :underline, because face-valid-attribute-values does
+;; FIXME this does allow you to enter the list forms of :box
+;; or :underline, because face-valid-attribute-values does
 ;; not return those forms.
 (defun read-face-attribute (face attribute &optional frame)
   "Interactively read a new value for FACE's ATTRIBUTE.
@@ -1319,10 +1257,10 @@ of a global face.  Value is the new attribute value."
 	 (valid (face-valid-attribute-values attribute frame))
 	 new-value)
     ;; Represent complex attribute values as strings by printing them
-    ;; out.  Stipple can be a vector; (WIDTH HEIGHT DATA).  Box can be
+    ;; out. Box can be
     ;; a list `(:width WIDTH :color COLOR)' or `(:width WIDTH :shadow
     ;; SHADOW)'.  Underline can be `(:color COLOR :style STYLE)'.
-    (and (memq attribute '(:box :stipple :underline))
+    (and (memq attribute '(:box :underline))
 	 (or (consp old-value)
 	     (vectorp old-value))
 	 (setq old-value (prin1-to-string old-value)))
@@ -1361,10 +1299,10 @@ of a global face.  Value is the new attribute value."
 	  ((eq valid 'integerp)
 	   (setq new-value (face-read-integer face old-value attribute-name)))
 	  (t (error "Internal error")))
-    ;; Convert stipple and box value text we read back to a list or
+    ;; Convert box value text we read back to a list or
     ;; vector if it looks like one.  This makes the assumption that a
     ;; pixmap file name won't start with an open-paren.
-    (and (memq attribute '(:stipple :box :underline))
+    (and (memq attribute '(:box :underline))
 	 (stringp new-value)
 	 (string-match-p "^[[(]" new-value)
 	 (setq new-value (read new-value)))
@@ -1393,7 +1331,7 @@ Value is a property list of attribute names and new values."
 			 (cons (read-face-attribute face (car attribute) frame)
 			       result))))))
 
-(defun modify-face (&optional face foreground background stipple
+(defun modify-face (&optional face foreground background
 			      bold-p italic-p underline inverse-p frame)
   "Modify attributes of faces interactively.
 If optional argument FRAME is nil or omitted, modify the face used
@@ -1406,7 +1344,6 @@ and the face and its settings are obtained by querying the user."
       (set-face-attribute face frame
 			  :foreground (or foreground 'unspecified)
 			  :background (or background 'unspecified)
-			  :stipple stipple
 			  :weight (if bold-p 'bold 'normal)
 			  :slant (if italic-p 'italic 'normal)
 			  :underline underline
@@ -1657,7 +1594,7 @@ is given, in which case return its value instead."
 	     ;; (see also realize_default_face in xfaces.c).
 	     (append
 	      '(:underline nil :overline nil :strike-through nil
-		:box nil :inverse-video nil :stipple nil :inherit nil
+		:box nil :inverse-video nil :inherit nil
                 :extend nil)
 	      ;; `display-graphic-p' is unavailable when running
 	      ;; temacs, prior to loading frame.el.
@@ -2664,7 +2601,7 @@ unwanted effects."
 (defface fill-column-indicator
   '((t :inherit shadow :weight normal :slant normal
        :underline nil :overline nil :strike-through nil
-       :box nil :inverse-video nil :stipple nil))
+       :box nil :inverse-video nil))
   "Face for displaying fill column indicator.
 This face is used when `display-fill-column-indicator-mode' is
 non-nil."
@@ -3242,8 +3179,6 @@ also the same size as FACE on FRAME, or fail."
 	(car fonts))
     (frame-parameter nil 'font)))
 
-(define-obsolete-function-alias 'face-background-pixmap #'face-stipple "29.1")
-(define-obsolete-function-alias 'set-face-background-pixmap #'set-face-stipple "29.1")
 (define-obsolete-function-alias 'x-defined-colors #'defined-colors "30.1")
 (define-obsolete-function-alias 'x-color-defined-p #'color-defined-p "30.1")
 (define-obsolete-function-alias 'x-color-values #'color-values "30.1")
