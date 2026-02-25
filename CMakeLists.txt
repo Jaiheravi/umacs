@@ -37,7 +37,6 @@ add_executable(ez
         src/minibuf.c
         src/pdumper.c
         src/process.c
-        src/process.c
         src/search.c
         src/u64.c
         src/sha1.c
