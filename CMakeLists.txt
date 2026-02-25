@@ -80,7 +80,6 @@ add_executable(ez
         src/syntax.c
         src/xdisp.c
         src/category.c
-        src/profiler.c
         src/kqueue.c
         src/floatfns.c
         src/doc.c

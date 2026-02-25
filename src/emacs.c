@@ -1662,7 +1662,6 @@ int main(int argc, char** argv)
     syms_of_kqueue();
 #endif /* HAVE_KQUEUE */
     syms_of_threads();
-    syms_of_profiler();
     syms_of_pdumper();
 
     keys_of_keyboard();

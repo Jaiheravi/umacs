@@ -1821,13 +1821,11 @@ push_handler_nosignal (Lisp_Object tag_ch_val, enum handlertype handlertype)
     {
       c = malloc (sizeof *c);
       if (!c)
-	return c;
-      if (profiler_memory_running)
-	malloc_probe (sizeof *c);
+        return c;
       c->nextfree = NULL;
       handlerlist->nextfree = c;
     }
-  c->type = handlertype;
+    c->type = handlertype;
   c->tag_or_ch = tag_ch_val;
   c->val = Qnil;
   c->next = handlerlist;
