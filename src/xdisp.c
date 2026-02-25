@@ -496,7 +496,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "font.h"
 #include "fontset.h"
 #include "blockinput.h"
-#include "xwidget.h"
 #ifdef HAVE_WINDOW_SYSTEM
 #include TERM_HEADER
 #endif /* HAVE_WINDOW_SYSTEM */
@@ -6471,13 +6470,8 @@ handle_single_display_spec (struct it *it, Lisp_Object spec, Lisp_Object object,
      `right-margin' or nil.  */
 
   bool valid_p = (STRINGP (value)
-#ifdef HAVE_WINDOW_SYSTEM
-		  || ((it ? FRAME_WINDOW_P (it->f) : frame_window_p)
-		      && valid_image_p (value))
-#endif /* not HAVE_WINDOW_SYSTEM */
              || (CONSP (value) && EQ (XCAR (value), Qspace))
-             || ((it ? FRAME_WINDOW_P (it->f) : frame_window_p)
-		 && valid_xwidget_spec_p (value)));
+             || ((it ? FRAME_WINDOW_P (it->f) : frame_window_p)));
 
   if (valid_p && display_replaced == 0)
     {
@@ -6560,38 +6554,6 @@ handle_single_display_spec (struct it *it, Lisp_Object spec, Lisp_Object object,
 	  *position = it->position = start_pos;
 	  retval = 1 + (it->area == TEXT_AREA);
 	}
-      else if (valid_xwidget_spec_p (value))
-	{
-          it->what = IT_XWIDGET;
-          it->method = GET_FROM_XWIDGET;
-          it->position = start_pos;
-	  it->object = NILP (object) ? it->w->contents : object;
-	  *position = start_pos;
-          it->xwidget = lookup_xwidget (value);
-	}
-#ifdef HAVE_WINDOW_SYSTEM
-      else
-	{
-	  specpdl_ref count = SPECPDL_INDEX ();
-
-	  it->what = IT_IMAGE;
-	  /* Don't allow quitting from lookup_image, for when we are
-	     displaying a non-selected window, and the buffer's point
-	     was temporarily moved to the window-point.  */
-	  specbind (Qinhibit_quit, Qt);
-	  it->image_id = lookup_image (it->f, value, it->face_id);
-	  unbind_to (count, Qnil);
-	  it->position = start_pos;
-	  it->object = NILP (object) ? it->w->contents : object;
-	  it->method = GET_FROM_IMAGE;
-
-	  /* Say that we haven't consumed the characters with
-	     `display' property yet.  The call to pop_it in
-	     set_iterator_to_next will clean this up.  */
-	  *position = start_pos;
-	}
-#endif /* HAVE_WINDOW_SYSTEM */
-
       return retval;
     }
 

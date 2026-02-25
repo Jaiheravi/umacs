@@ -38,7 +38,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "dispextern.h"
 #include "blockinput.h"
 #include "termhooks.h"		/* For FRAME_TERMINAL.  */
-#include "xwidget.h"
 #ifdef HAVE_WINDOW_SYSTEM
 #include TERM_HEADER
 #endif /* HAVE_WINDOW_SYSTEM */
@@ -5746,7 +5745,6 @@ Signal an error when WINDOW is the only window on its frame.  */)
 
       /* Block input.  */
       block_input ();
-      xwidget_view_delete_all_in_window (w);
       window_resize_apply (p, horflag);
       /* If this window is referred to by the dpyinfo's mouse
 	 highlight, invalidate that slot to be safe (Bug#9904).  */

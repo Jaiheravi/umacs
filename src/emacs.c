@@ -60,7 +60,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "systime.h"
 #include "termhooks.h"
 #include "window.h"
-#include "xwidget.h"
 
 #include "getpagesize.h"
 
@@ -1662,8 +1661,6 @@ int main(int argc, char** argv)
 #ifdef HAVE_KQUEUE
     syms_of_kqueue();
 #endif /* HAVE_KQUEUE */
-
-    syms_of_xwidget();
     syms_of_threads();
     syms_of_profiler();
     syms_of_pdumper();

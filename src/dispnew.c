@@ -41,7 +41,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "syssignal.h"
 #include "systime.h"
 //#include "tparam.h"
-#include "xwidget.h"
 #include "pdumper.h"
 #include "disptab.h"
 #include "cm.h"
@@ -4617,8 +4616,6 @@ update_window (struct window *w)
   /* check_current_matrix_flags (w); */
   add_window_display_history (w, w->current_matrix->method);
 #endif
-
-  xwidget_end_redisplay (w, w->current_matrix);
   clear_glyph_matrix (desired_matrix);
 }
 

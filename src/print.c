@@ -31,7 +31,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "disptab.h"
 #include "intervals.h"
 #include "blockinput.h"
-#include "xwidget.h"
 #include "dynlib.h"
 
 #include <c-ctype.h>
