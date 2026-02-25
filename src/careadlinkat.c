@@ -23,7 +23,7 @@
 #include "careadlinkat.h"
 
 #include "idx.h"
-#include "minmax.h"
+#include <sys/param.h>
 
 #include <errno.h>
 #include <limits.h>

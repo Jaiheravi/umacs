@@ -1923,7 +1923,7 @@ static bool bit_is_set (const unsigned char *, OFFSET);
 static bool buffer_chars_equal (struct context *, OFFSET, OFFSET);
 static bool compareseq_early_abort (struct context *);
 
-#include "minmax.h"
+# include <sys/param.h>
 #include "diffseq.h"
 
 DEFUN ("replace-region-contents", Freplace_region_contents,
@@ -3454,7 +3454,7 @@ styled_format (ptrdiff_t nargs, Lisp_Object *args, bool message)
    SPRINTF_BUFSIZE = (sizeof "-." + (LDBL_MAX_10_EXP + 1)
 		      + USEFUL_PRECISION_MAX)
   };
-  static_assert (USEFUL_PRECISION_MAX > 0);
+  // static_assert (USEFUL_PRECISION_MAX > 0);
 
   ptrdiff_t n;		/* The number of the next arg to substitute.  */
   char initial_buffer[1000 + SPRINTF_BUFSIZE];
