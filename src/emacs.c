@@ -1668,7 +1668,6 @@ int main(int argc, char** argv)
     syms_of_threads();
     syms_of_profiler();
     syms_of_pdumper();
-    syms_of_json();
 
     keys_of_keyboard();
 
