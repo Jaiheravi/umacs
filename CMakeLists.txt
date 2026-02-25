@@ -97,7 +97,6 @@ add_executable(ez
         src/careadlinkat.c
         src/scroll.c
         src/comp.c
-        src/fsusage.c
         src/sig2str.c
         src/allocator.c
         src/boot-time.c

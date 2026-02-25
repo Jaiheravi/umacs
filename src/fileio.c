@@ -101,7 +101,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include <allocator.h>
 #include <careadlinkat.h>
 #include <filename.h>
-#include <fsusage.h>
 #include <stat-time.h>
 
 #ifdef HPUX
@@ -6648,45 +6647,7 @@ storage available to a non-superuser.  All 3 numbers are in bytes.
 If the underlying system call fails, value is nil.  */)
   (Lisp_Object filename)
 {
-  filename = Fexpand_file_name (filename, Qnil);
-
-  /* If the file name has special constructs in it,
-     call the corresponding file name handler.  */
-  Lisp_Object handler = Ffind_file_name_handler (filename, Qfile_system_info);
-  if (!NILP (handler))
-    {
-      Lisp_Object result = calln (handler, Qfile_system_info, filename);
-      if (CONSP (result) || NILP (result))
-	return result;
-      error ("Invalid handler in `file-name-handler-alist'");
-    }
-
-  /* Try to detect whether or not fsusage.o is actually built.  */
-#if defined STAT_STATFS2_BSIZE || defined STAT_STATFS2_FRSIZE	\
-  || defined STAT_STATFS2_FSIZE || defined STAT_STATFS3_OSF1	\
-  || defined STAT_STATFS4 || defined STAT_STATVFS		\
-  || defined STAT_STATVFS64
-  struct fs_usage u;
-  const char *name;
-
-  name = SSDATA (ENCODE_FILE (filename));
-
-#if defined HAVE_ANDROID && !defined ANDROID_STUBIFY
-  /* With special directories, this information is unavailable.  */
-  if (android_is_special_directory (name, "/assets")
-      || android_is_special_directory (name, "/content"))
-    return Qnil;
-#endif /* defined HAVE_ANDROID && !defined ANDROID_STUBIFY */
-
-  if (get_fs_usage (name, NULL, &u) != 0)
-    return errno == ENOSYS ? Qnil : file_attribute_errno (filename, errno);
-  return list3 (blocks_to_bytes (u.fsu_blocksize, u.fsu_blocks, false),
-		blocks_to_bytes (u.fsu_blocksize, u.fsu_bfree, false),
-		blocks_to_bytes (u.fsu_blocksize, u.fsu_bavail,
-				 u.fsu_bavail_top_bit_set));
-#else
   return Qnil;
-#endif
 }
 
 #endif /* !DOS_NT */
