@@ -29,8 +29,8 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'rect))
-(eval-when-compile (require 'send-to))
+;;(eval-when-compile (require 'rect))
+;;(eval-when-compile (require 'send-to))
 
 ;; Indent track-mouse like progn.
 (put 'track-mouse 'lisp-indent-function 0)
