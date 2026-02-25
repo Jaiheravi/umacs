@@ -500,8 +500,8 @@ DIRS are relative."
 (defun startup--xdg-or-homedot (xdg-dir user-name)
   (let ((emacs-d-dir (concat "~" user-name
                              (if (eq system-type 'ms-dos)
-                                 "/_emacs.d/"
-                               "/.emacs.d/"))))
+                                 "/_emacs-zero.d/"
+                               "/.emacs-zero.d/"))))
     (cond
      ((or (file-exists-p emacs-d-dir)
           (if (eq system-type 'windows-nt)
@@ -510,8 +510,8 @@ DIRS are relative."
                                    "\\`[._]emacs\\(\\.elc?\\)?\\'"))
             (file-exists-p (concat "~" init-file-user
                                    (if (eq system-type 'ms-dos)
-                                       "/_emacs"
-                                     "/.emacs")))))
+                                       "/_emacs-zero"
+                                     "/.emacs-zero")))))
       emacs-d-dir)
      ((file-exists-p xdg-dir)
       xdg-dir)
