@@ -100,7 +100,6 @@ add_executable(ez
         src/doprnt.c
         src/dynlib.c
         src/careadlinkat.c
-        src/close-stream.c
         src/scroll.c
         src/comp.c
         src/fsusage.c

@@ -31,7 +31,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include <unistd.h>
 
 #include <c-ctype.h>
-#include <close-stream.h>
 #include <pathmax.h>
 
 #include "lisp.h"
@@ -139,6 +138,31 @@ int _cdecl _spawnlp (int, const char *, const char *, ...);
 #if defined HAVE_ANDROID && !defined ANDROID_STUBIFY
 #include "sfntfont.h"
 #endif
+
+int
+close_stream (FILE *stream)
+{
+  const bool some_pending = (__fpending (stream) != 0);
+  const bool prev_fail = (ferror (stream) != 0);
+  const bool fclose_fail = (fclose (stream) != 0);
+
+  /* Return an error indication if there was a previous failure or if
+     fclose failed, with one exception: ignore an fclose failure if
+     there was no previous error, no data remains to be flushed, and
+     fclose failed with EBADF.  That can happen when a program like cp
+     is invoked like this 'cp a b >&-' (i.e., with standard output
+     closed) and doesn't generate any output (hence no previous error
+     and nothing to be flushed).  */
+
+  if (prev_fail || (fclose_fail && (some_pending || errno != EBADF)))
+  {
+    if (! fclose_fail)
+      errno = 0;
+    return EOF;
+  }
+
+  return 0;
+}
 
 /* Declare here, including term.h is problematic on some systems.  */
 //extern void tputs (const char *, int, int (*)(int));
