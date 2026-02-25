@@ -1123,7 +1123,7 @@ int main(int argc, char** argv)
   }
   text_quoting_flag = using_utf8();
 
-  inhibit_window_system = 0;
+  inhibit_window_system = 1;
 
   /* Handle the -t switch, which specifies filename to use as terminal.  */
   dev_tty = xstrdup(DEV_TTY); /* the default terminal */
