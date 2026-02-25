@@ -1652,7 +1652,6 @@ int main(int argc, char** argv)
     syms_of_window();
     syms_of_xdisp();
     syms_of_font();
-    syms_of_xml();
 
 #ifdef HAVE_ZLIB
     syms_of_decompress();
@@ -2160,10 +2159,6 @@ void shut_down_emacs(int sig, Lisp_Object stuff)
     check_glyph_memory();
     check_message_stack();
   }
-
-#ifdef HAVE_LIBXML2
-  xml_cleanup_parser();
-#endif
 }
 
 

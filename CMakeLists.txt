@@ -4,7 +4,6 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-find_package(LibXml2 REQUIRED)
 find_package(Curses REQUIRED)
 find_package(ZLIB REQUIRED)
 add_executable(ez
@@ -54,7 +53,6 @@ add_executable(ez
         src/timespec-sub.c
         src/timespec-add.c
         src/window.c
-        src/xml.c
         src/xfaces.c
         src/keymap.c
         src/casetab.c
@@ -105,7 +103,6 @@ add_executable(ez
         src/boot-time.c
 )
 target_link_libraries(ez PRIVATE
-        LibXml2::LibXml2
         ${CURSES_LIBRARIES}
         ZLIB::ZLIB
 )
