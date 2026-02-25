@@ -25,7 +25,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include "frame.h"
 #include "sysstdio.h"
 #include "termchar.h"
-#include "tparam.h"
+#include "ncurses.h"
 
 #define	BIG	9999		/* Good on 32-bit hosts.  */
 
@@ -144,7 +144,7 @@ cmcostinit (struct tty_display_info *tty)
     char *p;
 
 #define	COST(x,e)	(x ? (cost = 0, tputs (x, 1, e), cost) : BIG)
-#define CMCOST(x,e)	((x == 0) ? BIG : (p = tgoto(x, 0, 0), COST(p ,e)))
+#define CMCOST(x,e)	((x == 0) ? BIG : (p = tparm(x, 0, 0), COST(p ,e)))
 
     tty->Wcm->cc_up =	 COST (tty->Wcm->cm_up, evalcost);
     tty->Wcm->cc_down =	 COST (tty->Wcm->cm_down, evalcost);
@@ -391,8 +391,8 @@ cmgoto (struct tty_display_info *tty, int row, int col)
       /* compute REAL direct cost */
       cost = 0;
       p = (dcm == tty->Wcm->cm_habs
-           ? tgoto (dcm, row, col)
-           : tgoto (dcm, col, row));
+           ? tparm (dcm, col, row)
+           : tparm (dcm, row, col));
       emacs_tputs (tty, p, 1, evalcost);
       if (cost <= relcost)
 	{	/* really is cheaper */
@@ -434,8 +434,9 @@ void
 Wcm_clear (struct tty_display_info *tty)
 {
   memset (tty->Wcm, 0, sizeof (struct cm));
-  UP = 0;
-  BC = 0;
+  // These are not needed using ncurses
+  // UP = 0;
+  // BC = 0;
 }
 
 /*

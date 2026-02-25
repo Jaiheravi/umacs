@@ -24,6 +24,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #include <config.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <ncurses.h>
 #include <stdlib.h>
 #include <sys/file.h>
 #include <sys/time.h>

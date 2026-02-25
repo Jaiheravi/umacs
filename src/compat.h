@@ -322,15 +322,15 @@ static inline size_t __fpending(FILE *fp)
 /* Termcap/terminfo functions — declared here instead of including
    <term.h> which pollutes the namespace with macros for every
    capability name (e.g., `lines`, `columns`).  */
-extern char *tparm(const char *, ...);
+// extern char *tparm(const char *, ...);
 extern int tputs(const char *, int, int (*)(int));
 extern char *tgetstr(const char *, char **);
 extern int tgetnum(const char *);
 extern int tgetflag(const char *);
 extern int tgetent(char *, const char *);
 extern char PC;
-#ifdef TERMINFO
-extern char *tigetstr(const char *);
-extern int tigetflag(const char *);
-extern int tigetnum(const char *);
-#endif
+// #ifdef TERMINFO
+// extern char *tigetstr(const char *);
+// extern int tigetflag(const char *);
+// extern int tigetnum(const char *);
+// #endif
