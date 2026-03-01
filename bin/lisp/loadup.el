@@ -205,7 +205,6 @@
 (load "help")
 
 (load "jka-cmpr-hook")
-(load "epa-hook")
 ;; Any Emacs Lisp source file (*.el) loaded here after can contain
 ;; multilingual text.
 (load "international/mule-cmds")
