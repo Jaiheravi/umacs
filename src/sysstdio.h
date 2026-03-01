@@ -20,29 +20,29 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #ifndef EMACS_SYSSTDIO_H
 #define EMACS_SYSSTDIO_H
 
-#include <stdarg.h>
 #include <fcntl.h>
 #include <limits.h>
-#include <stdio.h>
+#include <stdarg.h>
 #include <stddef.h>
+#include <stdio.h>
 
 #include <attribute.h>
 #include <unlocked-io.h>
 
-extern void errputc (int);
-extern void errwrite (void const *, ptrdiff_t);
-extern void close_output_streams (void);
+extern void errputc(int);
+extern void errwrite(void const*, ptrdiff_t);
+extern void close_output_streams(void);
 
 #if O_BINARY
-# define FOPEN_BINARY "b"
-# define FOPEN_TEXT "t"
+#define FOPEN_BINARY "b"
+#define FOPEN_TEXT "t"
 #else
-# define FOPEN_BINARY ""
-# define FOPEN_TEXT ""
+#define FOPEN_BINARY ""
+#define FOPEN_TEXT ""
 #endif
 
 #ifndef PIPE_BUF
- #define PIPE_BUF MAX_ALLOCA
+#define PIPE_BUF MAX_ALLOCA
 #endif
 
 #endif /* EMACS_SYSSTDIO_H */

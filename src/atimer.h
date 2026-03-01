@@ -29,56 +29,55 @@ struct atimer;
 
 enum atimer_type
 {
-  /* Timer is ripe at some absolute time.  */
-  ATIMER_ABSOLUTE,
+    /* Timer is ripe at some absolute time.  */
+    ATIMER_ABSOLUTE,
 
-  /* Timer is ripe at now plus an offset.  */
-  ATIMER_RELATIVE,
+    /* Timer is ripe at now plus an offset.  */
+    ATIMER_RELATIVE,
 
-  /* Timer runs continuously.  */
-  ATIMER_CONTINUOUS
+    /* Timer runs continuously.  */
+    ATIMER_CONTINUOUS
 };
 
 /* Type of timer callback functions.  */
 
-typedef void (* atimer_callback) (struct atimer *timer);
+typedef void (*atimer_callback)(struct atimer* timer);
 
 /* Structure describing an asynchronous timer.  */
 
-struct atimer
-{
-  /* The type of this timer.  */
-  enum atimer_type type;
+struct atimer {
+    /* The type of this timer.  */
+    enum atimer_type type;
 
-  /* Time when this timer is ripe.  */
-  struct timespec expiration;
+    /* Time when this timer is ripe.  */
+    struct timespec expiration;
 
-  /* Interval of this timer.  */
-  struct timespec interval;
+    /* Interval of this timer.  */
+    struct timespec interval;
 
-  /* Function to call when timer is ripe.  Interrupt input is
-     guaranteed to not be blocked when this function is called.  */
-  atimer_callback fn;
+    /* Function to call when timer is ripe.  Interrupt input is
+       guaranteed to not be blocked when this function is called.  */
+    atimer_callback fn;
 
-  /* Additional user-specified data to pass to FN.  */
-  void *client_data;
+    /* Additional user-specified data to pass to FN.  */
+    void* client_data;
 
-  /* Next in list of active or free atimers.  */
-  struct atimer *next;
+    /* Next in list of active or free atimers.  */
+    struct atimer* next;
 };
 
 /* Function prototypes.  */
 
-struct atimer *start_atimer (enum atimer_type, struct timespec,
-                             atimer_callback, void *);
-void cancel_atimer (struct atimer *);
-void do_pending_atimers (void);
-void init_atimer (void);
-void turn_on_atimers (bool);
-void stop_other_atimers (struct atimer *);
-void run_all_atimers (void);
+struct atimer* start_atimer(enum atimer_type, struct timespec, atimer_callback,
+                            void*);
+void cancel_atimer(struct atimer*);
+void do_pending_atimers(void);
+void init_atimer(void);
+void turn_on_atimers(bool);
+void stop_other_atimers(struct atimer*);
+void run_all_atimers(void);
 #ifdef HAVE_TIMERFD
-void timerfd_callback (int, void *);
+void timerfd_callback(int, void*);
 #endif
 
 #endif /* EMACS_ATIMER_H */

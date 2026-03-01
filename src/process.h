@@ -30,13 +30,15 @@ INLINE_HEADER_BEGIN
 /* Bound on number of file descriptors opened on behalf of a process,
    that need to be closed.  */
 
-enum { PROCESS_OPEN_FDS = 6 };
+enum
+{
+    PROCESS_OPEN_FDS = 6
+};
 
 /* This structure records information about a subprocess
    or network connection.  */
 
-struct Lisp_Process
-  {
+struct Lisp_Process {
     union vectorlike_header header;
 
     /* Name of subprocess terminal.  */
@@ -69,7 +71,8 @@ struct Lisp_Process
 
     Lisp_Object childp;
 
-    /* Plist for programs to keep per-process state information, parameters, etc.  */
+    /* Plist for programs to keep per-process state information, parameters,
+     * etc.  */
     Lisp_Object plist;
 
     /* Symbol indicating the type of process: real, network, serial.  */
@@ -130,7 +133,8 @@ struct Lisp_Process
     pid_t pid;
     /* Descriptor by which we read from this process.  */
     int infd;
-    /* Byte-count modulo (UINTMAX_MAX + 1) for process output read from `infd'.  */
+    /* Byte-count modulo (UINTMAX_MAX + 1) for process output read from `infd'.
+     */
     uintmax_t nbytes_read;
     /* Descriptor by which we write to this process.  */
     int outfd;
@@ -190,29 +194,21 @@ struct Lisp_Process
 #ifdef HAVE_GETADDRINFO_A
     /* Whether the socket is waiting for response from an asynchronous
        DNS call. */
-    struct gaicb *dns_request;
+    struct gaicb* dns_request;
 #endif
 
 
-  } GCALIGNED_STRUCT;
+} GCALIGNED_STRUCT;
 
-INLINE bool
-PROCESSP (Lisp_Object a)
-{
-  return PSEUDOVECTORP (a, PVEC_PROCESS);
+INLINE bool PROCESSP(Lisp_Object a) { return PSEUDOVECTORP(a, PVEC_PROCESS); }
+
+INLINE void CHECK_PROCESS(Lisp_Object x) {
+    CHECK_TYPE(PROCESSP(x), Qprocessp, x);
 }
 
-INLINE void
-CHECK_PROCESS (Lisp_Object x)
-{
-  CHECK_TYPE (PROCESSP (x), Qprocessp, x);
-}
-
-INLINE struct Lisp_Process *
-XPROCESS (Lisp_Object a)
-{
-  eassert (PROCESSP (a));
-  return XUNTAG (a, Lisp_Vectorlike, struct Lisp_Process);
+INLINE struct Lisp_Process* XPROCESS(Lisp_Object a) {
+    eassert(PROCESSP(a));
+    return XUNTAG(a, Lisp_Vectorlike, struct Lisp_Process);
 }
 
 /* Every field in the preceding structure except for the first two
@@ -223,23 +219,17 @@ XPROCESS (Lisp_Object a)
 /* Most code should use these functions to set Lisp fields in struct
    process.  */
 
-INLINE void
-pset_childp (struct Lisp_Process *p, Lisp_Object val)
-{
-  p->childp = val;
+INLINE void pset_childp(struct Lisp_Process* p, Lisp_Object val) {
+    p->childp = val;
 }
 
-INLINE void
-pset_status (struct Lisp_Process *p, Lisp_Object val)
-{
-  p->status = val;
+INLINE void pset_status(struct Lisp_Process* p, Lisp_Object val) {
+    p->status = val;
 }
 
 #ifdef HAVE_GNUTLS
-INLINE void
-pset_gnutls_cred_type (struct Lisp_Process *p, Lisp_Object val)
-{
-  p->gnutls_cred_type = val;
+INLINE void pset_gnutls_cred_type(struct Lisp_Process* p, Lisp_Object val) {
+    p->gnutls_cred_type = val;
 }
 #endif
 
@@ -250,51 +240,51 @@ extern bool inhibit_sentinels;
 /* Exit statuses for GNU programs that exec other programs.  */
 enum
 {
-  EXIT_CANCELED = 125, /* Internal error prior to exec attempt.  */
-  EXIT_CANNOT_INVOKE = 126, /* Program located, but not usable.  */
-  EXIT_ENOENT = 127 /* Could not find program to exec.  */
+    EXIT_CANCELED = 125, /* Internal error prior to exec attempt.  */
+    EXIT_CANNOT_INVOKE = 126, /* Program located, but not usable.  */
+    EXIT_ENOENT = 127 /* Could not find program to exec.  */
 };
 
 /* Defined in callproc.c.  */
 
-extern Lisp_Object get_current_directory (bool);
-extern void record_kill_process (struct Lisp_Process *, Lisp_Object);
+extern Lisp_Object get_current_directory(bool);
+extern void record_kill_process(struct Lisp_Process*, Lisp_Object);
 
 /* Defined in sysdep.c.  */
 
-extern Lisp_Object list_system_processes (void);
-extern Lisp_Object system_process_attributes (Lisp_Object);
+extern Lisp_Object list_system_processes(void);
+extern Lisp_Object system_process_attributes(Lisp_Object);
 
 /* Defined in process.c.  */
 
-extern void record_deleted_pid (pid_t, Lisp_Object);
+extern void record_deleted_pid(pid_t, Lisp_Object);
 struct sockaddr;
-extern Lisp_Object conv_sockaddr_to_lisp (struct sockaddr *, ptrdiff_t);
-extern void hold_keyboard_input (void);
-extern void unhold_keyboard_input (void);
-extern bool kbd_on_hold_p (void);
+extern Lisp_Object conv_sockaddr_to_lisp(struct sockaddr*, ptrdiff_t);
+extern void hold_keyboard_input(void);
+extern void unhold_keyboard_input(void);
+extern bool kbd_on_hold_p(void);
 
-typedef void (*fd_callback) (int fd, void *data);
+typedef void (*fd_callback)(int fd, void* data);
 
-extern void add_read_fd (int fd, fd_callback func, void *data);
-extern void add_non_keyboard_read_fd (int fd, fd_callback func, void *data);
-extern void delete_read_fd (int fd);
-extern void add_write_fd (int fd, fd_callback func, void *data);
-extern void delete_write_fd (int fd);
-extern void catch_child_signal (void);
-extern void restore_nofile_limit (void);
+extern void add_read_fd(int fd, fd_callback func, void* data);
+extern void add_non_keyboard_read_fd(int fd, fd_callback func, void* data);
+extern void delete_read_fd(int fd);
+extern void add_write_fd(int fd, fd_callback func, void* data);
+extern void delete_write_fd(int fd);
+extern void catch_child_signal(void);
+extern void restore_nofile_limit(void);
 
 #ifdef WINDOWSNT
-extern Lisp_Object network_interface_list (bool full, unsigned short match);
-extern Lisp_Object network_interface_info (Lisp_Object);
+extern Lisp_Object network_interface_list(bool full, unsigned short match);
+extern Lisp_Object network_interface_info(Lisp_Object);
 #endif
 
-extern Lisp_Object remove_slash_colon (Lisp_Object);
+extern Lisp_Object remove_slash_colon(Lisp_Object);
 
-extern void update_processes_for_thread_death (Lisp_Object);
-extern void dissociate_controlling_tty (void);
+extern void update_processes_for_thread_death(Lisp_Object);
+extern void dissociate_controlling_tty(void);
 
-extern int open_channel_for_module (Lisp_Object);
+extern int open_channel_for_module(Lisp_Object);
 
 INLINE_HEADER_END
 

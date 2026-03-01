@@ -30,19 +30,19 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 struct face;
 
-extern void free_face_fontset (struct frame *, struct face *);
-extern int face_for_char (struct frame *, struct face *, int,
-                          ptrdiff_t, Lisp_Object);
-extern Lisp_Object font_for_char (struct face *, int, ptrdiff_t, Lisp_Object);
+extern void free_face_fontset(struct frame*, struct face*);
+extern int face_for_char(struct frame*, struct face*, int, ptrdiff_t,
+                         Lisp_Object);
+extern Lisp_Object font_for_char(struct face*, int, ptrdiff_t, Lisp_Object);
 
-extern int make_fontset_for_ascii_face (struct frame *, int, struct face *);
-extern int fontset_from_font (Lisp_Object);
-extern int fs_query_fontset (Lisp_Object, int);
-extern Lisp_Object list_fontsets (struct frame *, Lisp_Object, int);
+extern int make_fontset_for_ascii_face(struct frame*, int, struct face*);
+extern int fontset_from_font(Lisp_Object);
+extern int fs_query_fontset(Lisp_Object, int);
+extern Lisp_Object list_fontsets(struct frame*, Lisp_Object, int);
 
-extern Lisp_Object fontset_name (int);
-extern Lisp_Object fontset_ascii (int);
+extern Lisp_Object fontset_name(int);
+extern Lisp_Object fontset_ascii(int);
 
-extern int face_for_font (struct frame *, Lisp_Object, struct face *);
+extern int face_for_font(struct frame*, Lisp_Object, struct face*);
 
 #endif /* EMACS_FONTSET_H */

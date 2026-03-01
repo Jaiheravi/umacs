@@ -33,6 +33,9 @@
    Using this is likely to work around similar bugs in other operating
    systems.  */
 
-enum { SYS_BUFSIZE_MAX = INT_MAX >> 20 << 20 };
+enum
+{
+    SYS_BUFSIZE_MAX = INT_MAX >> 20 << 20
+};
 
 #endif

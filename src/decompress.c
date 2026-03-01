@@ -22,50 +22,42 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <zlib.h>
 
-#include "lisp.h"
 #include "buffer.h"
 #include "composite.h"
+#include "lisp.h"
 #include "md5.h"
 
-
 
-struct decompress_unwind_data
-{
-  ptrdiff_t old_point, orig, start, nbytes;
-  z_stream *stream;
+struct decompress_unwind_data {
+    ptrdiff_t old_point, orig, start, nbytes;
+    z_stream* stream;
 };
 
-static void
-unwind_decompress (void *ddata)
-{
-  struct decompress_unwind_data *data = ddata;
-  inflateEnd (data->stream);
+static void unwind_decompress(void* ddata) {
+    struct decompress_unwind_data* data = ddata;
+    inflateEnd(data->stream);
 
-  /* Delete any uncompressed data already inserted on error, but
-     without calling the change hooks.  */
-  if (data->start)
-    {
-      del_range_2 (data->start, data->start, /* byte, char offsets the same */
-                   data->start + data->nbytes, data->start + data->nbytes,
-                   0);
-      update_compositions (data->start, data->start, CHECK_HEAD);
-      /* "Balance" the before-change-functions call, which would
-         otherwise be left "hanging".  */
-      signal_after_change (data->orig, data->start - data->orig,
-                           data->start - data->orig);
+    /* Delete any uncompressed data already inserted on error, but
+       without calling the change hooks.  */
+    if (data->start) {
+        del_range_2(data->start, data->start, /* byte, char offsets the same */
+                    data->start + data->nbytes, data->start + data->nbytes, 0);
+        update_compositions(data->start, data->start, CHECK_HEAD);
+        /* "Balance" the before-change-functions call, which would
+           otherwise be left "hanging".  */
+        signal_after_change(data->orig, data->start - data->orig,
+                            data->start - data->orig);
     }
-  /* Put point where it was, or if the buffer has shrunk because the
-     compressed data is bigger than the uncompressed, at
-     point-max.  */
-  SET_PT (min (data->old_point, ZV));
+    /* Put point where it was, or if the buffer has shrunk because the
+       compressed data is bigger than the uncompressed, at
+       point-max.  */
+    SET_PT(min(data->old_point, ZV));
 }
 
-DEFUN ("zlib-available-p", Fzlib_available_p, Szlib_available_p, 0, 0, 0,
-       doc: /* Return t if zlib decompression is available in this instance of Emacs.  */)
-     (void)
-{
-  return Qt;
-}
+DEFUN("zlib-available-p", Fzlib_available_p, Szlib_available_p, 0, 0, 0,
+      doc
+:/* Return t if zlib decompression is available in this instance of Emacs.  */)
+(void) { return Qt; }
 
 DEFUN ("zlib-decompress-region", Fzlib_decompress_region,
        Szlib_decompress_region,
@@ -80,107 +72,101 @@ text by whatever data was successfully decompressed (similar to gzip).
 If decompression is completely successful return t.
 
 This function can be called only in unibyte buffers.  */)
-  (Lisp_Object start, Lisp_Object end, Lisp_Object allow_partial)
-{
-  ptrdiff_t istart, iend, pos_byte;
-  z_stream stream;
-  int inflate_status;
-  struct decompress_unwind_data unwind_data;
-  specpdl_ref count = SPECPDL_INDEX ();
+(Lisp_Object start, Lisp_Object end, Lisp_Object allow_partial) {
+    ptrdiff_t istart, iend, pos_byte;
+    z_stream stream;
+    int inflate_status;
+    struct decompress_unwind_data unwind_data;
+    specpdl_ref count = SPECPDL_INDEX();
 
-  validate_region (&start, &end);
+    validate_region(&start, &end);
 
-  if (! NILP (BVAR (current_buffer, enable_multibyte_characters)))
-    error ("This function can be called only in unibyte buffers");
+    if (!NILP(BVAR(current_buffer, enable_multibyte_characters)))
+        error("This function can be called only in unibyte buffers");
 
-  /* This is a unibyte buffer, so character positions and bytes are
-     the same.  */
-  istart = XFIXNUM (start);
-  iend = XFIXNUM (end);
+    /* This is a unibyte buffer, so character positions and bytes are
+       the same.  */
+    istart = XFIXNUM(start);
+    iend = XFIXNUM(end);
 
-  /* Do the following before manipulating the gap.  */
-  modify_text (istart, iend);
+    /* Do the following before manipulating the gap.  */
+    modify_text(istart, iend);
 
-  move_gap_both (iend, iend);
+    move_gap_both(iend, iend);
 
-  stream.zalloc = Z_NULL;
-  stream.zfree = Z_NULL;
-  stream.opaque = Z_NULL;
-  stream.avail_in = 0;
-  stream.next_in = Z_NULL;
+    stream.zalloc = Z_NULL;
+    stream.zfree = Z_NULL;
+    stream.opaque = Z_NULL;
+    stream.avail_in = 0;
+    stream.next_in = Z_NULL;
 
-  /* The magic number 32 apparently means "autodetect both the gzip and
-     zlib formats" according to zlib.h.  */
-  if (inflateInit2 (&stream, MAX_WBITS + 32) != Z_OK)
-    return Qnil;
+    /* The magic number 32 apparently means "autodetect both the gzip and
+       zlib formats" according to zlib.h.  */
+    if (inflateInit2(&stream, MAX_WBITS + 32) != Z_OK)
+        return Qnil;
 
-  unwind_data.orig = istart;
-  unwind_data.start = iend;
-  unwind_data.stream = &stream;
-  unwind_data.old_point = PT;
-  unwind_data.nbytes = 0;
-  record_unwind_protect_ptr (unwind_decompress, &unwind_data);
+    unwind_data.orig = istart;
+    unwind_data.start = iend;
+    unwind_data.stream = &stream;
+    unwind_data.old_point = PT;
+    unwind_data.nbytes = 0;
+    record_unwind_protect_ptr(unwind_decompress, &unwind_data);
 
-  /* Insert the decompressed data at the end of the compressed data.  */
-  SET_PT (iend);
+    /* Insert the decompressed data at the end of the compressed data.  */
+    SET_PT(iend);
 
-  pos_byte = istart;
+    pos_byte = istart;
 
-  /* Keep calling 'inflate' until it reports an error or end-of-input.  */
-  do
-    {
-      /* Maximum number of bytes that one 'inflate' call should read and write.
-	 Do not make avail_out too large, as that might unduly delay C-g.
-	 zlib requires that avail_in and avail_out not exceed UINT_MAX.  */
-      ptrdiff_t avail_in = min (iend - pos_byte, UINT_MAX);
-      int avail_out = 16 * 1024;
-      int decompressed;
+    /* Keep calling 'inflate' until it reports an error or end-of-input.  */
+    do {
+        /* Maximum number of bytes that one 'inflate' call should read and
+       write. Do not make avail_out too large, as that might unduly delay C-g.
+       zlib requires that avail_in and avail_out not exceed UINT_MAX.  */
+        ptrdiff_t avail_in = min(iend - pos_byte, UINT_MAX);
+        int avail_out = 16 * 1024;
+        int decompressed;
 
-      if (GAP_SIZE < avail_out)
-	make_gap (avail_out - GAP_SIZE);
-      stream.next_in = BYTE_POS_ADDR (pos_byte);
-      stream.avail_in = avail_in;
-      stream.next_out = GPT_ADDR;
-      stream.avail_out = avail_out;
-      inflate_status = inflate (&stream, Z_NO_FLUSH);
-      pos_byte += avail_in - stream.avail_in;
-      decompressed = avail_out - stream.avail_out;
-      insert_from_gap (decompressed, decompressed, 0, false);
-      unwind_data.nbytes += decompressed;
-      maybe_quit ();
-    }
-  while (inflate_status == Z_OK);
+        if (GAP_SIZE < avail_out)
+            make_gap(avail_out - GAP_SIZE);
+        stream.next_in = BYTE_POS_ADDR(pos_byte);
+        stream.avail_in = avail_in;
+        stream.next_out = GPT_ADDR;
+        stream.avail_out = avail_out;
+        inflate_status = inflate(&stream, Z_NO_FLUSH);
+        pos_byte += avail_in - stream.avail_in;
+        decompressed = avail_out - stream.avail_out;
+        insert_from_gap(decompressed, decompressed, 0, false);
+        unwind_data.nbytes += decompressed;
+        maybe_quit();
+    } while (inflate_status == Z_OK);
 
-  Lisp_Object ret = Qt;
-  if (inflate_status != Z_STREAM_END)
-    {
-      if (!NILP (allow_partial))
-        ret = make_int (iend - pos_byte);
-      else
-        return unbind_to (count, Qnil);
+    Lisp_Object ret = Qt;
+    if (inflate_status != Z_STREAM_END) {
+        if (!NILP(allow_partial))
+            ret = make_int(iend - pos_byte);
+        else
+            return unbind_to(count, Qnil);
     }
 
-  unwind_data.start = 0;
+    unwind_data.start = 0;
 
-  /* Delete the compressed data.  */
-  del_range_2 (istart, istart, /* byte and char offsets are the same */
-               iend, iend, 0);
+    /* Delete the compressed data.  */
+    del_range_2(istart, istart, /* byte and char offsets are the same */
+                iend, iend, 0);
 
-  signal_after_change (istart, iend - istart, unwind_data.nbytes);
-  update_compositions (istart, istart, CHECK_HEAD);
+    signal_after_change(istart, iend - istart, unwind_data.nbytes);
+    update_compositions(istart, istart, CHECK_HEAD);
 
-  return unbind_to (count, ret);
+    return unbind_to(count, ret);
 }
 
-
+
 /***********************************************************************
-			    Initialization
+                Initialization
  ***********************************************************************/
-void
-syms_of_decompress (void)
-{
-  defsubr (&Szlib_decompress_region);
-  defsubr (&Szlib_available_p);
+void syms_of_decompress(void) {
+    defsubr(&Szlib_decompress_region);
+    defsubr(&Szlib_available_p);
 }
 
 #endif /* HAVE_ZLIB */

@@ -59,65 +59,59 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 INLINE_HEADER_BEGIN
 
-#define CATEGORYP(x) RANGED_FIXNUMP (0x20, x, 0x7E)
+#define CATEGORYP(x) RANGED_FIXNUMP(0x20, x, 0x7E)
 
-#define CHECK_CATEGORY(x) \
-  CHECK_TYPE (CATEGORYP (x), Qcategoryp, x)
+#define CHECK_CATEGORY(x) CHECK_TYPE(CATEGORYP(x), Qcategoryp, x)
 
-#define CATEGORY_SET_P(x) \
-  (BOOL_VECTOR_P (x) && bool_vector_size (x) == 128)
+#define CATEGORY_SET_P(x) (BOOL_VECTOR_P(x) && bool_vector_size(x) == 128)
 
 /* Return a new empty category set.  */
-#define MAKE_CATEGORY_SET (Fmake_bool_vector (make_fixnum (128), Qnil))
+#define MAKE_CATEGORY_SET (Fmake_bool_vector(make_fixnum(128), Qnil))
 
-#define CHECK_CATEGORY_SET(x) \
-  CHECK_TYPE (CATEGORY_SET_P (x), Qcategorysetp, x)
+#define CHECK_CATEGORY_SET(x) CHECK_TYPE(CATEGORY_SET_P(x), Qcategorysetp, x)
 
 /* Return the category set of character C in the current category table.  */
-#define CATEGORY_SET(c) char_category_set (c)
+#define CATEGORY_SET(c) char_category_set(c)
 
 /* Return true if CATEGORY_SET contains CATEGORY.
    Faster than '!NILP (Faref (category_set, make_fixnum (category)))'.  */
-INLINE bool
-CATEGORY_MEMBER (EMACS_INT category, Lisp_Object category_set)
-{
-  return bool_vector_bitref (category_set, category);
+INLINE bool CATEGORY_MEMBER(EMACS_INT category, Lisp_Object category_set) {
+    return bool_vector_bitref(category_set, category);
 }
 
 /* Return true if category set of CH contains CATEGORY.  */
-INLINE bool
-CHAR_HAS_CATEGORY (int ch, int category)
-{
-  Lisp_Object category_set = CATEGORY_SET (ch);
-  return CATEGORY_MEMBER (category, category_set);
+INLINE bool CHAR_HAS_CATEGORY(int ch, int category) {
+    Lisp_Object category_set = CATEGORY_SET(ch);
+    return CATEGORY_MEMBER(category, category_set);
 }
 
 /* The standard category table is stored where it will automatically
    be used in all new buffers.  */
-#define Vstandard_category_table BVAR (&buffer_defaults, category_table)
+#define Vstandard_category_table BVAR(&buffer_defaults, category_table)
 
 /* Return the doc string of CATEGORY in category table TABLE.  */
-#define CATEGORY_DOCSTRING(table, category)				\
-  AREF (Fchar_table_extra_slot (table, make_fixnum (0)), ((category) - ' '))
+#define CATEGORY_DOCSTRING(table, category)                                    \
+    AREF(Fchar_table_extra_slot(table, make_fixnum(0)), ((category) - ' '))
 
 /* Set the doc string of CATEGORY to VALUE in category table TABLE.  */
-#define SET_CATEGORY_DOCSTRING(table, category, value)			\
-  ASET (Fchar_table_extra_slot (table, make_fixnum (0)), ((category) - ' '), value)
+#define SET_CATEGORY_DOCSTRING(table, category, value)                         \
+    ASET(Fchar_table_extra_slot(table, make_fixnum(0)), ((category) - ' '),    \
+         value)
 
 /* Return the version number of category table TABLE.  Not used for
    the moment.  */
-#define CATEGORY_TABLE_VERSION (table) \
-  Fchar_table_extra_slot (table, make_fixnum (1))
+#define CATEGORY_TABLE_VERSION                                                 \
+    (table) Fchar_table_extra_slot(table, make_fixnum(1))
 
 /* Return true if there is a word boundary between two
    word-constituent characters C1 and C2 if they appear in this order.
    There is no word boundary between two word-constituent ASCII and
    Latin-1 characters.  */
-#define WORD_BOUNDARY_P(c1, c2)					\
-  (!(SINGLE_BYTE_CHAR_P (c1) && SINGLE_BYTE_CHAR_P (c2))	\
-   && word_boundary_p (c1, c2))
+#define WORD_BOUNDARY_P(c1, c2)                                                \
+    (!(SINGLE_BYTE_CHAR_P(c1) && SINGLE_BYTE_CHAR_P(c2)) &&                    \
+     word_boundary_p(c1, c2))
 
-extern bool word_boundary_p (int, int);
+extern bool word_boundary_p(int, int);
 
 INLINE_HEADER_END
 

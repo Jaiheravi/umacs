@@ -23,42 +23,42 @@
 #include <stddef.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 
-/* An object describing a memory allocator family.  */
+    /* An object describing a memory allocator family.  */
 
-struct allocator
-{
-  /* Do not use GCC attributes such as __attribute__ ((malloc)) with
-     the function types pointed at by these members, because these
-     attributes do not work with pointers to functions.  See
-     <https://lists.gnu.org/r/bug-gnulib/2011-04/msg00007.html>.  */
+    struct allocator {
+        /* Do not use GCC attributes such as __attribute__ ((malloc)) with
+           the function types pointed at by these members, because these
+           attributes do not work with pointers to functions.  See
+           <https://lists.gnu.org/r/bug-gnulib/2011-04/msg00007.html>.  */
 
-  /* Call ALLOCATE to allocate memory, like 'malloc'.  On failure ALLOCATE
-     should return NULL, though not necessarily set errno.  When given
-     a zero size it may return NULL even if successful.  */
-  void *(*allocate) (size_t);
+        /* Call ALLOCATE to allocate memory, like 'malloc'.  On failure ALLOCATE
+           should return NULL, though not necessarily set errno.  When given
+           a zero size it may return NULL even if successful.  */
+        void* (*allocate)(size_t);
 
-  /* If nonnull, call REALLOCATE to reallocate memory, like 'realloc'.
-     On failure REALLOCATE should return NULL, though not necessarily set
-     errno.  When given a zero size it may return NULL even if
-     successful.  */
-  void *(*reallocate) (void *, size_t);
+        /* If nonnull, call REALLOCATE to reallocate memory, like 'realloc'.
+           On failure REALLOCATE should return NULL, though not necessarily set
+           errno.  When given a zero size it may return NULL even if
+           successful.  */
+        void* (*reallocate)(void*, size_t);
 
-  /* Call FREE to free memory, like 'free'.  */
-  void (*free) (void *);
+        /* Call FREE to free memory, like 'free'.  */
+        void (*free)(void*);
 
-  /* If nonnull, call DIE (SIZE) if MALLOC (SIZE) or REALLOC (...,
-     SIZE) fails.  DIE should not return.  SIZE should equal SIZE_MAX
-     if size_t overflow was detected while calculating sizes to be
-     passed to MALLOC or REALLOC.  */
-  void (*die) (size_t);
-};
+        /* If nonnull, call DIE (SIZE) if MALLOC (SIZE) or REALLOC (...,
+           SIZE) fails.  DIE should not return.  SIZE should equal SIZE_MAX
+           if size_t overflow was detected while calculating sizes to be
+           passed to MALLOC or REALLOC.  */
+        void (*die)(size_t);
+    };
 
-/* An allocator using the stdlib functions and a null DIE function.  */
-extern struct allocator const stdlib_allocator;
+    /* An allocator using the stdlib functions and a null DIE function.  */
+    extern struct allocator const stdlib_allocator;
 
 
 #ifdef __cplusplus

@@ -24,13 +24,13 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <attribute.h>
 
-extern void init_signals (void);
-extern void block_child_signal (sigset_t *);
-extern void unblock_child_signal (sigset_t const *);
-extern void block_interrupt_signal (sigset_t *);
-extern void restore_signal_mask (sigset_t const *);
-extern void block_tty_out_signal (sigset_t *);
-extern void unblock_tty_out_signal (sigset_t const *);
+extern void init_signals(void);
+extern void block_child_signal(sigset_t*);
+extern void unblock_child_signal(sigset_t const*);
+extern void block_interrupt_signal(sigset_t*);
+extern void restore_signal_mask(sigset_t const*);
+extern void block_tty_out_signal(sigset_t*);
+extern void unblock_tty_out_signal(sigset_t const*);
 
 #ifdef HAVE_PTHREAD
 #include <pthread.h>
@@ -46,38 +46,38 @@ extern void unblock_tty_out_signal (sigset_t const *);
 #endif
 
 #if defined HAVE_TIMER_SETTIME && defined SIGEV_SIGNAL
-# define HAVE_ITIMERSPEC
+#define HAVE_ITIMERSPEC
 #endif
 
-#if (defined SIGPROF && !defined PROFILING \
-     && (defined HAVE_SETITIMER || defined HAVE_ITIMERSPEC))
-# define PROFILER_CPU_SUPPORT
+#if (defined SIGPROF && !defined PROFILING &&                                  \
+     (defined HAVE_SETITIMER || defined HAVE_ITIMERSPEC))
+#define PROFILER_CPU_SUPPORT
 #endif
 
 extern sigset_t empty_mask;
 
-typedef void (*signal_handler_t) (int);
+typedef void (*signal_handler_t)(int);
 
-extern void emacs_sigaction_init (struct sigaction *, signal_handler_t);
-char const *safe_strsignal (int) ATTRIBUTE_CONST;
+extern void emacs_sigaction_init(struct sigaction*, signal_handler_t);
+char const* safe_strsignal(int) ATTRIBUTE_CONST;
 
 #if NSIG < NSIG_MINIMUM
-# undef NSIG
-# define NSIG NSIG_MINIMUM
+#undef NSIG
+#define NSIG NSIG_MINIMUM
 #endif
 
 #ifndef SA_SIGINFO
-# define SA_SIGINFO 0
+#define SA_SIGINFO 0
 #endif
 
 #ifndef emacs_raise
-# define emacs_raise(sig) raise (sig)
+#define emacs_raise(sig) raise(sig)
 #endif
 
 #ifndef HAVE_STRSIGNAL
-# define strsignal(sig) safe_strsignal (sig)
+#define strsignal(sig) safe_strsignal(sig)
 #endif
 
-void deliver_process_signal (int, signal_handler_t);
+void deliver_process_signal(int, signal_handler_t);
 
 #endif /* EMACS_SYSSIGNAL_H */

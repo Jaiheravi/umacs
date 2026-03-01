@@ -45,7 +45,7 @@ typedef int fd_set;
 #endif /* no FD_SET */
 #endif /* not WINDOWSNT */
 
-#if !defined (HAVE_SELECT)
+#if !defined(HAVE_SELECT)
 #define select sys_select
 #endif
 
@@ -63,36 +63,30 @@ INLINE_HEADER_BEGIN
 
 /* Check for out-of-range errors if ENABLE_CHECKING is defined.  */
 
-INLINE void
-fd_CLR (int fd, fd_set *set)
-{
-  eassume (0 <= fd && fd < FD_SETSIZE);
-  FD_CLR (fd, set);
+INLINE void fd_CLR(int fd, fd_set* set) {
+    eassume(0 <= fd && fd < FD_SETSIZE);
+    FD_CLR(fd, set);
 }
 
-INLINE bool
-fd_ISSET (int fd, fd_set *set)
-{
-  eassume (0 <= fd && fd < FD_SETSIZE);
-  return FD_ISSET (fd, set) != 0;
+INLINE bool fd_ISSET(int fd, fd_set* set) {
+    eassume(0 <= fd && fd < FD_SETSIZE);
+    return FD_ISSET(fd, set) != 0;
 }
 
-INLINE void
-fd_SET (int fd, fd_set *set)
-{
-  eassume (0 <= fd && fd < FD_SETSIZE);
-  FD_SET (fd, set);
+INLINE void fd_SET(int fd, fd_set* set) {
+    eassume(0 <= fd && fd < FD_SETSIZE);
+    FD_SET(fd, set);
 }
 
 #undef FD_CLR
 #undef FD_ISSET
 #undef FD_SET
-#define FD_CLR(fd, set) fd_CLR (fd, set)
-#define FD_ISSET(fd, set) fd_ISSET (fd, set)
-#define FD_SET(fd, set) fd_SET (fd, set)
+#define FD_CLR(fd, set) fd_CLR(fd, set)
+#define FD_ISSET(fd, set) fd_ISSET(fd, set)
+#define FD_SET(fd, set) fd_SET(fd, set)
 
 INLINE_HEADER_END
 
-#endif	/* !WINDOWSNT */
+#endif /* !WINDOWSNT */
 
 #endif

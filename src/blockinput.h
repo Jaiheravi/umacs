@@ -49,23 +49,15 @@ extern volatile int interrupt_input_blocked;
 
 /* Begin critical section. */
 
-INLINE void
-block_input (void)
-{
-  interrupt_input_blocked++;
-}
+INLINE void block_input(void) { interrupt_input_blocked++; }
 
-extern void unblock_input (void);
-extern void totally_unblock_input (void);
-extern void unblock_input_to (int);
+extern void unblock_input(void);
+extern void totally_unblock_input(void);
+extern void unblock_input_to(int);
 
 /* In critical section?  */
 
-INLINE bool
-input_blocked_p (void)
-{
-  return interrupt_input_blocked > 0;
-}
+INLINE bool input_blocked_p(void) { return interrupt_input_blocked > 0; }
 
 INLINE_HEADER_END
 

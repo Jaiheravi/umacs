@@ -25,19 +25,19 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <sys/types.h>
 
-#ifdef HAVE_SYS_WAIT_H	/* We have sys/wait.h with POSIXish definitions.  */
+#ifdef HAVE_SYS_WAIT_H /* We have sys/wait.h with POSIXish definitions.  */
 #include <sys/wait.h>
-#endif  /* !HAVE_SYS_WAIT_H */
+#endif /* !HAVE_SYS_WAIT_H */
 
 #ifndef WCONTINUED
 #define WCONTINUED 8
 #endif
 
-#ifndef WCOREDUMP		/* not POSIX */
+#ifndef WCOREDUMP /* not POSIX */
 #define WCOREDUMP(status) ((status) & 0x80)
 #endif
 #ifndef WEXITSTATUS
-#define WEXITSTATUS(status) (((status)  & 0xff00) >> 8)
+#define WEXITSTATUS(status) (((status) & 0xff00) >> 8)
 #endif
 #ifndef WIFEXITED
 #define WIFEXITED(status) (WTERMSIG(status) == 0)
@@ -56,7 +56,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #endif
 
 /* Defined in sysdep.c.  */
-extern bool wait_for_termination (pid_t, int *, bool);
-extern pid_t child_status_changed (pid_t, int *, int);
+extern bool wait_for_termination(pid_t, int*, bool);
+extern pid_t child_status_changed(pid_t, int*, int);
 
 #endif /* EMACS_SYSWAIT_H */

@@ -23,34 +23,33 @@
 #include <compat.h>
 
 /* A time zone rule.  */
-struct tm_zone
-{
-  /* More abbreviations, should they be needed.  Their TZ_IS_SET
-     members are zero.  */
-  struct tm_zone *next;
+struct tm_zone {
+    /* More abbreviations, should they be needed.  Their TZ_IS_SET
+       members are zero.  */
+    struct tm_zone* next;
 
-  /* If nonzero, the rule represents the TZ environment variable set
-     to the first "abbreviation" (this may be the empty string).
-     Otherwise, it represents an unset TZ.  */
-  char tz_is_set;
+    /* If nonzero, the rule represents the TZ environment variable set
+       to the first "abbreviation" (this may be the empty string).
+       Otherwise, it represents an unset TZ.  */
+    char tz_is_set;
 
-  /* A sequence of null-terminated strings packed next to each other.
-     The strings are followed by an extra null byte.  If TZ_IS_SET,
-     there must be at least one string and the first string (which is
-     actually a TZ environment value) may be empty.  Otherwise all
-     strings must be nonempty.
+    /* A sequence of null-terminated strings packed next to each other.
+       The strings are followed by an extra null byte.  If TZ_IS_SET,
+       there must be at least one string and the first string (which is
+       actually a TZ environment value) may be empty.  Otherwise all
+       strings must be nonempty.
 
-     Abbreviations are stored here even on platforms with tm_zone, because
-     otherwise tm_zone values would be dead after changing TZ and calling
-     tzset.  Abbreviations never move once allocated, and are live
-     until tzfree is called.  */
-  char abbrs[FLEXIBLE_ARRAY_MEMBER];
+       Abbreviations are stored here even on platforms with tm_zone, because
+       otherwise tm_zone values would be dead after changing TZ and calling
+       tzset.  Abbreviations never move once allocated, and are live
+       until tzfree is called.  */
+    char abbrs[FLEXIBLE_ARRAY_MEMBER];
 };
 
-timezone_t set_tz (timezone_t);
-bool revert_tz (timezone_t);
+timezone_t set_tz(timezone_t);
+bool revert_tz(timezone_t);
 
 /* Magic cookie timezone_t value, for local time.  It differs from
    NULL and from all other timezone_t values.  Only the address
    matters; the pointer is never dereferenced.  */
-#define local_tz ((timezone_t) 1)
+#define local_tz ((timezone_t)1)

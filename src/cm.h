@@ -20,54 +20,52 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #define EMACS_CM_H
 
 /* Holds the minimum and maximum costs for the parameterized capabilities.  */
-struct parmcap
-  {
+struct parmcap {
     int mincost, maxcost;
-  };
+};
 
 /* This structure holds everything needed to do cursor motion except the pad
    character (PC) and the output speed of the terminal (ospeed), which
    termcap wants in global variables.  */
 
-struct cm
-  {
+struct cm {
     /* Cursor position.  -1 in *both* variables means the cursor
        position is unknown, in order to force absolute cursor motion. */
 
-    int cm_curY;			/* Current row */
-    int cm_curX;			/* Current column */
+    int cm_curY; /* Current row */
+    int cm_curX; /* Current column */
 
     /* Capabilities from termcap */
-    const char *cm_up;		/* up (up) */
-    const char *cm_down;	/* down (do) */
-    const char *cm_left;	/* left (le) */
-    const char *cm_right;	/* right (nd) */
-    const char *cm_home;	/* home (ho) */
-    const char *cm_cr;		/* carriage return (cr) */
-    const char *cm_ll;		/* last line (ll) */
-    const char *cm_tab;		/* tab (ta) */
-    const char *cm_backtab;	/* backtab (bt) */
-    char *cm_abs;		/* absolute (cm) */
-    const char *cm_habs;	/* horizontal absolute (ch) */
-    const char *cm_vabs;	/* vertical absolute (cv) */
+    const char* cm_up; /* up (up) */
+    const char* cm_down; /* down (do) */
+    const char* cm_left; /* left (le) */
+    const char* cm_right; /* right (nd) */
+    const char* cm_home; /* home (ho) */
+    const char* cm_cr; /* carriage return (cr) */
+    const char* cm_ll; /* last line (ll) */
+    const char* cm_tab; /* tab (ta) */
+    const char* cm_backtab; /* backtab (bt) */
+    char* cm_abs; /* absolute (cm) */
+    const char* cm_habs; /* horizontal absolute (ch) */
+    const char* cm_vabs; /* vertical absolute (cv) */
 #if false
     const char *cm_ds;		/* "don't send" string (ds) */
 #endif
-    const char *cm_multiup;	/* multiple up (UP) */
-    const char *cm_multidown;	/* multiple down (DO) */
-    const char *cm_multileft;	/* multiple left (LE) */
-    const char *cm_multiright;	/* multiple right (RI) */
-    int cm_cols;		/* number of cols on screen (co) */
-    int cm_rows;		/* number of rows on screen (li) */
-    int cm_tabwidth;		/* tab width (it) */
-    bool_bf cm_autowrap : 1;	/* autowrap flag (am) */
-    bool_bf cm_magicwrap : 1;	/* VT-100: cursor stays in last col but
-				    will cm_wrap if next char is
-				    printing (xn) */
-    bool_bf cm_usetabs : 1;	/* if set, use tabs */
-    bool_bf cm_losewrap : 1;	/* if reach right margin, forget cursor
-				   location */
-    bool_bf cm_autolf : 1;	/* \r performs a \r\n (rn) */
+    const char* cm_multiup; /* multiple up (UP) */
+    const char* cm_multidown; /* multiple down (DO) */
+    const char* cm_multileft; /* multiple left (LE) */
+    const char* cm_multiright; /* multiple right (RI) */
+    int cm_cols; /* number of cols on screen (co) */
+    int cm_rows; /* number of rows on screen (li) */
+    int cm_tabwidth; /* tab width (it) */
+    bool_bf cm_autowrap : 1; /* autowrap flag (am) */
+    bool_bf cm_magicwrap : 1; /* VT-100: cursor stays in last col but
+                  will cm_wrap if next char is
+                  printing (xn) */
+    bool_bf cm_usetabs : 1; /* if set, use tabs */
+    bool_bf cm_losewrap : 1; /* if reach right margin, forget cursor
+                location */
+    bool_bf cm_autolf : 1; /* \r performs a \r\n (rn) */
 
     /* Parameterized capabilities.  This needs to be a struct since
        the costs are accessed through pointers.  */
@@ -83,8 +81,8 @@ struct cm
 #endif
 
     /* Costs for the non-parameterized capabilities */
-    int cc_up;			/* cost for up */
-    int cc_down;		/* etc. */
+    int cc_up; /* cost for up */
+    int cc_down; /* etc. */
     int cc_left;
     int cc_right;
     int cc_home;
@@ -97,77 +95,80 @@ struct cm
     int cc_abs;
     int cc_habs;
     int cc_vabs;
-  };
+};
 
 /* Shorthand */
 #ifndef NoCMShortHand
-#define curY(tty)		(tty)->Wcm->cm_curY
-#define curX(tty)		(tty)->Wcm->cm_curX
-#define Up(tty)			(tty)->Wcm->cm_up
-#define Down(tty)		(tty)->Wcm->cm_down
-#define Left(tty)		(tty)->Wcm->cm_left
-#define Right(tty)		(tty)->Wcm->cm_right
-#define Tab(tty)		(tty)->Wcm->cm_tab
-#define BackTab(tty)		(tty)->Wcm->cm_backtab
-#define TabWidth(tty)		(tty)->Wcm->cm_tabwidth
-#define CR(tty)			(tty)->Wcm->cm_cr
-#define Home(tty)		(tty)->Wcm->cm_home
-#define LastLine(tty)		(tty)->Wcm->cm_ll
-#define AbsPosition(tty)	(tty)->Wcm->cm_abs
-#define ColPosition(tty)	(tty)->Wcm->cm_habs
-#define RowPosition(tty)	(tty)->Wcm->cm_vabs
-#define MultiUp(tty)		(tty)->Wcm->cm_multiup
-#define MultiDown(tty)		(tty)->Wcm->cm_multidown
-#define MultiLeft(tty)		(tty)->Wcm->cm_multileft
-#define MultiRight(tty)		(tty)->Wcm->cm_multiright
-#define AutoWrap(tty)		(tty)->Wcm->cm_autowrap
-#define MagicWrap(tty)		(tty)->Wcm->cm_magicwrap
-#define UseTabs(tty)		(tty)->Wcm->cm_usetabs
-#define FrameRows(tty)		(tty)->Wcm->cm_rows
-#define FrameCols(tty)		(tty)->Wcm->cm_cols
+#define curY(tty) (tty)->Wcm->cm_curY
+#define curX(tty) (tty)->Wcm->cm_curX
+#define Up(tty) (tty)->Wcm->cm_up
+#define Down(tty) (tty)->Wcm->cm_down
+#define Left(tty) (tty)->Wcm->cm_left
+#define Right(tty) (tty)->Wcm->cm_right
+#define Tab(tty) (tty)->Wcm->cm_tab
+#define BackTab(tty) (tty)->Wcm->cm_backtab
+#define TabWidth(tty) (tty)->Wcm->cm_tabwidth
+#define CR(tty) (tty)->Wcm->cm_cr
+#define Home(tty) (tty)->Wcm->cm_home
+#define LastLine(tty) (tty)->Wcm->cm_ll
+#define AbsPosition(tty) (tty)->Wcm->cm_abs
+#define ColPosition(tty) (tty)->Wcm->cm_habs
+#define RowPosition(tty) (tty)->Wcm->cm_vabs
+#define MultiUp(tty) (tty)->Wcm->cm_multiup
+#define MultiDown(tty) (tty)->Wcm->cm_multidown
+#define MultiLeft(tty) (tty)->Wcm->cm_multileft
+#define MultiRight(tty) (tty)->Wcm->cm_multiright
+#define AutoWrap(tty) (tty)->Wcm->cm_autowrap
+#define MagicWrap(tty) (tty)->Wcm->cm_magicwrap
+#define UseTabs(tty) (tty)->Wcm->cm_usetabs
+#define FrameRows(tty) (tty)->Wcm->cm_rows
+#define FrameCols(tty) (tty)->Wcm->cm_cols
 
-#define UpCost(tty)		(tty)->Wcm->cc_up
-#define DownCost(tty)		(tty)->Wcm->cc_down
-#define LeftCost(tty)		(tty)->Wcm->cc_left
-#define RightCost(tty)		(tty)->Wcm->cc_right
-#define HomeCost(tty)		(tty)->Wcm->cc_home
-#define CRCost(tty)		(tty)->Wcm->cc_cr
-#define LastLineCost(tty)	(tty)->Wcm->cc_ll
-#define TabCost(tty)		(tty)->Wcm->cc_tab
-#define BackTabCost(tty)	(tty)->Wcm->cc_backtab
-#define AbsPositionCost(tty)	(tty)->Wcm->cc_abs
-#define ColPositionCost(tty)	(tty)->Wcm->cc_habs
-#define RowPositionCost(tty)	(tty)->Wcm->cc_vabs
-#define MultiUpCost(tty)	(tty)->Wcm->cc_multiup
-#define MultiDownCost(tty)	(tty)->Wcm->cc_multidown
-#define MultiLeftCost(tty)	(tty)->Wcm->cc_multileft
-#define MultiRightCost(tty)	(tty)->Wcm->cc_multiright
-#endif	/* NoCMShortHand */
+#define UpCost(tty) (tty)->Wcm->cc_up
+#define DownCost(tty) (tty)->Wcm->cc_down
+#define LeftCost(tty) (tty)->Wcm->cc_left
+#define RightCost(tty) (tty)->Wcm->cc_right
+#define HomeCost(tty) (tty)->Wcm->cc_home
+#define CRCost(tty) (tty)->Wcm->cc_cr
+#define LastLineCost(tty) (tty)->Wcm->cc_ll
+#define TabCost(tty) (tty)->Wcm->cc_tab
+#define BackTabCost(tty) (tty)->Wcm->cc_backtab
+#define AbsPositionCost(tty) (tty)->Wcm->cc_abs
+#define ColPositionCost(tty) (tty)->Wcm->cc_habs
+#define RowPositionCost(tty) (tty)->Wcm->cc_vabs
+#define MultiUpCost(tty) (tty)->Wcm->cc_multiup
+#define MultiDownCost(tty) (tty)->Wcm->cc_multidown
+#define MultiLeftCost(tty) (tty)->Wcm->cc_multileft
+#define MultiRightCost(tty) (tty)->Wcm->cc_multiright
+#endif /* NoCMShortHand */
 
-#define cmat(tty,row,col)	(curY(tty) = (row), curX(tty) = (col))
-#define cmplus(tty,n)					            \
-  {                                                                 \
-    if ((curX (tty) += (n)) >= FrameCols (tty) && !MagicWrap (tty)) \
-      {                                                             \
-	if ((tty)->Wcm->cm_losewrap) losecursor (tty);              \
-	else if (AutoWrap (tty)) curX (tty) = 0, curY (tty)++;      \
-	else curX (tty)--;                                          \
-      }                                                             \
-  }
+#define cmat(tty, row, col) (curY(tty) = (row), curX(tty) = (col))
+#define cmplus(tty, n)                                                         \
+    {                                                                          \
+        if ((curX(tty) += (n)) >= FrameCols(tty) && !MagicWrap(tty)) {         \
+            if ((tty)->Wcm->cm_losewrap)                                       \
+                losecursor(tty);                                               \
+            else if (AutoWrap(tty))                                            \
+                curX(tty) = 0, curY(tty)++;                                    \
+            else                                                               \
+                curX(tty)--;                                                   \
+        }                                                                      \
+    }
 
-#define losecursor(tty)	 (curX(tty) = -1, curY(tty) = -1)
+#define losecursor(tty) (curX(tty) = -1, curY(tty) = -1)
 
 extern int cost;
-extern int evalcost (int c);
+extern int evalcost(int c);
 
-#define emacs_tputs(tty, str, affcnt, putc) (current_tty = (tty), tputs (str, affcnt, putc))
+#define emacs_tputs(tty, str, affcnt, putc)                                    \
+    (current_tty = (tty), tputs(str, affcnt, putc))
 
-extern struct tty_display_info *current_tty;
-extern void cmcheckmagic (struct tty_display_info *);
-extern int cmputc (int);
-extern void cmcostinit (struct tty_display_info *);
-extern void cmgoto (struct tty_display_info *, int, int);
-extern void Wcm_clear (struct tty_display_info *);
-extern int Wcm_init (struct tty_display_info *);
+extern struct tty_display_info* current_tty;
+extern void cmcheckmagic(struct tty_display_info*);
+extern int cmputc(int);
+extern void cmcostinit(struct tty_display_info*);
+extern void cmgoto(struct tty_display_info*, int, int);
+extern void Wcm_clear(struct tty_display_info*);
+extern int Wcm_init(struct tty_display_info*);
 
 #endif /* EMACS_CM_H */

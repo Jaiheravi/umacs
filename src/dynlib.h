@@ -22,20 +22,20 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <attribute.h>
 
-typedef void *dynlib_handle_ptr;
-dynlib_handle_ptr dynlib_open (const char *path);
-dynlib_handle_ptr dynlib_open_for_eln (const char *path);
-int dynlib_close (dynlib_handle_ptr h);
-const char *dynlib_error (void);
+typedef void* dynlib_handle_ptr;
+dynlib_handle_ptr dynlib_open(const char* path);
+dynlib_handle_ptr dynlib_open_for_eln(const char* path);
+int dynlib_close(dynlib_handle_ptr h);
+const char* dynlib_error(void);
 
-ATTRIBUTE_MAY_ALIAS void *dynlib_sym (dynlib_handle_ptr h, const char *sym);
+ATTRIBUTE_MAY_ALIAS void* dynlib_sym(dynlib_handle_ptr h, const char* sym);
 
-typedef void (ATTRIBUTE_MAY_ALIAS *dynlib_function_ptr) (void);
-dynlib_function_ptr dynlib_func (dynlib_handle_ptr h, const char *sym);
+typedef void(ATTRIBUTE_MAY_ALIAS* dynlib_function_ptr)(void);
+dynlib_function_ptr dynlib_func(dynlib_handle_ptr h, const char* sym);
 
 /* Sets *FILE to the file name from which PTR was loaded, and *SYM to
    its symbol name.  If the file or symbol name could not be
    determined, set the corresponding argument to NULL.  */
-void dynlib_addr (void (*ptr) (void), const char **file, const char **sym);
+void dynlib_addr(void (*ptr)(void), const char** file, const char** sym);
 
 #endif /* DYNLIB_H */

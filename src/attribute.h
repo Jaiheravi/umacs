@@ -91,7 +91,7 @@
    _GL_ATTRIBUTE_REPRODUCIBLE, _GL_ATTRIBUTE_RETURNS_NONNULL,
    _GL_ATTRIBUTE_SENTINEL, _GL_ATTRIBUTE_UNSEQUENCED, _GL_UNNAMED.  */
 #if !_GL_CONFIG_H_INCLUDED
- #error "Please include config.h first."
+#error "Please include config.h first."
 #endif
 
 
@@ -110,11 +110,11 @@
 
 /* If a function call is not optimized way, warn with MSG.  */
 /* Applies to: functions.  */
-#define ATTRIBUTE_WARNING(msg) _GL_ATTRIBUTE_WARNING (msg)
+#define ATTRIBUTE_WARNING(msg) _GL_ATTRIBUTE_WARNING(msg)
 
 /* If a function call is not optimized way, report an error with MSG.  */
 /* Applies to: functions.  */
-#define ATTRIBUTE_ERROR(msg) _GL_ATTRIBUTE_ERROR (msg)
+#define ATTRIBUTE_ERROR(msg) _GL_ATTRIBUTE_ERROR(msg)
 
 
 /* Attributes for memory-allocating functions.  */
@@ -128,7 +128,7 @@
    ATTRIBUTE_ALLOC_SIZE ((M, N)) - Multiply the Mth and Nth arguments
    to determine the size of the returned memory block.  */
 /* Applies to: functions, pointer to functions, function types.  */
-#define ATTRIBUTE_ALLOC_SIZE(args) _GL_ATTRIBUTE_ALLOC_SIZE (args)
+#define ATTRIBUTE_ALLOC_SIZE(args) _GL_ATTRIBUTE_ALLOC_SIZE(args)
 
 /* ATTRIBUTE_DEALLOC (F, I) declares that the function returns pointers
    that can be freed by passing them as the Ith argument to the
@@ -145,7 +145,7 @@
    ATTRIBUTE_SENTINEL () - The last argument is NULL (requires C99).
    ATTRIBUTE_SENTINEL ((N)) - The (N+1)st argument from the end is NULL.  */
 /* Applies to: functions.  */
-#define ATTRIBUTE_SENTINEL(pos) _GL_ATTRIBUTE_SENTINEL (pos)
+#define ATTRIBUTE_SENTINEL(pos) _GL_ATTRIBUTE_SENTINEL(pos)
 
 
 /* ================== Attributes for compiler diagnostics ================== */
@@ -164,17 +164,18 @@
    If FIRST-TO-CHECK is not 0, arguments starting at FIRST-TO_CHECK
    are suitable for the format string.  */
 /* Applies to: functions.  */
-#define ATTRIBUTE_FORMAT(spec) _GL_ATTRIBUTE_FORMAT (spec)
+#define ATTRIBUTE_FORMAT(spec) _GL_ATTRIBUTE_FORMAT(spec)
 
 /* ATTRIBUTE_NONNULL ((N1, N2,...)) - Arguments N1, N2,... must not be NULL.
    ATTRIBUTE_NONNULL () - All pointer arguments must not be null.  */
 /* Applies to: functions.  */
-#define ATTRIBUTE_NONNULL(args) _GL_ATTRIBUTE_NONNULL (args)
+#define ATTRIBUTE_NONNULL(args) _GL_ATTRIBUTE_NONNULL(args)
 
 /* ATTRIBUTE_NONNULL_IF_NONZERO (NP, NI) - Argument NP (a pointer)
    must not be NULL if the argument NI (an integer) is != 0.  */
 /* Applies to: functions.  */
-#define ATTRIBUTE_NONNULL_IF_NONZERO(np, ni) _GL_ATTRIBUTE_NONNULL_IF_NONZERO (np, ni)
+#define ATTRIBUTE_NONNULL_IF_NONZERO(np, ni)                                   \
+    _GL_ATTRIBUTE_NONNULL_IF_NONZERO(np, ni)
 
 
 /* The function's return value is a non-NULL pointer.  */
@@ -345,7 +346,7 @@
    lack unnamed parameters, and to C++ and later C, which have them.  */
 /* Applies to:
      - function parameters.  */
-#define UNNAMED(id) _GL_UNNAMED (id)
+#define UNNAMED(id) _GL_UNNAMED(id)
 
 
 #endif /* _GL_ATTRIBUTE_H */

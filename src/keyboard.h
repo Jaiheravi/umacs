@@ -19,14 +19,14 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #pragma once
 
-#include "coding.h"             /* for ENCODE_UTF_8 and ENCODE_SYSTEM */
+#include "coding.h" /* for ENCODE_UTF_8 and ENCODE_SYSTEM */
 #include "termhooks.h"
 
 INLINE_HEADER_BEGIN
 
 /* Most code should use this macro to access Lisp fields in struct kboard.  */
 
-#define KVAR(kboard, field) ((kboard)->field ## _)
+#define KVAR(kboard, field) ((kboard)->field##_)
 
 /* Each KBOARD represents one logical input stream from which Emacs
    gets input.  If we are using ordinary terminals, it has one KBOARD
@@ -69,9 +69,8 @@ INLINE_HEADER_BEGIN
    When Emacs goes back to the any-kboard state, it looks at all the KBOARDs
    to find those; and it tries processing their input right away.  */
 
-struct kboard
-  {
-    KBOARD *next_kboard;
+struct kboard {
+    KBOARD* next_kboard;
 
     /* If non-nil, a keymap that overrides all others but applies only to
        this KBOARD.  Lisp code that uses this instead of calling read-char
@@ -106,10 +105,10 @@ struct kboard
     Lisp_Object defining_kbd_macro_;
 
     /* The start of storage for the current keyboard macro.  */
-    Lisp_Object *kbd_macro_buffer;
+    Lisp_Object* kbd_macro_buffer;
 
     /* Where to store the next keystroke of the macro.  */
-    Lisp_Object *kbd_macro_ptr;
+    Lisp_Object* kbd_macro_ptr;
 
     /* The finalized section of the macro starts at kbd_macro_buffer and
        ends before this.  This is not the same as kbd_macro_ptr, because
@@ -119,7 +118,7 @@ struct kboard
        macro by the last command: all the events between kbd_macro_end and
        kbd_macro_ptr belong to the last command; see
        cancel-kbd-macro-events.  */
-    Lisp_Object *kbd_macro_end;
+    Lisp_Object* kbd_macro_end;
 
     /* Allocated size of kbd_macro_buffer.  */
     ptrdiff_t kbd_macro_bufsize;
@@ -173,60 +172,43 @@ struct kboard
 
     /* If we have a prompt string specified by the user, this is it.  */
     Lisp_Object echo_prompt_;
-  };
+};
 
-INLINE void
-kset_default_minibuffer_frame (struct kboard *kb, Lisp_Object val)
-{
-  kb->Vdefault_minibuffer_frame_ = val;
+INLINE void kset_default_minibuffer_frame(struct kboard* kb, Lisp_Object val) {
+    kb->Vdefault_minibuffer_frame_ = val;
 }
-INLINE void
-kset_defining_kbd_macro (struct kboard *kb, Lisp_Object val)
-{
-  kb->defining_kbd_macro_ = val;
+INLINE void kset_defining_kbd_macro(struct kboard* kb, Lisp_Object val) {
+    kb->defining_kbd_macro_ = val;
 }
-INLINE void
-kset_input_decode_map (struct kboard *kb, Lisp_Object val)
-{
-  kb->Vinput_decode_map_ = val;
+INLINE void kset_input_decode_map(struct kboard* kb, Lisp_Object val) {
+    kb->Vinput_decode_map_ = val;
 }
-INLINE void
-kset_last_command (struct kboard *kb, Lisp_Object val)
-{
-  kb->Vlast_command_ = val;
+INLINE void kset_last_command(struct kboard* kb, Lisp_Object val) {
+    kb->Vlast_command_ = val;
 }
-INLINE void
-kset_last_kbd_macro (struct kboard *kb, Lisp_Object val)
-{
-  kb->Vlast_kbd_macro_ = val;
+INLINE void kset_last_kbd_macro(struct kboard* kb, Lisp_Object val) {
+    kb->Vlast_kbd_macro_ = val;
 }
-INLINE void
-kset_prefix_arg (struct kboard *kb, Lisp_Object val)
-{
-  kb->Vprefix_arg_ = val;
+INLINE void kset_prefix_arg(struct kboard* kb, Lisp_Object val) {
+    kb->Vprefix_arg_ = val;
 }
-INLINE void
-kset_system_key_alist (struct kboard *kb, Lisp_Object val)
-{
-  kb->Vsystem_key_alist_ = val;
+INLINE void kset_system_key_alist(struct kboard* kb, Lisp_Object val) {
+    kb->Vsystem_key_alist_ = val;
 }
-INLINE void
-kset_window_system (struct kboard *kb, Lisp_Object val)
-{
-  kb->Vwindow_system_ = val;
+INLINE void kset_window_system(struct kboard* kb, Lisp_Object val) {
+    kb->Vwindow_system_ = val;
 }
 
-union buffered_input_event
-{
-  ENUM_BF (event_kind) kind : EVENT_KIND_WIDTH;
-  struct input_event ie;
+union buffered_input_event {
+    ENUM_BF(event_kind) kind : EVENT_KIND_WIDTH;
+    struct input_event ie;
 #if defined HAVE_X11 || defined HAVE_PGTK
-  struct selection_input_event sie;
+    struct selection_input_event sie;
 #endif
 };
 
 /* Temporarily used before a frame has been opened. */
-extern KBOARD *initial_kboard;
+extern KBOARD* initial_kboard;
 
 /* In the single-kboard state, this is the kboard
    from which input is accepted.
@@ -234,8 +216,7 @@ extern KBOARD *initial_kboard;
    In the any-kboard state, this is the kboard from which we are
    right now considering input.  We can consider input from another
    kboard, but doing so requires throwing to wrong_kboard_jmpbuf.  */
-extern KBOARD *current_kboard;
-
+extern KBOARD* current_kboard;
 
 
 /* Total number of times read_char has returned, modulo UINTMAX_MAX + 1.  */
@@ -249,9 +230,9 @@ extern ptrdiff_t point_before_last_command_or_undo;
 /* The value of current_buffer immediately before the last command was
    executed, or the last time the undo-boundary command added a
    boundary.*/
-extern struct buffer *buffer_before_last_command_or_undo;
+extern struct buffer* buffer_before_last_command_or_undo;
 
-extern struct buffer *prev_buffer;
+extern struct buffer* prev_buffer;
 
 /* Nonzero means polling for input is temporarily suppressed.  */
 extern int poll_suppress_count;
@@ -269,7 +250,7 @@ extern ptrdiff_t this_command_key_count;
    like Fselect_frame, to make sure that a switch-frame event is
    generated by the next character.  */
 extern Lisp_Object internal_last_event_frame;
-
+
 /* This holds a Lisp vector that holds the properties of a single
    menu item while decoding it in parse_menu_item.
    Using a Lisp vector to hold this information while we decode it
@@ -281,28 +262,28 @@ extern Lisp_Object item_properties;
    that is saved for GC protection. */
 enum item_property_idx
 {
-  ITEM_PROPERTY_ITEM,
-  /* The item string.  */
-  ITEM_PROPERTY_NAME,
-  /* Start of initialize to nil */
-  /* The binding: nil, a command or a keymap.  */
-  ITEM_PROPERTY_DEF,
-  /* The keymap if the binding is a keymap, otherwise nil.  */
-  ITEM_PROPERTY_MAP,
-  /* Nil, :radio or :toggle.  */
-  ITEM_PROPERTY_TYPE,
-  /* Nil or a string describing an equivalent key binding.  */
-  ITEM_PROPERTY_KEYEQ,
-  /* Not nil if a selected toggle box or radio button, otherwise nil.  */
-  ITEM_PROPERTY_SELECTED,
-  /* Place for a help string. Not yet used.  */
-  ITEM_PROPERTY_HELP,
-  /* Start of initialize to t */
-  /* Last property. */
-  /* Not nil if item is enabled.  */
-  ITEM_PROPERTY_ENABLE,
-  /* Keep this equal to the highest member.  */
-  ITEM_PROPERTY_MAX = ITEM_PROPERTY_ENABLE
+    ITEM_PROPERTY_ITEM,
+    /* The item string.  */
+    ITEM_PROPERTY_NAME,
+    /* Start of initialize to nil */
+    /* The binding: nil, a command or a keymap.  */
+    ITEM_PROPERTY_DEF,
+    /* The keymap if the binding is a keymap, otherwise nil.  */
+    ITEM_PROPERTY_MAP,
+    /* Nil, :radio or :toggle.  */
+    ITEM_PROPERTY_TYPE,
+    /* Nil or a string describing an equivalent key binding.  */
+    ITEM_PROPERTY_KEYEQ,
+    /* Not nil if a selected toggle box or radio button, otherwise nil.  */
+    ITEM_PROPERTY_SELECTED,
+    /* Place for a help string. Not yet used.  */
+    ITEM_PROPERTY_HELP,
+    /* Start of initialize to t */
+    /* Last property. */
+    /* Not nil if item is enabled.  */
+    ITEM_PROPERTY_ENABLE,
+    /* Keep this equal to the highest member.  */
+    ITEM_PROPERTY_MAX = ITEM_PROPERTY_ENABLE
 };
 
 /* This holds a Lisp vector that holds the results of decoding
@@ -344,99 +325,97 @@ extern int menu_items_n_panes;
 
 enum menu_item_pane_idx
 {
-  MENU_ITEMS_PANE_NAME = 1,
-  MENU_ITEMS_PANE_PREFIX = 2,
-  MENU_ITEMS_PANE_LENGTH = 3,
+    MENU_ITEMS_PANE_NAME = 1,
+    MENU_ITEMS_PANE_PREFIX = 2,
+    MENU_ITEMS_PANE_LENGTH = 3,
 };
 
 enum menu_item_idx
 {
-  MENU_ITEMS_ITEM_NAME = 0,
-  MENU_ITEMS_ITEM_ENABLE,
-  MENU_ITEMS_ITEM_VALUE,
-  MENU_ITEMS_ITEM_EQUIV_KEY,
-  MENU_ITEMS_ITEM_DEFINITION,
-  MENU_ITEMS_ITEM_TYPE,
-  MENU_ITEMS_ITEM_SELECTED,
-  MENU_ITEMS_ITEM_HELP,
-  MENU_ITEMS_ITEM_LENGTH
+    MENU_ITEMS_ITEM_NAME = 0,
+    MENU_ITEMS_ITEM_ENABLE,
+    MENU_ITEMS_ITEM_VALUE,
+    MENU_ITEMS_ITEM_EQUIV_KEY,
+    MENU_ITEMS_ITEM_DEFINITION,
+    MENU_ITEMS_ITEM_TYPE,
+    MENU_ITEMS_ITEM_SELECTED,
+    MENU_ITEMS_ITEM_HELP,
+    MENU_ITEMS_ITEM_LENGTH
 };
 
 enum
 {
-  KBD_BUFFER_SIZE = 4096
+    KBD_BUFFER_SIZE = 4096
 };
 
-extern void unuse_menu_items (void);
+extern void unuse_menu_items(void);
 
 /* This is how to deal with multibyte text if HAVE_MULTILINGUAL_MENU
    isn't defined.  The use of HAVE_MULTILINGUAL_MENU could probably be
    confined to an extended version of this with sections of code below
    using it unconditionally.  */
 
-#define ENCODE_MENU_STRING(str) string_make_unibyte (str)
+#define ENCODE_MENU_STRING(str) string_make_unibyte(str)
 
 /* Macros for dealing with lispy events.  */
 
 /* True if EVENT has data fields describing it (i.e. a mouse click).  */
-#define EVENT_HAS_PARAMETERS(event) CONSP (event)
+#define EVENT_HAS_PARAMETERS(event) CONSP(event)
 
 /* Extract the head from an event.
    This works on composite and simple events.  */
-#define EVENT_HEAD(event) \
-  (EVENT_HAS_PARAMETERS (event) ? XCAR (event) : (event))
+#define EVENT_HEAD(event) (EVENT_HAS_PARAMETERS(event) ? XCAR(event) : (event))
 
 /* Extract the starting and ending positions from a composite event. */
 
 /* Unlike Lisp `event-start', this also handles touch screen events,
    which are not actually mouse events in the general sense.  */
-#define EVENT_START(event)				\
-  ((EQ (EVENT_HEAD (event), Qtouchscreen_begin)		\
-    || EQ (EVENT_HEAD (event), Qtouchscreen_end))	\
-   ? CDR_SAFE (CAR_SAFE (CDR_SAFE (event)))		\
-   : CAR_SAFE (CDR_SAFE (event)))
+#define EVENT_START(event)                                                     \
+    ((EQ(EVENT_HEAD(event), Qtouchscreen_begin) ||                             \
+      EQ(EVENT_HEAD(event), Qtouchscreen_end))                                 \
+         ? CDR_SAFE(CAR_SAFE(CDR_SAFE(event)))                                 \
+         : CAR_SAFE(CDR_SAFE(event)))
 
 /* This does not handle touchscreen events.  */
-#define EVENT_END(event) CAR_SAFE (CDR_SAFE (CDR_SAFE (event)))
+#define EVENT_END(event) CAR_SAFE(CDR_SAFE(CDR_SAFE(event)))
 
 /* Extract the click count from a multi-click event.  */
-#define EVENT_CLICK_COUNT(event) Fnth (make_fixnum (2), event)
+#define EVENT_CLICK_COUNT(event) Fnth(make_fixnum(2), event)
 
 /* Extract the fields of a position.  */
-#define POSN_WINDOW(posn) CAR_SAFE (posn)
-#define POSN_POSN(posn) CAR_SAFE (CDR_SAFE (posn))
-#define POSN_SET_POSN(posn,x) XSETCAR (XCDR (posn), x)
-#define POSN_WINDOW_POSN(posn) CAR_SAFE (CDR_SAFE (CDR_SAFE (posn)))
-#define POSN_TIMESTAMP(posn) CAR_SAFE (CDR_SAFE (CDR_SAFE (CDR_SAFE (posn))))
-#define POSN_SCROLLBAR_PART(posn) Fnth (make_fixnum (4), posn)
+#define POSN_WINDOW(posn) CAR_SAFE(posn)
+#define POSN_POSN(posn) CAR_SAFE(CDR_SAFE(posn))
+#define POSN_SET_POSN(posn, x) XSETCAR(XCDR(posn), x)
+#define POSN_WINDOW_POSN(posn) CAR_SAFE(CDR_SAFE(CDR_SAFE(posn)))
+#define POSN_TIMESTAMP(posn) CAR_SAFE(CDR_SAFE(CDR_SAFE(CDR_SAFE(posn))))
+#define POSN_SCROLLBAR_PART(posn) Fnth(make_fixnum(4), posn)
 
 /* A cons (STRING . STRING-CHARPOS), or nil in mouse-click events.
    It's a cons if the click is over a string in the mode line.  */
 
-#define POSN_STRING(posn) Fnth (make_fixnum (4), posn)
+#define POSN_STRING(posn) Fnth(make_fixnum(4), posn)
 
 /* If POSN_STRING is nil, event refers to buffer location.  */
 
-#define POSN_INBUFFER_P(posn) NILP (POSN_STRING (posn))
-#define POSN_BUFFER_POSN(posn) Fnth (make_fixnum (5), posn)
+#define POSN_INBUFFER_P(posn) NILP(POSN_STRING(posn))
+#define POSN_BUFFER_POSN(posn) Fnth(make_fixnum(5), posn)
 
 /* Getting the kind of an event head.  */
-#define EVENT_HEAD_KIND(event_head) \
-  Fget (event_head, Qevent_kind)
+#define EVENT_HEAD_KIND(event_head) Fget(event_head, Qevent_kind)
 
 /* Address (if not 0) of struct timespec to zero out if a SIGIO interrupt
    happens.  */
-extern struct timespec *input_available_clear_time;
+extern struct timespec* input_available_clear_time;
 
 extern union buffered_input_event kbd_buffer[KBD_BUFFER_SIZE];
-extern union buffered_input_event *kbd_fetch_ptr;
-extern union buffered_input_event *kbd_store_ptr;
+extern union buffered_input_event* kbd_fetch_ptr;
+extern union buffered_input_event* kbd_store_ptr;
 
 extern bool ignore_mouse_drag_p;
 
-extern Lisp_Object parse_modifiers (Lisp_Object);
-extern Lisp_Object reorder_modifiers (Lisp_Object);
-extern int parse_solitary_modifier (Lisp_Object symbol);
+extern Lisp_Object parse_modifiers(Lisp_Object);
+extern Lisp_Object reorder_modifiers(Lisp_Object);
+extern int parse_solitary_modifier(Lisp_Object symbol);
 
 
 /* This is like Vthis_command, except that commands never set it.  */
@@ -446,59 +425,57 @@ extern int quit_char;
 extern bool input_was_pending;
 extern unsigned int timers_run;
 
-extern bool menu_separator_name_p (const char *);
-extern bool parse_menu_item (Lisp_Object, int);
+extern bool menu_separator_name_p(const char*);
+extern bool parse_menu_item(Lisp_Object, int);
 
-extern void init_raw_keybuf_count (void);
-extern KBOARD *allocate_kboard (Lisp_Object);
-extern void delete_kboard (KBOARD *);
-extern void not_single_kboard_state (KBOARD *);
-extern void push_kboard (struct kboard *);
-extern void push_frame_kboard (struct frame *);
-extern void pop_kboard (void);
-extern void temporarily_switch_to_single_kboard (struct frame *);
-extern void input_poll_signal (int);
-extern void start_polling (void);
-extern void stop_polling (void);
-extern void set_poll_suppress_count (int);
-extern int gobble_input (void);
-extern bool input_polling_used (void);
-extern void clear_input_pending (void);
-extern bool requeued_command_events_pending_p (void);
-extern void bind_polling_period (int);
-extern int make_ctrl_char (int) ATTRIBUTE_CONST;
-extern void stuff_buffered_input (Lisp_Object);
-extern void clear_waiting_for_input (void);
-extern void swallow_events (bool);
-extern bool lucid_event_type_list_p (Lisp_Object);
-extern void kbd_buffer_store_event (struct input_event *);
-extern void kbd_buffer_store_buffered_event (union buffered_input_event *,
-					     struct input_event *);
-INLINE void
-kbd_buffer_store_event_hold (struct input_event *event,
-			     struct input_event *hold_quit)
-{
-  static_assert (alignof (struct input_event) == alignof (union buffered_input_event)
-		 && sizeof (struct input_event) == sizeof (union buffered_input_event));
-  kbd_buffer_store_buffered_event ((union buffered_input_event *) event,
-				   hold_quit);
+extern void init_raw_keybuf_count(void);
+extern KBOARD* allocate_kboard(Lisp_Object);
+extern void delete_kboard(KBOARD*);
+extern void not_single_kboard_state(KBOARD*);
+extern void push_kboard(struct kboard*);
+extern void push_frame_kboard(struct frame*);
+extern void pop_kboard(void);
+extern void temporarily_switch_to_single_kboard(struct frame*);
+extern void input_poll_signal(int);
+extern void start_polling(void);
+extern void stop_polling(void);
+extern void set_poll_suppress_count(int);
+extern int gobble_input(void);
+extern bool input_polling_used(void);
+extern void clear_input_pending(void);
+extern bool requeued_command_events_pending_p(void);
+extern void bind_polling_period(int);
+extern int make_ctrl_char(int) ATTRIBUTE_CONST;
+extern void stuff_buffered_input(Lisp_Object);
+extern void clear_waiting_for_input(void);
+extern void swallow_events(bool);
+extern bool lucid_event_type_list_p(Lisp_Object);
+extern void kbd_buffer_store_event(struct input_event*);
+extern void kbd_buffer_store_buffered_event(union buffered_input_event*,
+                                            struct input_event*);
+INLINE void kbd_buffer_store_event_hold(struct input_event* event,
+                                        struct input_event* hold_quit) {
+    static_assert(
+        alignof(struct input_event) == alignof(union buffered_input_event) &&
+        sizeof(struct input_event) == sizeof(union buffered_input_event));
+    kbd_buffer_store_buffered_event((union buffered_input_event*)event,
+                                    hold_quit);
 }
-extern void poll_for_input_1 (void);
-extern void show_help_echo (Lisp_Object, Lisp_Object, Lisp_Object,
-                            Lisp_Object);
-extern void gen_help_event (Lisp_Object, Lisp_Object, Lisp_Object,
-                            Lisp_Object, ptrdiff_t);
-extern void kbd_buffer_store_help_event (Lisp_Object, Lisp_Object);
-extern Lisp_Object menu_item_eval_property (Lisp_Object);
-extern bool kbd_buffer_events_waiting (void);
-extern void add_user_signal (int, const char *);
+extern void poll_for_input_1(void);
+extern void show_help_echo(Lisp_Object, Lisp_Object, Lisp_Object, Lisp_Object);
+extern void gen_help_event(Lisp_Object, Lisp_Object, Lisp_Object, Lisp_Object,
+                           ptrdiff_t);
+extern void kbd_buffer_store_help_event(Lisp_Object, Lisp_Object);
+extern Lisp_Object menu_item_eval_property(Lisp_Object);
+extern bool kbd_buffer_events_waiting(void);
+extern void add_user_signal(int, const char*);
 
-extern int tty_read_avail_input (struct terminal *, struct input_event *);
-extern struct timespec timer_check (void);
-extern void mark_kboards (void);
+extern int tty_read_avail_input(struct terminal*, struct input_event*);
+extern struct timespec timer_check(void);
+extern void mark_kboards(void);
 
 /* Terminal device used by Emacs for terminal I/O.  */
-extern char *dev_tty;
+extern char* dev_tty;
 /* Initial value for dev_tty.  */
 extern char const DEV_TTY[];
 

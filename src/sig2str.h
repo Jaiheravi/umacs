@@ -22,11 +22,11 @@
 /* An upper bound on signal numbers allowed by the system.  */
 
 #if defined _sys_nsig
-# define SIGNUM_BOUND (_sys_nsig - 1)
+#define SIGNUM_BOUND (_sys_nsig - 1)
 #elif defined _SIG_MAXSIG
-# define SIGNUM_BOUND (_SIG_MAXSIG - 2) /* FreeBSD >= 7.  */
+#define SIGNUM_BOUND (_SIG_MAXSIG - 2) /* FreeBSD >= 7.  */
 #elif defined NSIG
-# define SIGNUM_BOUND (NSIG - 1)
+#define SIGNUM_BOUND (NSIG - 1)
 #else
-# define SIGNUM_BOUND 64
+#define SIGNUM_BOUND 64
 #endif

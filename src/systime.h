@@ -19,15 +19,15 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #ifndef EMACS_SYSTIME_H
 #define EMACS_SYSTIME_H
 
-#include "lisp.h"
 #include <timespec.h>
+#include "lisp.h"
 
 INLINE_HEADER_BEGIN
 
 #ifdef HAVE_X_WINDOWS
-# include <X11/X.h>
+#include <X11/X.h>
 #elif defined HAVE_HAIKU
-# include <support/SupportDefs.h>
+#include <support/SupportDefs.h>
 typedef int64 Time;
 #else
 typedef unsigned long Time;
@@ -43,10 +43,10 @@ typedef unsigned long Time;
 #endif
 #endif
 
-#include <sys/time.h>	/* for 'struct timeval' */
+#include <sys/time.h> /* for 'struct timeval' */
 
 #undef hz /* AIX <sys/param.h> #defines this.  */
-
+
 /* Emacs uses struct timespec to represent nonnegative temporal intervals.
 
    WARNING: Since tv_sec might be an unsigned value, do not use struct
@@ -55,39 +55,34 @@ typedef unsigned long Time;
    should be an absolute time since the epoch and B a nonnegative offset.  */
 
 /* Return an invalid timespec.  */
-INLINE struct timespec
-invalid_timespec (void)
-{
-  return make_timespec (0, -1);
-}
+INLINE struct timespec invalid_timespec(void) { return make_timespec(0, -1); }
 
 /* Return true if TIME is a valid timespec.  This currently doesn't worry
    about whether tv_nsec is less than TIMESPEC_HZ; leap seconds might
    cause a problem if it did.  */
-INLINE bool
-timespec_valid_p (struct timespec t)
-{
-  return t.tv_nsec >= 0;
-}
+INLINE bool timespec_valid_p(struct timespec t) { return t.tv_nsec >= 0; }
 
 /* defined in keyboard.c */
-extern void set_waiting_for_input (struct timespec *);
+extern void set_waiting_for_input(struct timespec*);
 
 /* Emacs uses the integer list (HI LO US PS) to represent the time
    (HI << LO_TIME_BITS) + LO + US / 1e6 + PS / 1e12.  */
-enum { LO_TIME_BITS = 16 };
+enum
+{
+    LO_TIME_BITS = 16
+};
 
 /* defined in timefns.c */
-extern struct timeval make_timeval (struct timespec) ATTRIBUTE_CONST;
-extern struct timespec monotonic_coarse_timespec (void);
-extern Lisp_Object make_lisp_time (struct timespec);
-extern Lisp_Object timespec_to_lisp (struct timespec);
-extern struct timespec list4_to_timespec (Lisp_Object, Lisp_Object,
-					  Lisp_Object, Lisp_Object);
-extern struct timespec lisp_time_argument (Lisp_Object);
-extern double float_time (Lisp_Object);
-extern void init_timefns (void);
-extern void syms_of_timefns (void);
+extern struct timeval make_timeval(struct timespec) ATTRIBUTE_CONST;
+extern struct timespec monotonic_coarse_timespec(void);
+extern Lisp_Object make_lisp_time(struct timespec);
+extern Lisp_Object timespec_to_lisp(struct timespec);
+extern struct timespec list4_to_timespec(Lisp_Object, Lisp_Object, Lisp_Object,
+                                         Lisp_Object);
+extern struct timespec lisp_time_argument(Lisp_Object);
+extern double float_time(Lisp_Object);
+extern void init_timefns(void);
+extern void syms_of_timefns(void);
 
 INLINE_HEADER_END
 

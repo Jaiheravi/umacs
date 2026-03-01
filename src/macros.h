@@ -36,20 +36,20 @@ extern Lisp_Object executing_kbd_macro;
 
 /* Finish defining the current keyboard macro.  */
 
-extern void end_kbd_macro (void);
+extern void end_kbd_macro(void);
 
 /* Declare that all chars stored so far in the kbd macro being defined
  really belong to it.  This is done in between editor commands.  */
 
-extern void finalize_kbd_macro_chars (void);
+extern void finalize_kbd_macro_chars(void);
 
 /* Store a character into kbd macro being defined */
 
-extern void store_kbd_macro_char (Lisp_Object);
+extern void store_kbd_macro_char(Lisp_Object);
 
 /* Whether the execution of a macro has reached its end.
    This should be called only while executing a macro.  */
 
-extern bool at_end_of_macro_p (void);
+extern bool at_end_of_macro_p(void);
 
 #endif /* EMACS_MACROS_H */

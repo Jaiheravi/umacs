@@ -17,34 +17,35 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef FILEMODE_H_
-# define FILEMODE_H_
+#define FILEMODE_H_
 
 /* This file uses HAVE_DECL_STRMODE.  */
-# if !_GL_CONFIG_H_INCLUDED
-#  error "Please include config.h first."
-# endif
+#if !_GL_CONFIG_H_INCLUDED
+#error "Please include config.h first."
+#endif
 
-# include <sys/types.h>
-# include <sys/stat.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 /* Get the declaration of strmode.  */
-# if HAVE_DECL_STRMODE
-#  include <string.h> /* Mac OS X, FreeBSD, OpenBSD */
-#  include <unistd.h> /* NetBSD */
-# endif
+#if HAVE_DECL_STRMODE
+#include <string.h> /* Mac OS X, FreeBSD, OpenBSD */
+#include <unistd.h> /* NetBSD */
+#endif
 
-# ifdef __cplusplus
-extern "C" {
-# endif
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
-# if !HAVE_DECL_STRMODE
-extern void strmode (mode_t mode, char *str);
-# endif
+#if !HAVE_DECL_STRMODE
+    extern void strmode(mode_t mode, char* str);
+#endif
 
-extern void filemodestring (struct stat const *statp, char *str);
+    extern void filemodestring(struct stat const* statp, char* str);
 
-# ifdef __cplusplus
+#ifdef __cplusplus
 }
-# endif
+#endif
 
 #endif

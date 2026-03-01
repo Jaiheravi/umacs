@@ -22,7 +22,7 @@
 
 /* This file uses _Alignof.  */
 #if !_GL_CONFIG_H_INCLUDED
- #error "Please include config.h first."
+#error "Please include config.h first."
 #endif
 
 #include <stddef.h>
@@ -34,9 +34,9 @@
    Otherwise, use _Alignof to get a tighter bound.  */
 
 #if !defined __STDC_VERSION__ || __STDC_VERSION__ < 201112 || defined _Alignof
-# define FLEXALIGNOF(type) (sizeof (type) & ~ (sizeof (type) - 1))
+#define FLEXALIGNOF(type) (sizeof(type) & ~(sizeof(type) - 1))
 #else
-# define FLEXALIGNOF(type) _Alignof (type)
+#define FLEXALIGNOF(type) _Alignof(type)
 #endif
 
 /* Yield a properly aligned upper bound on the size of a struct of
@@ -61,9 +61,9 @@
 
    Yield a value less than N if and only if arithmetic overflow occurs.  */
 
-#define FLEXSIZEOF(type, member, n) \
-   ((offsetof (type, member) + FLEXALIGNOF (type) - 1 + (n)) \
-    & ~ (FLEXALIGNOF (type) - 1))
+#define FLEXSIZEOF(type, member, n)                                            \
+    ((offsetof(type, member) + FLEXALIGNOF(type) - 1 + (n)) &                  \
+     ~(FLEXALIGNOF(type) - 1))
 
 /* Yield a properly aligned upper bound on the size of a struct of
    type TYPE with a flexible array member named MEMBER that has N
@@ -73,5 +73,5 @@
      struct s { int a; double d[FLEXIBLE_ARRAY_MEMBER]; };
      struct s *p = malloc (FLEXNSIZEOF (struct s, d, n));
  */
-#define FLEXNSIZEOF(type, member, n) \
-  FLEXSIZEOF (type, member, (n) * sizeof (((type *) 0)->member[0]))
+#define FLEXNSIZEOF(type, member, n)                                           \
+    FLEXSIZEOF(type, member, (n) * sizeof(((type*)0)->member[0]))

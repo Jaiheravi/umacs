@@ -57,21 +57,19 @@ int menu_items_n_panes;
 /* Current depth within submenus.  */
 static int menu_items_submenu_depth;
 
-void init_menu_items(void)
-{
-  if (menu_items_inuse)
-    error("Trying to use a menu from within a menu-entry");
+void init_menu_items(void) {
+    if (menu_items_inuse)
+        error("Trying to use a menu from within a menu-entry");
 
-  if (NILP(menu_items))
-  {
-    menu_items_allocated = 60;
-    menu_items = make_nil_vector(menu_items_allocated);
-  }
+    if (NILP(menu_items)) {
+        menu_items_allocated = 60;
+        menu_items = make_nil_vector(menu_items_allocated);
+    }
 
-  menu_items_inuse = true;
-  menu_items_used = 0;
-  menu_items_n_panes = 0;
-  menu_items_submenu_depth = 0;
+    menu_items_inuse = true;
+    menu_items_used = 0;
+    menu_items_n_panes = 0;
+    menu_items_submenu_depth = 0;
 }
 
 /* Call at the end of generating the data in menu_items.  */
@@ -83,83 +81,75 @@ void unuse_menu_items(void) { menu_items_inuse = false; }
 /* Call when finished using the data for the current menu
    in menu_items.  */
 
-void discard_menu_items(void)
-{
-  /* Free the structure if it is especially large.
-     Otherwise, hold on to it, to save time.  */
-  if (menu_items_allocated > 200)
-  {
-    menu_items = Qnil;
-    menu_items_allocated = 0;
-  }
-  eassert(!menu_items_inuse);
+void discard_menu_items(void) {
+    /* Free the structure if it is especially large.
+       Otherwise, hold on to it, to save time.  */
+    if (menu_items_allocated > 200) {
+        menu_items = Qnil;
+        menu_items_allocated = 0;
+    }
+    eassert(!menu_items_inuse);
 }
 
 /* This undoes save_menu_items, and it is called by the specpdl unwind
    mechanism.  */
 
-static void restore_menu_items(Lisp_Object saved)
-{
-  menu_items = XCAR(saved);
-  menu_items_inuse = !NILP(menu_items);
-  menu_items_allocated = (VECTORP(menu_items) ? ASIZE(menu_items) : 0);
-  saved = XCDR(saved);
-  menu_items_used = XFIXNUM(XCAR(saved));
-  saved = XCDR(saved);
-  menu_items_n_panes = XFIXNUM(XCAR(saved));
-  saved = XCDR(saved);
-  menu_items_submenu_depth = XFIXNUM(XCAR(saved));
+static void restore_menu_items(Lisp_Object saved) {
+    menu_items = XCAR(saved);
+    menu_items_inuse = !NILP(menu_items);
+    menu_items_allocated = (VECTORP(menu_items) ? ASIZE(menu_items) : 0);
+    saved = XCDR(saved);
+    menu_items_used = XFIXNUM(XCAR(saved));
+    saved = XCDR(saved);
+    menu_items_n_panes = XFIXNUM(XCAR(saved));
+    saved = XCDR(saved);
+    menu_items_submenu_depth = XFIXNUM(XCAR(saved));
 }
 
 /* Push the whole state of menu_items processing onto the specpdl.
    It will be restored when the specpdl is unwound.  */
 
-void save_menu_items(void)
-{
-  Lisp_Object saved = list4(
-      menu_items_inuse ? menu_items : Qnil, make_fixnum(menu_items_used),
-      make_fixnum(menu_items_n_panes), make_fixnum(menu_items_submenu_depth));
-  record_unwind_protect(restore_menu_items, saved);
-  menu_items_inuse = false;
-  menu_items = Qnil;
+void save_menu_items(void) {
+    Lisp_Object saved = list4(
+        menu_items_inuse ? menu_items : Qnil, make_fixnum(menu_items_used),
+        make_fixnum(menu_items_n_panes), make_fixnum(menu_items_submenu_depth));
+    record_unwind_protect(restore_menu_items, saved);
+    menu_items_inuse = false;
+    menu_items = Qnil;
 }
 
 
 /* Ensure that there is room for ITEMS items in the menu_items vector.  */
 
-static void ensure_menu_items(int items)
-{
-  int incr = items - (menu_items_allocated - menu_items_used);
-  if (incr > 0)
-  {
-    menu_items = larger_vector(menu_items, incr, INT_MAX);
-    menu_items_allocated = ASIZE(menu_items);
-  }
+static void ensure_menu_items(int items) {
+    int incr = items - (menu_items_allocated - menu_items_used);
+    if (incr > 0) {
+        menu_items = larger_vector(menu_items, incr, INT_MAX);
+        menu_items_allocated = ASIZE(menu_items);
+    }
 }
 
 /* Indicate boundary between left and right.  */
 
-static void push_left_right_boundary(void)
-{
-  ensure_menu_items(1);
-  ASET(menu_items, menu_items_used, Qquote);
-  menu_items_used++;
+static void push_left_right_boundary(void) {
+    ensure_menu_items(1);
+    ASET(menu_items, menu_items_used, Qquote);
+    menu_items_used++;
 }
 
 /* Start a new menu pane in menu_items.
    NAME is the pane name.  PREFIX_VEC is a prefix key for this pane.  */
 
-static void push_menu_pane(Lisp_Object name, Lisp_Object prefix_vec)
-{
-  ensure_menu_items(MENU_ITEMS_PANE_LENGTH);
-  if (menu_items_submenu_depth == 0)
-    menu_items_n_panes++;
-  ASET(menu_items, menu_items_used, Qt);
-  menu_items_used++;
-  ASET(menu_items, menu_items_used, name);
-  menu_items_used++;
-  ASET(menu_items, menu_items_used, prefix_vec);
-  menu_items_used++;
+static void push_menu_pane(Lisp_Object name, Lisp_Object prefix_vec) {
+    ensure_menu_items(MENU_ITEMS_PANE_LENGTH);
+    if (menu_items_submenu_depth == 0)
+        menu_items_n_panes++;
+    ASET(menu_items, menu_items_used, Qt);
+    menu_items_used++;
+    ASET(menu_items, menu_items_used, name);
+    menu_items_used++;
+    ASET(menu_items, menu_items_used, prefix_vec);
+    menu_items_used++;
 }
 
 /* Push one menu item into the current pane.  NAME is the string to
@@ -173,28 +163,26 @@ static void push_menu_pane(Lisp_Object name, Lisp_Object prefix_vec)
 static void push_menu_item(Lisp_Object name, Lisp_Object enable,
                            Lisp_Object key, Lisp_Object def, Lisp_Object equiv,
                            Lisp_Object type, Lisp_Object selected,
-                           Lisp_Object help)
-{
-  ensure_menu_items(MENU_ITEMS_ITEM_LENGTH);
+                           Lisp_Object help) {
+    ensure_menu_items(MENU_ITEMS_ITEM_LENGTH);
 
-  ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_NAME, name);
-  ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_ENABLE, enable);
-  ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_VALUE, key);
-  ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_EQUIV_KEY, equiv);
-  ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_DEFINITION, def);
-  ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_TYPE, type);
-  ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_SELECTED, selected);
-  ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_HELP, help);
+    ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_NAME, name);
+    ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_ENABLE, enable);
+    ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_VALUE, key);
+    ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_EQUIV_KEY, equiv);
+    ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_DEFINITION, def);
+    ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_TYPE, type);
+    ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_SELECTED, selected);
+    ASET(menu_items, menu_items_used + MENU_ITEMS_ITEM_HELP, help);
 
-  menu_items_used += MENU_ITEMS_ITEM_LENGTH;
+    menu_items_used += MENU_ITEMS_ITEM_LENGTH;
 }
 
 /* Args passed between single_keymap_panes and single_menu_item.  */
-struct skp
-{
-  Lisp_Object pending_maps;
-  int maxdepth;
-  int notbuttons;
+struct skp {
+    Lisp_Object pending_maps;
+    int maxdepth;
+    int notbuttons;
 };
 
 static void single_menu_item(Lisp_Object, Lisp_Object, Lisp_Object, void*);
@@ -207,42 +195,39 @@ static void single_menu_item(Lisp_Object, Lisp_Object, Lisp_Object, void*);
    If we encounter submenus deeper than MAXDEPTH levels, ignore them.  */
 
 static void single_keymap_panes(Lisp_Object keymap, Lisp_Object pane_name,
-                                Lisp_Object prefix, int maxdepth)
-{
-  struct skp skp;
+                                Lisp_Object prefix, int maxdepth) {
+    struct skp skp;
 
-  skp.pending_maps = Qnil;
-  skp.maxdepth = maxdepth;
-  skp.notbuttons = 0;
+    skp.pending_maps = Qnil;
+    skp.maxdepth = maxdepth;
+    skp.notbuttons = 0;
 
-  if (maxdepth <= 0)
-    return;
+    if (maxdepth <= 0)
+        return;
 
-  push_menu_pane(pane_name, prefix);
+    push_menu_pane(pane_name, prefix);
 
-  if (!have_boxes())
-  {
-    /* Remember index for first item in this pane so we can go back
- and add a prefix when (if) we see the first button.  After
- that, notbuttons is set to 0, to mark that we have seen a
- button and all non button items need a prefix.  */
-    skp.notbuttons = menu_items_used;
-  }
+    if (!have_boxes()) {
+        /* Remember index for first item in this pane so we can go back
+     and add a prefix when (if) we see the first button.  After
+     that, notbuttons is set to 0, to mark that we have seen a
+     button and all non button items need a prefix.  */
+        skp.notbuttons = menu_items_used;
+    }
 
-  map_keymap_canonical(keymap, single_menu_item, Qnil, &skp);
+    map_keymap_canonical(keymap, single_menu_item, Qnil, &skp);
 
-  /* Process now any submenus which want to be panes at this level.  */
-  while (CONSP(skp.pending_maps))
-  {
-    Lisp_Object elt, eltcdr, string;
-    elt = XCAR(skp.pending_maps);
-    eltcdr = XCDR(elt);
-    string = XCAR(eltcdr);
-    /* We no longer discard the @ from the beginning of the string here.
- Instead, we do this in *menu_show.  */
-    single_keymap_panes(Fcar(elt), string, XCDR(eltcdr), maxdepth - 1);
-    skp.pending_maps = XCDR(skp.pending_maps);
-  }
+    /* Process now any submenus which want to be panes at this level.  */
+    while (CONSP(skp.pending_maps)) {
+        Lisp_Object elt, eltcdr, string;
+        elt = XCAR(skp.pending_maps);
+        eltcdr = XCDR(elt);
+        string = XCAR(eltcdr);
+        /* We no longer discard the @ from the beginning of the string here.
+     Instead, we do this in *menu_show.  */
+        single_keymap_panes(Fcar(elt), string, XCDR(eltcdr), maxdepth - 1);
+        skp.pending_maps = XCDR(skp.pending_maps);
+    }
 }
 
 /* This is a subroutine of single_keymap_panes that handles one
@@ -253,247 +238,225 @@ static void single_keymap_panes(Lisp_Object keymap, Lisp_Object pane_name,
    If we encounter submenus deeper than SKP->MAXDEPTH levels, ignore them.  */
 
 static void single_menu_item(Lisp_Object key, Lisp_Object item,
-                             Lisp_Object dummy, void* skp_v)
-{
-  Lisp_Object map, item_string, enabled;
-  bool res;
-  struct skp* skp = skp_v;
+                             Lisp_Object dummy, void* skp_v) {
+    Lisp_Object map, item_string, enabled;
+    bool res;
+    struct skp* skp = skp_v;
 
-  /* Parse the menu item and leave the result in item_properties.  */
-  res = parse_menu_item(item, 0);
-  if (!res)
-    return; /* Not a menu item.  */
+    /* Parse the menu item and leave the result in item_properties.  */
+    res = parse_menu_item(item, 0);
+    if (!res)
+        return; /* Not a menu item.  */
 
-  map = AREF(item_properties, ITEM_PROPERTY_MAP);
+    map = AREF(item_properties, ITEM_PROPERTY_MAP);
 
-  enabled = AREF(item_properties, ITEM_PROPERTY_ENABLE);
-  item_string = AREF(item_properties, ITEM_PROPERTY_NAME);
+    enabled = AREF(item_properties, ITEM_PROPERTY_ENABLE);
+    item_string = AREF(item_properties, ITEM_PROPERTY_NAME);
 
-  if (!NILP(map) && SREF(item_string, 0) == '@')
-  {
-    if (!NILP(enabled))
-      /* An enabled separate pane. Remember this to handle it later.  */
-      skp->pending_maps =
-          Fcons(Fcons(map, Fcons(item_string, key)), skp->pending_maps);
-    return;
-  }
+    if (!NILP(map) && SREF(item_string, 0) == '@') {
+        if (!NILP(enabled))
+            /* An enabled separate pane. Remember this to handle it later.  */
+            skp->pending_maps =
+                Fcons(Fcons(map, Fcons(item_string, key)), skp->pending_maps);
+        return;
+    }
 
-  /* Simulate radio buttons and toggle boxes by putting a prefix in
-     front of them.  */
-  if (!have_boxes())
-  {
-    char const* prefix = 0;
-    Lisp_Object type = AREF(item_properties, ITEM_PROPERTY_TYPE);
-    if (!NILP(type))
-    {
-      Lisp_Object selected = AREF(item_properties, ITEM_PROPERTY_SELECTED);
+    /* Simulate radio buttons and toggle boxes by putting a prefix in
+       front of them.  */
+    if (!have_boxes()) {
+        char const* prefix = 0;
+        Lisp_Object type = AREF(item_properties, ITEM_PROPERTY_TYPE);
+        if (!NILP(type)) {
+            Lisp_Object selected =
+                AREF(item_properties, ITEM_PROPERTY_SELECTED);
 
-      if (skp->notbuttons)
-      /* The first button. Line up previous items in this menu.  */
-      {
-        int idx = skp->notbuttons; /* Index for first item this menu.  */
-        int submenu = 0;
-        Lisp_Object tem;
-        while (idx < menu_items_used)
-        {
-          tem = AREF(menu_items, idx + MENU_ITEMS_ITEM_NAME);
-          if (NILP(tem))
-          {
-            idx++;
-            submenu++; /* Skip sub menu.  */
-          }
-          else if (EQ(tem, Qlambda))
-          {
-            idx++;
-            submenu--; /* End sub menu.  */
-          }
-          else if (EQ(tem, Qt))
-            idx += 3; /* Skip new pane marker. */
-          else if (EQ(tem, Qquote))
-            idx++; /* Skip a left, right divider. */
-          else
-          {
-            if (!submenu && SREF(tem, 0) != '\0' && SREF(tem, 0) != '-')
+            if (skp->notbuttons)
+            /* The first button. Line up previous items in this menu.  */
             {
-              AUTO_STRING(spaces, "    ");
-              ASET(menu_items, idx + MENU_ITEMS_ITEM_NAME,
-                   concat2(spaces, tem));
+                int idx = skp->notbuttons; /* Index for first item this menu. */
+                int submenu = 0;
+                Lisp_Object tem;
+                while (idx < menu_items_used) {
+                    tem = AREF(menu_items, idx + MENU_ITEMS_ITEM_NAME);
+                    if (NILP(tem)) {
+                        idx++;
+                        submenu++; /* Skip sub menu.  */
+                    }
+                    else if (EQ(tem, Qlambda)) {
+                        idx++;
+                        submenu--; /* End sub menu.  */
+                    }
+                    else if (EQ(tem, Qt))
+                        idx += 3; /* Skip new pane marker. */
+                    else if (EQ(tem, Qquote))
+                        idx++; /* Skip a left, right divider. */
+                    else {
+                        if (!submenu && SREF(tem, 0) != '\0' &&
+                            SREF(tem, 0) != '-') {
+                            AUTO_STRING(spaces, "    ");
+                            ASET(menu_items, idx + MENU_ITEMS_ITEM_NAME,
+                                 concat2(spaces, tem));
+                        }
+                        idx += MENU_ITEMS_ITEM_LENGTH;
+                    }
+                }
+                skp->notbuttons = 0;
             }
-            idx += MENU_ITEMS_ITEM_LENGTH;
-          }
+
+            /* Calculate prefix, if any, for this item.  */
+            if (EQ(type, QCtoggle))
+                prefix = NILP(selected) ? "[ ] " : "[X] ";
+            else if (EQ(type, QCradio))
+                prefix = NILP(selected) ? "( ) " : "(*) ";
         }
-        skp->notbuttons = 0;
-      }
+        /* Not a button. If we have earlier buttons, then we need a prefix.  */
+        else if (!skp->notbuttons && SREF(item_string, 0) != '\0' &&
+                 SREF(item_string, 0) != '-')
+            prefix = "    ";
 
-      /* Calculate prefix, if any, for this item.  */
-      if (EQ(type, QCtoggle))
-        prefix = NILP(selected) ? "[ ] " : "[X] ";
-      else if (EQ(type, QCradio))
-        prefix = NILP(selected) ? "( ) " : "(*) ";
+        if (prefix) {
+            AUTO_STRING_WITH_LEN(prefix_obj, prefix, 4);
+            item_string = concat2(prefix_obj, item_string);
+        }
     }
-    /* Not a button. If we have earlier buttons, then we need a prefix.  */
-    else if (!skp->notbuttons && SREF(item_string, 0) != '\0' &&
-             SREF(item_string, 0) != '-')
-      prefix = "    ";
 
-    if (prefix)
+    if ((FRAME_TERMCAP_P(XFRAME(Vmenu_updating_frame)) ||
+         FRAME_MSDOS_P(XFRAME(Vmenu_updating_frame))) &&
+        !NILP(map))
+    /* Indicate visually that this is a submenu.  */
     {
-      AUTO_STRING_WITH_LEN(prefix_obj, prefix, 4);
-      item_string = concat2(prefix_obj, item_string);
+        AUTO_STRING(space_gt, " >");
+        item_string = concat2(item_string, space_gt);
     }
-  }
 
-  if ((FRAME_TERMCAP_P(XFRAME(Vmenu_updating_frame)) ||
-       FRAME_MSDOS_P(XFRAME(Vmenu_updating_frame))) &&
-      !NILP(map))
-  /* Indicate visually that this is a submenu.  */
-  {
-    AUTO_STRING(space_gt, " >");
-    item_string = concat2(item_string, space_gt);
-  }
-
-  push_menu_item(item_string, enabled, key,
-                 AREF(item_properties, ITEM_PROPERTY_DEF),
-                 AREF(item_properties, ITEM_PROPERTY_KEYEQ),
-                 AREF(item_properties, ITEM_PROPERTY_TYPE),
-                 AREF(item_properties, ITEM_PROPERTY_SELECTED),
-                 AREF(item_properties, ITEM_PROPERTY_HELP));
+    push_menu_item(item_string, enabled, key,
+                   AREF(item_properties, ITEM_PROPERTY_DEF),
+                   AREF(item_properties, ITEM_PROPERTY_KEYEQ),
+                   AREF(item_properties, ITEM_PROPERTY_TYPE),
+                   AREF(item_properties, ITEM_PROPERTY_SELECTED),
+                   AREF(item_properties, ITEM_PROPERTY_HELP));
 }
 
 /* Look through KEYMAPS, a vector of keymaps that is NMAPS long,
    and generate menu panes for them in menu_items.  */
 
-static void keymap_panes(Lisp_Object* keymaps, ptrdiff_t nmaps)
-{
-  ptrdiff_t mapno;
+static void keymap_panes(Lisp_Object* keymaps, ptrdiff_t nmaps) {
+    ptrdiff_t mapno;
 
-  init_menu_items();
+    init_menu_items();
 
-  /* Loop over the given keymaps, making a pane for each map.
-     But don't make a pane that is empty--ignore that map instead.
-     P is the number of panes we have made so far.  */
-  for (mapno = 0; mapno < nmaps; mapno++)
-    single_keymap_panes(keymaps[mapno], Fkeymap_prompt(keymaps[mapno]), Qnil,
-                        10);
+    /* Loop over the given keymaps, making a pane for each map.
+       But don't make a pane that is empty--ignore that map instead.
+       P is the number of panes we have made so far.  */
+    for (mapno = 0; mapno < nmaps; mapno++)
+        single_keymap_panes(keymaps[mapno], Fkeymap_prompt(keymaps[mapno]),
+                            Qnil, 10);
 
-  finish_menu_items();
+    finish_menu_items();
 }
 
 /* Encode a menu string as appropriate for menu-updating-frame's type.  */
-static Lisp_Object encode_menu_string(Lisp_Object str)
-{
-  /* TTY menu strings are encoded by write_glyphs, when they are
-     delivered to the glass, so no need to encode them here.  */
-  if (FRAME_TERMCAP_P(XFRAME(Vmenu_updating_frame)))
-    return str;
-  return ENCODE_MENU_STRING(str);
+static Lisp_Object encode_menu_string(Lisp_Object str) {
+    /* TTY menu strings are encoded by write_glyphs, when they are
+       delivered to the glass, so no need to encode them here.  */
+    if (FRAME_TERMCAP_P(XFRAME(Vmenu_updating_frame)))
+        return str;
+    return ENCODE_MENU_STRING(str);
 }
 
 /* Push the items in a single pane defined by the alist PANE.  */
-static void list_of_items(Lisp_Object pane)
-{
-  Lisp_Object tail, item, item1;
+static void list_of_items(Lisp_Object pane) {
+    Lisp_Object tail, item, item1;
 
-  for (tail = pane; CONSP(tail); tail = XCDR(tail))
-  {
-    item = XCAR(tail);
-    if (STRINGP(item))
-      push_menu_item(encode_menu_string(item), Qnil, Qnil, Qt, Qnil, Qnil, Qnil,
-                     Qnil);
-    else if (CONSP(item))
-    {
-      item1 = XCAR(item);
-      CHECK_STRING(item1);
-      push_menu_item(encode_menu_string(item1), Qt, XCDR(item), Qt, Qnil, Qnil,
-                     Qnil, Qnil);
+    for (tail = pane; CONSP(tail); tail = XCDR(tail)) {
+        item = XCAR(tail);
+        if (STRINGP(item))
+            push_menu_item(encode_menu_string(item), Qnil, Qnil, Qt, Qnil, Qnil,
+                           Qnil, Qnil);
+        else if (CONSP(item)) {
+            item1 = XCAR(item);
+            CHECK_STRING(item1);
+            push_menu_item(encode_menu_string(item1), Qt, XCDR(item), Qt, Qnil,
+                           Qnil, Qnil, Qnil);
+        }
+        else
+            push_left_right_boundary();
     }
-    else
-      push_left_right_boundary();
-  }
 }
 
 /* Push all the panes and items of a menu described by the
    alist-of-alists MENU.
    This handles old-fashioned calls to x-popup-menu.  */
-void list_of_panes(Lisp_Object menu)
-{
-  Lisp_Object tail;
+void list_of_panes(Lisp_Object menu) {
+    Lisp_Object tail;
 
-  init_menu_items();
+    init_menu_items();
 
-  for (tail = menu; CONSP(tail); tail = XCDR(tail))
-  {
-    Lisp_Object elt, pane_name, pane_data;
-    elt = XCAR(tail);
-    pane_name = Fcar(elt);
-    CHECK_STRING(pane_name);
-    push_menu_pane(encode_menu_string(pane_name), Qnil);
-    pane_data = Fcdr(elt);
-    CHECK_CONS(pane_data);
-    list_of_items(pane_data);
-  }
+    for (tail = menu; CONSP(tail); tail = XCDR(tail)) {
+        Lisp_Object elt, pane_name, pane_data;
+        elt = XCAR(tail);
+        pane_name = Fcar(elt);
+        CHECK_STRING(pane_name);
+        push_menu_pane(encode_menu_string(pane_name), Qnil);
+        pane_data = Fcdr(elt);
+        CHECK_CONS(pane_data);
+        list_of_items(pane_data);
+    }
 
-  finish_menu_items();
+    finish_menu_items();
 }
 
 /* Set up data in menu_items for a menu bar item
    whose event type is ITEM_KEY (with string ITEM_NAME)
    and whose contents come from the list of keymaps MAPS.  */
 bool parse_single_submenu(Lisp_Object item_key, Lisp_Object item_name,
-                          Lisp_Object maps)
-{
-  Lisp_Object* mapvec;
-  bool top_level_items = 0;
-  USE_SAFE_ALLOCA;
+                          Lisp_Object maps) {
+    Lisp_Object* mapvec;
+    bool top_level_items = 0;
+    USE_SAFE_ALLOCA;
 
-  ptrdiff_t len = list_length(maps);
+    ptrdiff_t len = list_length(maps);
 
-  /* Convert the list MAPS into a vector MAPVEC.  */
-  SAFE_ALLOCA_LISP(mapvec, len);
-  for (ptrdiff_t i = 0; i < len; i++)
-  {
-    mapvec[i] = Fcar(maps);
-    maps = Fcdr(maps);
-  }
-
-  /* Loop over the given keymaps, making a pane for each map.
-     But don't make a pane that is empty--ignore that map instead.  */
-  for (ptrdiff_t i = 0; i < len; i++)
-  {
-    if (!KEYMAPP(mapvec[i]))
-    {
-      /* Here we have a command at top level in the menu bar
-         as opposed to a submenu.  */
-      top_level_items = 1;
-      push_menu_pane(Qnil, Qnil);
-      push_menu_item(item_name, Qt, item_key, mapvec[i], Qnil, Qnil, Qnil,
-                     Qnil);
+    /* Convert the list MAPS into a vector MAPVEC.  */
+    SAFE_ALLOCA_LISP(mapvec, len);
+    for (ptrdiff_t i = 0; i < len; i++) {
+        mapvec[i] = Fcar(maps);
+        maps = Fcdr(maps);
     }
-    else
-    {
-      Lisp_Object prompt;
-      prompt = Fkeymap_prompt(mapvec[i]);
-      single_keymap_panes(mapvec[i], !NILP(prompt) ? prompt : item_name,
-                          item_key, 10);
-    }
-  }
 
-  SAFE_FREE();
-  return top_level_items;
+    /* Loop over the given keymaps, making a pane for each map.
+       But don't make a pane that is empty--ignore that map instead.  */
+    for (ptrdiff_t i = 0; i < len; i++) {
+        if (!KEYMAPP(mapvec[i])) {
+            /* Here we have a command at top level in the menu bar
+               as opposed to a submenu.  */
+            top_level_items = 1;
+            push_menu_pane(Qnil, Qnil);
+            push_menu_item(item_name, Qt, item_key, mapvec[i], Qnil, Qnil, Qnil,
+                           Qnil);
+        }
+        else {
+            Lisp_Object prompt;
+            prompt = Fkeymap_prompt(mapvec[i]);
+            single_keymap_panes(mapvec[i], !NILP(prompt) ? prompt : item_name,
+                                item_key, 10);
+        }
+    }
+
+    SAFE_FREE();
+    return top_level_items;
 }
 
-ptrdiff_t menu_item_width(const unsigned char* str)
-{
-  ptrdiff_t len;
-  const unsigned char* p;
+ptrdiff_t menu_item_width(const unsigned char* str) {
+    ptrdiff_t len;
+    const unsigned char* p;
 
-  for (len = 0, p = str; *p;)
-  {
-    int ch_len, ch = string_char_and_length(p, &ch_len);
-    len += CHARACTER_WIDTH(ch);
-    p += ch_len;
-  }
-  return len;
+    for (len = 0, p = str; *p;) {
+        int ch_len, ch = string_char_and_length(p, &ch_len);
+        len += CHARACTER_WIDTH(ch);
+        p += ch_len;
+    }
+    return len;
 }
 
 DEFUN ("menu-bar-menu-at-x-y", Fmenu_bar_menu_at_x_y, Smenu_bar_menu_at_x_y,
@@ -516,294 +479,275 @@ This function can return non-nil only on a text-terminal frame
 or on an X frame that doesn't use any GUI toolkit.  Otherwise,
 Emacs does not manage the menu bar and cannot convert coordinates
 into menu items.  */)
-(Lisp_Object x, Lisp_Object y, Lisp_Object frame)
-{
-  int row, col;
-  struct frame* f = decode_any_frame(frame);
+(Lisp_Object x, Lisp_Object y, Lisp_Object frame) {
+    int row, col;
+    struct frame* f = decode_any_frame(frame);
 
-  if (!FRAME_LIVE_P(f))
-    return Qnil;
+    if (!FRAME_LIVE_P(f))
+        return Qnil;
 
-  pixel_to_glyph_coords(f, XFIXNUM(x), XFIXNUM(y), &col, &row, NULL, 1);
-  if (0 <= row && row < FRAME_MENU_BAR_LINES(f))
-  {
-    Lisp_Object items, item;
-    int i;
+    pixel_to_glyph_coords(f, XFIXNUM(x), XFIXNUM(y), &col, &row, NULL, 1);
+    if (0 <= row && row < FRAME_MENU_BAR_LINES(f)) {
+        Lisp_Object items, item;
+        int i;
 
-    /* Find the menu bar item under `col'.  */
-    item = Qnil;
-    items = FRAME_MENU_BAR_ITEMS(f);
-    /* This loop assumes a single menu-bar line, and will fail to
- find an item if it is not in the first line.  Note that
- make_lispy_event in keyboard.c makes the same assumption.  */
-    for (i = 0; i < ASIZE(items); i += 4)
-    {
-      Lisp_Object pos, str;
+        /* Find the menu bar item under `col'.  */
+        item = Qnil;
+        items = FRAME_MENU_BAR_ITEMS(f);
+        /* This loop assumes a single menu-bar line, and will fail to
+     find an item if it is not in the first line.  Note that
+     make_lispy_event in keyboard.c makes the same assumption.  */
+        for (i = 0; i < ASIZE(items); i += 4) {
+            Lisp_Object pos, str;
 
-      str = AREF(items, i + 1);
-      pos = AREF(items, i + 3);
-      if (NILP(str))
-        return item;
-      if (XFIXNUM(pos) <= col
-          /* We use <= so the blank between 2 items on a TTY is
-       considered part of the previous item.  */
-          && col <= XFIXNUM(pos) + menu_item_width(SDATA(str)))
-      {
-        item = AREF(items, i);
-        return item;
-      }
+            str = AREF(items, i + 1);
+            pos = AREF(items, i + 3);
+            if (NILP(str))
+                return item;
+            if (XFIXNUM(pos) <= col
+                /* We use <= so the blank between 2 items on a TTY is
+             considered part of the previous item.  */
+                && col <= XFIXNUM(pos) + menu_item_width(SDATA(str))) {
+                item = AREF(items, i);
+                return item;
+            }
+        }
     }
-  }
-  return Qnil;
+    return Qnil;
 }
 
-Lisp_Object x_popup_menu_1(Lisp_Object position, Lisp_Object menu)
-{
-  Lisp_Object keymap, tem, tem2 = Qnil;
-  int xpos = 0, ypos = 0;
-  Lisp_Object title;
-  const char* error_name = NULL;
-  Lisp_Object selection = Qnil;
-  struct frame* f;
-  Lisp_Object x, y, window;
-  int menuflags = 0;
-  specpdl_ref specpdl_count = SPECPDL_INDEX();
+Lisp_Object x_popup_menu_1(Lisp_Object position, Lisp_Object menu) {
+    Lisp_Object keymap, tem, tem2 = Qnil;
+    int xpos = 0, ypos = 0;
+    Lisp_Object title;
+    const char* error_name = NULL;
+    Lisp_Object selection = Qnil;
+    struct frame* f;
+    Lisp_Object x, y, window;
+    int menuflags = 0;
+    specpdl_ref specpdl_count = SPECPDL_INDEX();
 
-  if (NILP(position))
-    /* This is an obsolete call, which wants us to precompute the
-       keybinding equivalents, but we don't do that any more anyway.  */
-    return Qnil;
+    if (NILP(position))
+        /* This is an obsolete call, which wants us to precompute the
+           keybinding equivalents, but we don't do that any more anyway.  */
+        return Qnil;
 
-  {
-    bool get_current_pos_p = 0;
-
-    /* Decode the first argument: find the window and the coordinates.  */
-    if (EQ(position, Qt) ||
-        (CONSP(position) &&
-         (EQ(XCAR(position), Qmenu_bar) || EQ(XCAR(position), Qtab_bar) ||
-          (CONSP(XCDR(position)) && EQ(XCAR(XCDR(position)), Qtab_bar)) ||
-          EQ(XCAR(position), Qtool_bar))))
     {
-      get_current_pos_p = 1;
+        bool get_current_pos_p = 0;
+
+        /* Decode the first argument: find the window and the coordinates.  */
+        if (EQ(position, Qt) ||
+            (CONSP(position) &&
+             (EQ(XCAR(position), Qmenu_bar) || EQ(XCAR(position), Qtab_bar) ||
+              (CONSP(XCDR(position)) && EQ(XCAR(XCDR(position)), Qtab_bar)) ||
+              EQ(XCAR(position), Qtool_bar)))) {
+            get_current_pos_p = 1;
+        }
+        else {
+            tem = Fcar(position);
+            if (CONSP(tem)) {
+                window = Fcar(Fcdr(position));
+                x = XCAR(tem);
+                y = Fcar(XCDR(tem));
+            }
+            else {
+                menuflags |= MENU_FOR_CLICK;
+                tem = EVENT_START(position); /* EVENT_START (position) */
+                window = Fcar(tem); /* POSN_WINDOW (tem) */
+                tem2 = Fcar(Fcdr(tem)); /* POSN_POSN (tem) */
+                /* The MENU_KBD_NAVIGATION field is set when the menu
+                   was invoked by F10, which probably means they have no
+                   mouse.  In that case, we let them switch between
+                   top-level menu-bar menus by using C-f/C-b and
+                   horizontal arrow keys, since they cannot click the
+                   mouse to open a different submenu.  This flag is only
+                   supported by tty_menu_show.  We set it when POSITION
+                   and last_nonmenu_event are different, which means we
+                   constructed POSITION by hand (in popup-menu, see
+                   menu-bar.el) to look like a mouse click on the menu bar
+                   event.  */
+                if (!EQ(POSN_POSN(last_nonmenu_event), POSN_POSN(position)) &&
+                    CONSP(tem2) && EQ(XCAR(tem2), Qmenu_bar))
+                    menuflags |= MENU_KBD_NAVIGATION;
+                tem = Fcar(Fcdr(Fcdr(tem))); /* POSN_WINDOW_POSN (tem) */
+                x = Fcar(tem);
+                y = Fcdr(tem);
+            }
+
+            /* If a click happens in an external tool bar or a detached
+               tool bar, x and y is NIL.  In that case, use the current
+               mouse position.  This happens for the help button in the
+               tool bar.  Ideally popup-menu should pass NIL to
+               this function, but it doesn't.  */
+            if (NILP(x) && NILP(y))
+                get_current_pos_p = 1;
+        }
+
+        if (get_current_pos_p) {
+            /* Use the mouse's current position.  */
+            struct frame* new_f = SELECTED_FRAME();
+
+            XSETFASTINT(x, 0);
+            XSETFASTINT(y, 0);
+            {
+                Lisp_Object bar_window;
+                enum scroll_bar_part part;
+                Time time;
+                void (*mouse_position_hook)(struct frame**, int, Lisp_Object*,
+                                            enum scroll_bar_part*, Lisp_Object*,
+                                            Lisp_Object*, Time*) =
+                    FRAME_TERMINAL(new_f)->mouse_position_hook;
+
+                if (mouse_position_hook)
+                    (*mouse_position_hook)(&new_f, 1, &bar_window, &part, &x,
+                                           &y, &time);
+            }
+
+            if (new_f != 0)
+                XSETFRAME(window, new_f);
+            else {
+                window = selected_window;
+                XSETFASTINT(x, 0);
+                XSETFASTINT(y, 0);
+            }
+        }
+
+        /* Decode where to put the menu.  */
+
+        if (FRAMEP(window)) {
+            f = XFRAME(window);
+            xpos = 0;
+            ypos = 0;
+        }
+        else if (WINDOWP(window)) {
+            struct window* win = XWINDOW(window);
+            CHECK_LIVE_WINDOW(window);
+            f = XFRAME(WINDOW_FRAME(win));
+
+            if (FIXNUMP(tem2)) {
+                /* Clicks in the text area, where TEM2 is a buffer
+                   position, are relative to the top-left edge of the text
+                   area, see keyboard.c:make_lispy_position.  */
+                xpos = window_box_left(win, TEXT_AREA);
+                ypos = (WINDOW_TOP_EDGE_Y(win) + WINDOW_TAB_LINE_HEIGHT(win) +
+                        WINDOW_HEADER_LINE_HEIGHT(win));
+            }
+            else {
+                xpos = WINDOW_LEFT_EDGE_X(win);
+                ypos = WINDOW_TOP_EDGE_Y(win);
+            }
+        }
+        else
+            /* ??? Not really clean; should be Qwindow_or_framep
+         but I don't want to make one now.  */
+            wrong_type_argument(Qwindowp, window);
+
+        xpos += check_integer_range(x,
+                                    (xpos < INT_MIN - MOST_NEGATIVE_FIXNUM
+                                         ? (EMACS_INT)INT_MIN - xpos
+                                         : MOST_NEGATIVE_FIXNUM),
+                                    INT_MAX - xpos);
+        ypos += check_integer_range(y,
+                                    (ypos < INT_MIN - MOST_NEGATIVE_FIXNUM
+                                         ? (EMACS_INT)INT_MIN - ypos
+                                         : MOST_NEGATIVE_FIXNUM),
+                                    INT_MAX - ypos);
+
+        XSETFRAME(Vmenu_updating_frame, f);
     }
-    else
-    {
-      tem = Fcar(position);
-      if (CONSP(tem))
-      {
-        window = Fcar(Fcdr(position));
-        x = XCAR(tem);
-        y = Fcar(XCDR(tem));
-      }
-      else
-      {
-        menuflags |= MENU_FOR_CLICK;
-        tem = EVENT_START(position); /* EVENT_START (position) */
-        window = Fcar(tem); /* POSN_WINDOW (tem) */
-        tem2 = Fcar(Fcdr(tem)); /* POSN_POSN (tem) */
-        /* The MENU_KBD_NAVIGATION field is set when the menu
-           was invoked by F10, which probably means they have no
-           mouse.  In that case, we let them switch between
-           top-level menu-bar menus by using C-f/C-b and
-           horizontal arrow keys, since they cannot click the
-           mouse to open a different submenu.  This flag is only
-           supported by tty_menu_show.  We set it when POSITION
-           and last_nonmenu_event are different, which means we
-           constructed POSITION by hand (in popup-menu, see
-           menu-bar.el) to look like a mouse click on the menu bar
-           event.  */
-        if (!EQ(POSN_POSN(last_nonmenu_event), POSN_POSN(position)) &&
-            CONSP(tem2) && EQ(XCAR(tem2), Qmenu_bar))
-          menuflags |= MENU_KBD_NAVIGATION;
-        tem = Fcar(Fcdr(Fcdr(tem))); /* POSN_WINDOW_POSN (tem) */
-        x = Fcar(tem);
-        y = Fcdr(tem);
-      }
 
-      /* If a click happens in an external tool bar or a detached
-         tool bar, x and y is NIL.  In that case, use the current
-         mouse position.  This happens for the help button in the
-         tool bar.  Ideally popup-menu should pass NIL to
-         this function, but it doesn't.  */
-      if (NILP(x) && NILP(y))
-        get_current_pos_p = 1;
-    }
+    /* Now parse the lisp menus.  */
+    record_unwind_protect_void(unuse_menu_items);
 
-    if (get_current_pos_p)
-    {
-      /* Use the mouse's current position.  */
-      struct frame* new_f = SELECTED_FRAME();
-
-      XSETFASTINT(x, 0);
-      XSETFASTINT(y, 0);
-      {
-        Lisp_Object bar_window;
-        enum scroll_bar_part part;
-        Time time;
-        void (*mouse_position_hook)(struct frame**, int, Lisp_Object*,
-                                    enum scroll_bar_part*, Lisp_Object*,
-                                    Lisp_Object*, Time*) =
-            FRAME_TERMINAL(new_f)->mouse_position_hook;
-
-        if (mouse_position_hook)
-          (*mouse_position_hook)(&new_f, 1, &bar_window, &part, &x, &y, &time);
-      }
-
-      if (new_f != 0)
-        XSETFRAME(window, new_f);
-      else
-      {
-        window = selected_window;
-        XSETFASTINT(x, 0);
-        XSETFASTINT(y, 0);
-      }
-    }
-
-    /* Decode where to put the menu.  */
-
-    if (FRAMEP(window))
-    {
-      f = XFRAME(window);
-      xpos = 0;
-      ypos = 0;
-    }
-    else if (WINDOWP(window))
-    {
-      struct window* win = XWINDOW(window);
-      CHECK_LIVE_WINDOW(window);
-      f = XFRAME(WINDOW_FRAME(win));
-
-      if (FIXNUMP(tem2))
-      {
-        /* Clicks in the text area, where TEM2 is a buffer
-           position, are relative to the top-left edge of the text
-           area, see keyboard.c:make_lispy_position.  */
-        xpos = window_box_left(win, TEXT_AREA);
-        ypos = (WINDOW_TOP_EDGE_Y(win) + WINDOW_TAB_LINE_HEIGHT(win) +
-                WINDOW_HEADER_LINE_HEIGHT(win));
-      }
-      else
-      {
-        xpos = WINDOW_LEFT_EDGE_X(win);
-        ypos = WINDOW_TOP_EDGE_Y(win);
-      }
-    }
-    else
-      /* ??? Not really clean; should be Qwindow_or_framep
-   but I don't want to make one now.  */
-      wrong_type_argument(Qwindowp, window);
-
-    xpos += check_integer_range(x,
-                                (xpos < INT_MIN - MOST_NEGATIVE_FIXNUM
-                                     ? (EMACS_INT)INT_MIN - xpos
-                                     : MOST_NEGATIVE_FIXNUM),
-                                INT_MAX - xpos);
-    ypos += check_integer_range(y,
-                                (ypos < INT_MIN - MOST_NEGATIVE_FIXNUM
-                                     ? (EMACS_INT)INT_MIN - ypos
-                                     : MOST_NEGATIVE_FIXNUM),
-                                INT_MAX - ypos);
-
-    XSETFRAME(Vmenu_updating_frame, f);
-  }
-
-  /* Now parse the lisp menus.  */
-  record_unwind_protect_void(unuse_menu_items);
-
-  title = Qnil;
-
-  /* Decode the menu items from what was specified.  */
-
-  keymap = get_keymap(menu, 0, 0);
-  if (CONSP(keymap))
-  {
-    /* We were given a keymap.  Extract menu info from the keymap.  */
-    Lisp_Object prompt;
-
-    /* Extract the detailed info to make one pane.  */
-    keymap_panes(&menu, 1);
-
-    /* Search for a string appearing directly as an element of the keymap.
- That string is the title of the menu.  */
-    prompt = Fkeymap_prompt(keymap);
-        if (!NILP(prompt))
-      title = prompt;
-
-    /* Make that be the pane title of the first pane.  */
-    if (!NILP(prompt) && menu_items_n_panes >= 0)
-      ASET(menu_items, MENU_ITEMS_PANE_NAME, prompt);
-
-    menuflags |= MENU_KEYMAPS;
-  }
-  else if (CONSP(menu) && KEYMAPP(XCAR(menu)))
-  {
-    /* We were given a list of keymaps.  */
-    ptrdiff_t nmaps = list_length(menu);
-    Lisp_Object* maps;
-    ptrdiff_t i;
-    USE_SAFE_ALLOCA;
-
-    SAFE_ALLOCA_LISP(maps, nmaps);
     title = Qnil;
 
-    /* The first keymap that has a prompt string
- supplies the menu title.  */
-    for (tem = menu, i = 0; CONSP(tem); tem = XCDR(tem))
-    {
-      Lisp_Object prompt;
+    /* Decode the menu items from what was specified.  */
 
-      maps[i++] = keymap = get_keymap(XCAR(tem), 1, 0);
+    keymap = get_keymap(menu, 0, 0);
+    if (CONSP(keymap)) {
+        /* We were given a keymap.  Extract menu info from the keymap.  */
+        Lisp_Object prompt;
 
-      prompt = Fkeymap_prompt(keymap);
-      if (NILP(title) && !NILP(prompt))
-        title = prompt;
+        /* Extract the detailed info to make one pane.  */
+        keymap_panes(&menu, 1);
+
+        /* Search for a string appearing directly as an element of the keymap.
+     That string is the title of the menu.  */
+        prompt = Fkeymap_prompt(keymap);
+        if (!NILP(prompt))
+            title = prompt;
+
+        /* Make that be the pane title of the first pane.  */
+        if (!NILP(prompt) && menu_items_n_panes >= 0)
+            ASET(menu_items, MENU_ITEMS_PANE_NAME, prompt);
+
+        menuflags |= MENU_KEYMAPS;
+    }
+    else if (CONSP(menu) && KEYMAPP(XCAR(menu))) {
+        /* We were given a list of keymaps.  */
+        ptrdiff_t nmaps = list_length(menu);
+        Lisp_Object* maps;
+        ptrdiff_t i;
+        USE_SAFE_ALLOCA;
+
+        SAFE_ALLOCA_LISP(maps, nmaps);
+        title = Qnil;
+
+        /* The first keymap that has a prompt string
+     supplies the menu title.  */
+        for (tem = menu, i = 0; CONSP(tem); tem = XCDR(tem)) {
+            Lisp_Object prompt;
+
+            maps[i++] = keymap = get_keymap(XCAR(tem), 1, 0);
+
+            prompt = Fkeymap_prompt(keymap);
+            if (NILP(title) && !NILP(prompt))
+                title = prompt;
+        }
+
+        /* Extract the detailed info to make one pane.  */
+        keymap_panes(maps, nmaps);
+
+        /* Make the title be the pane title of the first pane.  */
+        if (!NILP(title) && menu_items_n_panes >= 0)
+            ASET(menu_items, MENU_ITEMS_PANE_NAME, title);
+
+        menuflags |= MENU_KEYMAPS;
+
+        SAFE_FREE();
+    }
+    else {
+        /* We were given an old-fashioned menu.  */
+        title = Fcar(menu);
+        CHECK_STRING(title);
+
+        list_of_panes(Fcdr(menu));
+
+        menuflags &= ~MENU_KEYMAPS;
     }
 
-    /* Extract the detailed info to make one pane.  */
-    keymap_panes(maps, nmaps);
+    unbind_to(specpdl_count, Qnil);
 
-    /* Make the title be the pane title of the first pane.  */
-    if (!NILP(title) && menu_items_n_panes >= 0)
-      ASET(menu_items, MENU_ITEMS_PANE_NAME, title);
+    record_unwind_protect_void(discard_menu_items);
 
-    menuflags |= MENU_KEYMAPS;
+    run_hook(Qx_pre_popup_menu_hook);
 
-    SAFE_FREE();
-  }
-  else
-  {
-    /* We were given an old-fashioned menu.  */
-    title = Fcar(menu);
-    CHECK_STRING(title);
+    /* Display them in a menu, but not if F is the initial frame that
+       doesn't have its hooks set (e.g., in a batch session), because
+       such a frame cannot display menus.  */
+    if (!FRAME_INITIAL_P(f)) {
+        if (FRAME_TERMCAP_P(f) && !NILP(Vx_popup_menu_function))
+            selection = calln(Vx_popup_menu_function, position, menu);
+        else
+            selection = FRAME_TERMINAL(f)->menu_show_hook(
+                f, xpos, ypos, menuflags, title, &error_name);
+    }
 
-    list_of_panes(Fcdr(menu));
+    unbind_to(specpdl_count, Qnil);
 
-    menuflags &= ~MENU_KEYMAPS;
-  }
-
-  unbind_to(specpdl_count, Qnil);
-
-  record_unwind_protect_void(discard_menu_items);
-
-  run_hook(Qx_pre_popup_menu_hook);
-
-  /* Display them in a menu, but not if F is the initial frame that
-     doesn't have its hooks set (e.g., in a batch session), because
-     such a frame cannot display menus.  */
-  if (!FRAME_INITIAL_P(f))
-  {
-    if (FRAME_TERMCAP_P(f) && !NILP(Vx_popup_menu_function))
-      selection = calln(Vx_popup_menu_function, position, menu);
-    else
-      selection = FRAME_TERMINAL(f)->menu_show_hook(f, xpos, ypos, menuflags,
-                                                    title, &error_name);
-  }
-
-  unbind_to(specpdl_count, Qnil);
-
-  if (error_name)
-    error("%s", error_name);
-  return selection;
+    if (error_name)
+        error("%s", error_name);
+    return selection;
 }
 
 DEFUN("x-popup-menu", Fx_popup_menu, Sx_popup_menu, 2, 2, 0, doc:
@@ -850,42 +794,38 @@ keyboard input, then this normally results in a quit and
 touch screen event (indicating that the user invoked the menu with the
 a pointing device) then no quit occurs and `x-popup-menu' returns
 nil.  */)
-(Lisp_Object position, Lisp_Object menu)
-{
-  init_raw_keybuf_count();
-  return x_popup_menu_1(position, menu);
+(Lisp_Object position, Lisp_Object menu) {
+    init_raw_keybuf_count();
+    return x_popup_menu_1(position, menu);
 }
 
 /* If F's terminal is not capable of displaying a popup dialog,
    emulate it with a menu.  */
 
 static Lisp_Object emulate_dialog_with_menu(struct frame* f,
-                                            Lisp_Object contents)
-{
-  Lisp_Object x, y, frame, newpos, prompt = Fcar(contents);
-  int x_coord, y_coord;
+                                            Lisp_Object contents) {
+    Lisp_Object x, y, frame, newpos, prompt = Fcar(contents);
+    int x_coord, y_coord;
 
-  if (FRAME_WINDOW_P(f))
-  {
-    x_coord = FRAME_PIXEL_WIDTH(f);
-    y_coord = FRAME_PIXEL_HEIGHT(f);
-  }
-  else
-  {
-    x_coord = FRAME_COLS(f);
-    /* Center the title at frame middle.  (TTY menus have
- their upper-left corner at the given position.)  */
-    if (STRINGP(prompt))
-      x_coord -= SCHARS(prompt);
-    y_coord = FRAME_TOTAL_LINES(f);
-  }
+    if (FRAME_WINDOW_P(f)) {
+        x_coord = FRAME_PIXEL_WIDTH(f);
+        y_coord = FRAME_PIXEL_HEIGHT(f);
+    }
+    else {
+        x_coord = FRAME_COLS(f);
+        /* Center the title at frame middle.  (TTY menus have
+     their upper-left corner at the given position.)  */
+        if (STRINGP(prompt))
+            x_coord -= SCHARS(prompt);
+        y_coord = FRAME_TOTAL_LINES(f);
+    }
 
-  XSETFRAME(frame, f);
-  XSETINT(x, x_coord / 2);
-  XSETINT(y, y_coord / 2);
-  newpos = list2(list2(x, y), frame);
+    XSETFRAME(frame, f);
+    XSETINT(x, x_coord / 2);
+    XSETINT(y, y_coord / 2);
+    newpos = list2(list2(x, y), frame);
 
-  return Fx_popup_menu(newpos, list2(prompt, contents));
+    return Fx_popup_menu(newpos, list2(prompt, contents));
 }
 
 DEFUN ("x-popup-dialog", Fx_popup_dialog, Sx_popup_dialog, 2, 3, 0,
@@ -911,96 +851,90 @@ otherwise it is "Question".
 If the user gets rid of the dialog box without making a valid choice,
 for instance using the window manager, then this produces a quit and
 `x-popup-dialog' does not return.  */)
-(Lisp_Object position, Lisp_Object contents, Lisp_Object header)
-{
-  struct frame* f = NULL;
-  Lisp_Object window;
+(Lisp_Object position, Lisp_Object contents, Lisp_Object header) {
+    struct frame* f = NULL;
+    Lisp_Object window;
 
-  /* Decode the first argument: find the window or frame to use.  */
-  if (EQ(position, Qt) ||
-      (CONSP(position) &&
-       (EQ(XCAR(position), Qmenu_bar) || EQ(XCAR(position), Qtab_bar) ||
-        EQ(XCAR(position), Qtool_bar))))
-    window = selected_window;
-  else if (CONSP(position))
-  {
-    Lisp_Object tem = XCAR(position);
-    if (CONSP(tem))
-      window = Fcar(XCDR(position));
-    else
-    {
-      tem = Fcar(XCDR(position)); /* EVENT_START (position) */
-      window = Fcar(tem); /* POSN_WINDOW (tem) */
+    /* Decode the first argument: find the window or frame to use.  */
+    if (EQ(position, Qt) ||
+        (CONSP(position) &&
+         (EQ(XCAR(position), Qmenu_bar) || EQ(XCAR(position), Qtab_bar) ||
+          EQ(XCAR(position), Qtool_bar))))
+        window = selected_window;
+    else if (CONSP(position)) {
+        Lisp_Object tem = XCAR(position);
+        if (CONSP(tem))
+            window = Fcar(XCDR(position));
+        else {
+            tem = Fcar(XCDR(position)); /* EVENT_START (position) */
+            window = Fcar(tem); /* POSN_WINDOW (tem) */
+        }
     }
-  }
-  else if (WINDOWP(position) || FRAMEP(position))
-    window = position;
-  else
-    window = Qnil;
+    else if (WINDOWP(position) || FRAMEP(position))
+        window = position;
+    else
+        window = Qnil;
 
-  /* Decode where to put the menu.  */
+    /* Decode where to put the menu.  */
 
-  if (FRAMEP(window))
-    f = XFRAME(window);
-  else if (WINDOWP(window))
-  {
-    CHECK_LIVE_WINDOW(window);
-    f = XFRAME(WINDOW_FRAME(XWINDOW(window)));
-  }
-  else
-    /* ??? Not really clean; should be CHECK_WINDOW_OR_FRAME,
-       but I don't want to make one now.  */
-    CHECK_WINDOW(window);
+    if (FRAMEP(window))
+        f = XFRAME(window);
+    else if (WINDOWP(window)) {
+        CHECK_LIVE_WINDOW(window);
+        f = XFRAME(WINDOW_FRAME(XWINDOW(window)));
+    }
+    else
+        /* ??? Not really clean; should be CHECK_WINDOW_OR_FRAME,
+           but I don't want to make one now.  */
+        CHECK_WINDOW(window);
 
-  /* Note that xw_popup_dialog can call menu code, so
-     Vmenu_updating_frame should be set (Bug#17891).  */
-  eassume(f && FRAME_LIVE_P(f));
-  XSETFRAME(Vmenu_updating_frame, f);
+    /* Note that xw_popup_dialog can call menu code, so
+       Vmenu_updating_frame should be set (Bug#17891).  */
+    eassume(f && FRAME_LIVE_P(f));
+    XSETFRAME(Vmenu_updating_frame, f);
 
-  /* Force a redisplay before showing the dialog.  If a frame is created
-     just before showing the dialog, its contents may not have been fully
-     drawn, as this depends on timing of events from the X server.  Redisplay
-     is not done when a dialog is shown.  If redisplay could be done in the
-     X event loop (i.e. the X event loop does not run in a signal handler)
-     this would not be needed.
+    /* Force a redisplay before showing the dialog.  If a frame is created
+       just before showing the dialog, its contents may not have been fully
+       drawn, as this depends on timing of events from the X server.  Redisplay
+       is not done when a dialog is shown.  If redisplay could be done in the
+       X event loop (i.e. the X event loop does not run in a signal handler)
+       this would not be needed.
 
-     Do this before creating the widget value that points to Lisp
-     string contents, because Fredisplay may GC and relocate them.  */
-  Fredisplay(Qt);
+       Do this before creating the widget value that points to Lisp
+       string contents, because Fredisplay may GC and relocate them.  */
+    Fredisplay(Qt);
 
-  /* Display the popup dialog by a terminal-specific hook ... */
-  if (FRAME_TERMINAL(f)->popup_dialog_hook)
-  {
-    Lisp_Object selection =
-        FRAME_TERMINAL(f)->popup_dialog_hook(f, header, contents);
-      return selection;
-  }
-  /* ... or emulate it with a menu.  */
-  return emulate_dialog_with_menu(f, contents);
+    /* Display the popup dialog by a terminal-specific hook ... */
+    if (FRAME_TERMINAL(f)->popup_dialog_hook) {
+        Lisp_Object selection =
+            FRAME_TERMINAL(f)->popup_dialog_hook(f, header, contents);
+        return selection;
+    }
+    /* ... or emulate it with a menu.  */
+    return emulate_dialog_with_menu(f, contents);
 }
 
-void syms_of_menu(void)
-{
-  menu_items = Qnil;
-  staticpro(&menu_items);
+void syms_of_menu(void) {
+    menu_items = Qnil;
+    staticpro(&menu_items);
 
-  DEFSYM(Qhide, "hide");
-  DEFSYM(Qx_pre_popup_menu_hook, "x-pre-popup-menu-hook");
+    DEFSYM(Qhide, "hide");
+    DEFSYM(Qx_pre_popup_menu_hook, "x-pre-popup-menu-hook");
 
-  DEFVAR_LISP ("x-pre-popup-menu-hook", Vx_pre_popup_menu_hook,
+    DEFVAR_LISP ("x-pre-popup-menu-hook", Vx_pre_popup_menu_hook,
 	       doc: /* Hook run before `x-popup-menu' displays a popup menu.
 It is only run before the menu is really going to be displayed.  It
 won't be run if `x-popup-menu' fails or returns for some other reason
 (such as the keymap is invalid).  */);
-  Vx_pre_popup_menu_hook = Qnil;
+    Vx_pre_popup_menu_hook = Qnil;
 
-  DEFVAR_LISP ("x-popup-menu-function", Vx_popup_menu_function,
+    DEFVAR_LISP ("x-popup-menu-function", Vx_popup_menu_function,
 	       doc: /* Function to call to pop up a menu.
  The function is called like `x-popup-menu'.  This is currently only
  used for frames on text terminals.  */);
-  Vx_popup_menu_function = Qnil;
+    Vx_popup_menu_function = Qnil;
 
-  defsubr(&Sx_popup_menu);
-  defsubr(&Sx_popup_dialog);
-  defsubr(&Smenu_bar_menu_at_x_y);
+    defsubr(&Sx_popup_menu);
+    defsubr(&Sx_popup_dialog);
+    defsubr(&Smenu_bar_menu_at_x_y);
 }

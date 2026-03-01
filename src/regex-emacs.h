@@ -24,11 +24,10 @@
 /* This is the structure we store register match data in.
    Declare this before including lisp.h, since lisp.h (via thread.h)
    uses struct re_registers.  */
-struct re_registers
-{
-  ptrdiff_t num_regs;
-  ptrdiff_t *start;
-  ptrdiff_t *end;
+struct re_registers {
+    ptrdiff_t num_regs;
+    ptrdiff_t* start;
+    ptrdiff_t* end;
 };
 
 #include "lisp.h"
@@ -54,81 +53,80 @@ extern ptrdiff_t emacs_re_max_failures;
 
 /* Amount of memory that we can safely stack allocate.  */
 extern ptrdiff_t emacs_re_safe_alloca;
-
+
 /* This data structure represents a compiled pattern.  Before calling
    the pattern compiler, the fields 'buffer', 'allocated', 'fastmap',
    and 'translate' can be set.  After the pattern has been
    compiled, the 're_nsub' field is available.  All other fields are
    private to the regex routines.  */
 
-struct re_pattern_buffer
-{
-	/* Space that holds the compiled pattern.  It is declared as
+struct re_pattern_buffer {
+    /* Space that holds the compiled pattern.  It is declared as
           'unsigned char *' because its elements are
            sometimes used as array indexes.  */
-  unsigned char *buffer;
+    unsigned char* buffer;
 
-	/* Number of bytes to which 'buffer' points.  */
-  ptrdiff_t allocated;
+    /* Number of bytes to which 'buffer' points.  */
+    ptrdiff_t allocated;
 
-	/* Number of bytes actually used in 'buffer'.  */
-  ptrdiff_t used;
+    /* Number of bytes actually used in 'buffer'.  */
+    ptrdiff_t used;
 
-        /* Charset of unibyte characters at compiling time.  */
-  int charset_unibyte;
+    /* Charset of unibyte characters at compiling time.  */
+    int charset_unibyte;
 
-        /* Pointer to a fastmap, if any, otherwise zero.  re_search uses
-           the fastmap, if there is one, to skip over impossible
-           starting points for matches.  */
-  char *fastmap;
+    /* Pointer to a fastmap, if any, otherwise zero.  re_search uses
+       the fastmap, if there is one, to skip over impossible
+       starting points for matches.  */
+    char* fastmap;
 
-        /* Either a translate table to apply to all characters before
-           comparing them, or zero for no translation.  The translation
-           applies to a pattern when it is compiled and to a string
-           when it is matched.  */
-  Lisp_Object translate;
+    /* Either a translate table to apply to all characters before
+       comparing them, or zero for no translation.  The translation
+       applies to a pattern when it is compiled and to a string
+       when it is matched.  */
+    Lisp_Object translate;
 
-	/* Number of subexpressions found by the compiler.  */
-  ptrdiff_t re_nsub;
+    /* Number of subexpressions found by the compiler.  */
+    ptrdiff_t re_nsub;
 
-        /* True if and only if this pattern can match the empty string.
-           Well, in truth it's used only in 're_search_2', to see
-           whether or not we should use the fastmap, so we don't set
-           this absolutely perfectly; see 're_compile_fastmap'.  */
-  bool_bf can_be_null : 1;
+    /* True if and only if this pattern can match the empty string.
+       Well, in truth it's used only in 're_search_2', to see
+       whether or not we should use the fastmap, so we don't set
+       this absolutely perfectly; see 're_compile_fastmap'.  */
+    bool_bf can_be_null : 1;
 
-        /* If REGS_UNALLOCATED, allocate space in the 'regs' structure
-             for at least (re_nsub + 1) groups.
-           If REGS_REALLOCATE, reallocate space if necessary.
-           If REGS_FIXED, use what's there.  */
-  unsigned regs_allocated : 2;
+    /* If REGS_UNALLOCATED, allocate space in the 'regs' structure
+         for at least (re_nsub + 1) groups.
+       If REGS_REALLOCATE, reallocate space if necessary.
+       If REGS_FIXED, use what's there.  */
+    unsigned regs_allocated : 2;
 
-        /* Set to false when 'regex_compile' compiles a pattern; set to true
-           by 're_compile_fastmap' if it updates the fastmap.  */
-  bool_bf fastmap_accurate : 1;
+    /* Set to false when 'regex_compile' compiles a pattern; set to true
+       by 're_compile_fastmap' if it updates the fastmap.  */
+    bool_bf fastmap_accurate : 1;
 
-  /* If true, the compilation of the pattern had to look up the syntax table,
-     so the compiled pattern is valid for the current syntax table only.  */
-  bool_bf used_syntax : 1;
+    /* If true, the compilation of the pattern had to look up the syntax table,
+       so the compiled pattern is valid for the current syntax table only.  */
+    bool_bf used_syntax : 1;
 
-  /* If true, multi-byte form in the regexp pattern should be
-     recognized as a multibyte character.  */
-  bool_bf multibyte : 1;
+    /* If true, multi-byte form in the regexp pattern should be
+       recognized as a multibyte character.  */
+    bool_bf multibyte : 1;
 
-  /* If true, multi-byte form in the target of match should be
-     recognized as a multibyte character.  */
-  bool_bf target_multibyte : 1;
+    /* If true, multi-byte form in the target of match should be
+       recognized as a multibyte character.  */
+    bool_bf target_multibyte : 1;
 };
-
+
 /* Declarations for routines.  */
 
 /* Compile the regular expression PATTERN, with length LENGTH
    and syntax given by the global 're_syntax_options', into the buffer
    BUFFER.  Return NULL if successful, and an error string if not.  */
-extern const char *re_compile_pattern (const char *pattern, ptrdiff_t length,
-				       bool posix_backtracking,
-				       const char *whitespace_regexp,
-				       struct re_pattern_buffer *buffer);
+extern const char* re_compile_pattern(const char* pattern, ptrdiff_t length,
+                                      bool posix_backtracking,
+                                      const char* whitespace_regexp,
+                                      struct re_pattern_buffer* buffer);
 
 
 /* Search in the string STRING (with length LENGTH) for the pattern
@@ -136,29 +134,27 @@ extern const char *re_compile_pattern (const char *pattern, ptrdiff_t length,
    characters.  Return the starting position of the match, -1 for no
    match, or -2 for an internal error.  Also return register
    information in REGS (if REGS is non-null).  */
-extern ptrdiff_t re_search (struct re_pattern_buffer *buffer,
-			   const char *string, ptrdiff_t length,
-			   ptrdiff_t start, ptrdiff_t range,
-			   struct re_registers *regs);
+extern ptrdiff_t re_search(struct re_pattern_buffer* buffer, const char* string,
+                           ptrdiff_t length, ptrdiff_t start, ptrdiff_t range,
+                           struct re_registers* regs);
 
 
 /* Like 're_search', but search in the concatenation of STRING1 and
    STRING2.  Also, stop searching at index START + STOP.  */
-extern ptrdiff_t re_search_2 (struct re_pattern_buffer *buffer,
-			     const char *string1, ptrdiff_t length1,
-			     const char *string2, ptrdiff_t length2,
-			     ptrdiff_t start, ptrdiff_t range,
-			     struct re_registers *regs,
-			     ptrdiff_t stop);
+extern ptrdiff_t re_search_2(struct re_pattern_buffer* buffer,
+                             const char* string1, ptrdiff_t length1,
+                             const char* string2, ptrdiff_t length2,
+                             ptrdiff_t start, ptrdiff_t range,
+                             struct re_registers* regs, ptrdiff_t stop);
 
 
 /* Like 're_search_2', but return how many characters in STRING the regexp
    in BUFFER matched, starting at position START.  */
-extern ptrdiff_t re_match_2 (struct re_pattern_buffer *buffer,
-			    const char *string1, ptrdiff_t length1,
-			    const char *string2, ptrdiff_t length2,
-			    ptrdiff_t start, struct re_registers *regs,
-			    ptrdiff_t stop);
+extern ptrdiff_t re_match_2(struct re_pattern_buffer* buffer,
+                            const char* string1, ptrdiff_t length1,
+                            const char* string2, ptrdiff_t length2,
+                            ptrdiff_t start, struct re_registers* regs,
+                            ptrdiff_t stop);
 
 
 /* Set REGS to hold NUM_REGS registers, storing them in STARTS and
@@ -173,30 +169,39 @@ extern ptrdiff_t re_match_2 (struct re_pattern_buffer *buffer,
    Unless this function is called, the first search or match using
    PATTERN_BUFFER will allocate its own register data, without
    freeing the old data.  */
-extern void re_set_registers (struct re_pattern_buffer *buffer,
-			      struct re_registers *regs,
-			      ptrdiff_t num_regs,
-			      ptrdiff_t *starts, ptrdiff_t *ends);
+extern void re_set_registers(struct re_pattern_buffer* buffer,
+                             struct re_registers* regs, ptrdiff_t num_regs,
+                             ptrdiff_t* starts, ptrdiff_t* ends);
 
 /* Character classes.  */
-typedef enum { RECC_ERROR = 0,
-	       RECC_ALNUM, RECC_ALPHA, RECC_WORD,
-	       RECC_GRAPH, RECC_PRINT,
-	       RECC_LOWER, RECC_UPPER,
-	       RECC_PUNCT, RECC_CNTRL,
-	       RECC_DIGIT, RECC_XDIGIT,
-	       RECC_BLANK, RECC_SPACE,
-	       RECC_MULTIBYTE, RECC_NONASCII,
-	       RECC_ASCII, RECC_UNIBYTE,
-	       RECC_NUM_CLASSES = RECC_UNIBYTE
+typedef enum
+{
+    RECC_ERROR = 0,
+    RECC_ALNUM,
+    RECC_ALPHA,
+    RECC_WORD,
+    RECC_GRAPH,
+    RECC_PRINT,
+    RECC_LOWER,
+    RECC_UPPER,
+    RECC_PUNCT,
+    RECC_CNTRL,
+    RECC_DIGIT,
+    RECC_XDIGIT,
+    RECC_BLANK,
+    RECC_SPACE,
+    RECC_MULTIBYTE,
+    RECC_NONASCII,
+    RECC_ASCII,
+    RECC_UNIBYTE,
+    RECC_NUM_CLASSES = RECC_UNIBYTE
 } re_wctype_t;
 
-extern bool re_iswctype (int ch, re_wctype_t cc);
-extern re_wctype_t re_wctype_parse (const unsigned char **strp,
-				    ptrdiff_t limit);
+extern bool re_iswctype(int ch, re_wctype_t cc);
+extern re_wctype_t re_wctype_parse(const unsigned char** strp, ptrdiff_t limit);
 
 #if ENABLE_CHECKING
-extern void print_compiled_pattern (FILE *dest, struct re_pattern_buffer *bufp);
+extern void print_compiled_pattern(FILE* dest, struct re_pattern_buffer* bufp);
 #endif
 
 #endif /* EMACS_REGEX_H */

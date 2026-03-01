@@ -21,21 +21,22 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* Bit fields used by terminal-specific menu_show_hook.  */
 
-enum {
-  MENU_KEYMAPS = 0x1,
-  MENU_FOR_CLICK = 0x2,
-  MENU_KBD_NAVIGATION = 0x4
+enum
+{
+    MENU_KEYMAPS = 0x1,
+    MENU_FOR_CLICK = 0x2,
+    MENU_KBD_NAVIGATION = 0x4
 };
 
-extern void init_menu_items (void);
-extern void finish_menu_items (void);
-extern void discard_menu_items (void);
-extern void save_menu_items (void);
-extern bool parse_single_submenu (Lisp_Object, Lisp_Object, Lisp_Object);
-extern void list_of_panes (Lisp_Object);
+extern void init_menu_items(void);
+extern void finish_menu_items(void);
+extern void discard_menu_items(void);
+extern void save_menu_items(void);
+extern bool parse_single_submenu(Lisp_Object, Lisp_Object, Lisp_Object);
+extern void list_of_panes(Lisp_Object);
 
-extern Lisp_Object tty_menu_show (struct frame *, int, int, int,
-				  Lisp_Object, const char **);
-extern ptrdiff_t menu_item_width (const unsigned char *);
-extern Lisp_Object x_popup_menu_1 (Lisp_Object position, Lisp_Object menu);
+extern Lisp_Object tty_menu_show(struct frame*, int, int, int, Lisp_Object,
+                                 const char**);
+extern ptrdiff_t menu_item_width(const unsigned char*);
+extern Lisp_Object x_popup_menu_1(Lisp_Object position, Lisp_Object menu);
 #endif /* MENU_H */

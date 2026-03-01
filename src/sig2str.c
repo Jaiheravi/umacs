@@ -23,8 +23,8 @@
 #include <signal.h>
 
 #include <limits.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "sig2str.h"
@@ -32,235 +32,236 @@
 #include "compat.h"
 
 #ifndef SIGRTMIN
-# define SIGRTMIN 0
-# undef SIGRTMAX
+#define SIGRTMIN 0
+#undef SIGRTMAX
 #endif
 #ifndef SIGRTMAX
-# define SIGRTMAX (SIGRTMIN - 1)
+#define SIGRTMAX (SIGRTMIN - 1)
 #endif
 
-#define NUMNAME(name) { SIG##name, #name }
+#define NUMNAME(name) {SIG##name, #name}
 
 /* Signal names and numbers.  Put the preferred name first.  */
-static struct numname { int num; char const name[8]; } numname_table[] =
-  {
-    /* Signals required by POSIX 1003.1-2001 base, listed in
-       traditional numeric order where possible.  */
+static struct numname {
+    int num;
+    char const name[8];
+} numname_table[] = {
+/* Signals required by POSIX 1003.1-2001 base, listed in
+   traditional numeric order where possible.  */
 #ifdef SIGHUP
-    NUMNAME (HUP),
+    NUMNAME(HUP),
 #endif
 #ifdef SIGINT
-    NUMNAME (INT),
+    NUMNAME(INT),
 #endif
 #ifdef SIGQUIT
-    NUMNAME (QUIT),
+    NUMNAME(QUIT),
 #endif
 #ifdef SIGILL
-    NUMNAME (ILL),
+    NUMNAME(ILL),
 #endif
 #ifdef SIGTRAP
-    NUMNAME (TRAP),
+    NUMNAME(TRAP),
 #endif
 #ifdef SIGABRT
-    NUMNAME (ABRT),
+    NUMNAME(ABRT),
 #endif
 #ifdef SIGFPE
-    NUMNAME (FPE),
+    NUMNAME(FPE),
 #endif
 #ifdef SIGKILL
-    NUMNAME (KILL),
+    NUMNAME(KILL),
 #endif
 #ifdef SIGSEGV
-    NUMNAME (SEGV),
+    NUMNAME(SEGV),
 #endif
-    /* On Haiku, SIGSEGV == SIGBUS, but we prefer SIGSEGV to match
-       strsignal.c output, so SIGBUS must be listed second.  */
+/* On Haiku, SIGSEGV == SIGBUS, but we prefer SIGSEGV to match
+   strsignal.c output, so SIGBUS must be listed second.  */
 #ifdef SIGBUS
-    NUMNAME (BUS),
+    NUMNAME(BUS),
 #endif
 #ifdef SIGPIPE
-    NUMNAME (PIPE),
+    NUMNAME(PIPE),
 #endif
 #ifdef SIGALRM
-    NUMNAME (ALRM),
+    NUMNAME(ALRM),
 #endif
 #ifdef SIGTERM
-    NUMNAME (TERM),
+    NUMNAME(TERM),
 #endif
 #ifdef SIGUSR1
-    NUMNAME (USR1),
+    NUMNAME(USR1),
 #endif
 #ifdef SIGUSR2
-    NUMNAME (USR2),
+    NUMNAME(USR2),
 #endif
 #ifdef SIGCHLD
-    NUMNAME (CHLD),
+    NUMNAME(CHLD),
 #endif
 #ifdef SIGURG
-    NUMNAME (URG),
+    NUMNAME(URG),
 #endif
 #ifdef SIGSTOP
-    NUMNAME (STOP),
+    NUMNAME(STOP),
 #endif
 #ifdef SIGTSTP
-    NUMNAME (TSTP),
+    NUMNAME(TSTP),
 #endif
 #ifdef SIGCONT
-    NUMNAME (CONT),
+    NUMNAME(CONT),
 #endif
 #ifdef SIGTTIN
-    NUMNAME (TTIN),
+    NUMNAME(TTIN),
 #endif
 #ifdef SIGTTOU
-    NUMNAME (TTOU),
+    NUMNAME(TTOU),
 #endif
 
-    /* Signals required by POSIX 1003.1-2001 with the XSI extension.  */
+/* Signals required by POSIX 1003.1-2001 with the XSI extension.  */
 #ifdef SIGSYS
-    NUMNAME (SYS),
+    NUMNAME(SYS),
 #endif
 #ifdef SIGPOLL
-    NUMNAME (POLL),
+    NUMNAME(POLL),
 #endif
 #ifdef SIGVTALRM
-    NUMNAME (VTALRM),
+    NUMNAME(VTALRM),
 #endif
 #ifdef SIGPROF
-    NUMNAME (PROF),
+    NUMNAME(PROF),
 #endif
 #ifdef SIGXCPU
-    NUMNAME (XCPU),
+    NUMNAME(XCPU),
 #endif
 #ifdef SIGXFSZ
-    NUMNAME (XFSZ),
+    NUMNAME(XFSZ),
 #endif
 
-    /* Unix Version 7.  */
+/* Unix Version 7.  */
 #ifdef SIGIOT
-    NUMNAME (IOT),      /* Older name for ABRT.  */
+    NUMNAME(IOT), /* Older name for ABRT.  */
 #endif
 #ifdef SIGEMT
-    NUMNAME (EMT),
+    NUMNAME(EMT),
 #endif
 
-    /* USG Unix.  */
+/* USG Unix.  */
 #ifdef SIGPHONE
-    NUMNAME (PHONE),
+    NUMNAME(PHONE),
 #endif
 #ifdef SIGWIND
-    NUMNAME (WIND),
+    NUMNAME(WIND),
 #endif
 
-    /* Unix System V.  */
+/* Unix System V.  */
 #ifdef SIGCLD
-    NUMNAME (CLD),
+    NUMNAME(CLD),
 #endif
 #ifdef SIGPWR
-    NUMNAME (PWR),
+    NUMNAME(PWR),
 #endif
 
-    /* GNU/Linux 2.2 and Solaris 8.  */
+/* GNU/Linux 2.2 and Solaris 8.  */
 #ifdef SIGCANCEL
-    NUMNAME (CANCEL),
+    NUMNAME(CANCEL),
 #endif
 #ifdef SIGLWP
-    NUMNAME (LWP),
+    NUMNAME(LWP),
 #endif
 #ifdef SIGWAITING
-    NUMNAME (WAITING),
+    NUMNAME(WAITING),
 #endif
 #ifdef SIGFREEZE
-    NUMNAME (FREEZE),
+    NUMNAME(FREEZE),
 #endif
 #ifdef SIGTHAW
-    NUMNAME (THAW),
+    NUMNAME(THAW),
 #endif
 #ifdef SIGLOST
-    NUMNAME (LOST),
+    NUMNAME(LOST),
 #endif
 #ifdef SIGWINCH
-    NUMNAME (WINCH),
+    NUMNAME(WINCH),
 #endif
 
-    /* GNU/Linux 2.2.  */
+/* GNU/Linux 2.2.  */
 #ifdef SIGINFO
-    NUMNAME (INFO),
+    NUMNAME(INFO),
 #endif
 #ifdef SIGIO
-    NUMNAME (IO),
+    NUMNAME(IO),
 #endif
 #ifdef SIGSTKFLT
-    NUMNAME (STKFLT),
+    NUMNAME(STKFLT),
 #endif
 
-    /* AIX 7.  */
+/* AIX 7.  */
 #ifdef SIGCPUFAIL
-    NUMNAME (CPUFAIL),
+    NUMNAME(CPUFAIL),
 #endif
 
-    /* AIX 5L.  */
+/* AIX 5L.  */
 #ifdef SIGDANGER
-    NUMNAME (DANGER),
+    NUMNAME(DANGER),
 #endif
 #ifdef SIGGRANT
-    NUMNAME (GRANT),
+    NUMNAME(GRANT),
 #endif
 #ifdef SIGMIGRATE
-    NUMNAME (MIGRATE),
+    NUMNAME(MIGRATE),
 #endif
 #ifdef SIGMSG
-    NUMNAME (MSG),
+    NUMNAME(MSG),
 #endif
 #ifdef SIGPRE
-    NUMNAME (PRE),
+    NUMNAME(PRE),
 #endif
 #ifdef SIGRETRACT
-    NUMNAME (RETRACT),
+    NUMNAME(RETRACT),
 #endif
 #ifdef SIGSAK
-    NUMNAME (SAK),
+    NUMNAME(SAK),
 #endif
 #ifdef SIGSOUND
-    NUMNAME (SOUND),
+    NUMNAME(SOUND),
 #endif
 
-    /* Older AIX versions.  */
+/* Older AIX versions.  */
 #ifdef SIGALRM1
-    NUMNAME (ALRM1),    /* unknown; taken from Bash 2.05 */
+    NUMNAME(ALRM1), /* unknown; taken from Bash 2.05 */
 #endif
 #ifdef SIGKAP
-    NUMNAME (KAP),      /* Older name for SIGGRANT.  */
+    NUMNAME(KAP), /* Older name for SIGGRANT.  */
 #endif
 #ifdef SIGVIRT
-    NUMNAME (VIRT),     /* unknown; taken from Bash 2.05 */
+    NUMNAME(VIRT), /* unknown; taken from Bash 2.05 */
 #endif
 #ifdef SIGWINDOW
-    NUMNAME (WINDOW),   /* Older name for SIGWINCH.  */
+    NUMNAME(WINDOW), /* Older name for SIGWINCH.  */
 #endif
 
-    /* OpenBSD.  */
+/* OpenBSD.  */
 #ifdef SIGTHR
-    NUMNAME (THR),
+    NUMNAME(THR),
 #endif
 
-    /* BeOS, Haiku */
+/* BeOS, Haiku */
 #ifdef SIGKILLTHR
-    NUMNAME (KILLTHR),
+    NUMNAME(KILLTHR),
 #endif
 
-    /* Older HP-UX versions.  */
+/* Older HP-UX versions.  */
 #ifdef SIGDIL
-    NUMNAME (DIL),
+    NUMNAME(DIL),
 #endif
 
-    /* native Windows */
+/* native Windows */
 #ifdef SIGBREAK
-    NUMNAME (BREAK),
+    NUMNAME(BREAK),
 #endif
 
     /* Korn shell and Bash, of uncertain vintage.  */
-    { 0, "EXIT" }
-  };
+    {0, "EXIT"}};
 
 #define NUMNAME_ENTRIES (sizeof numname_table / sizeof numname_table[0])
 
@@ -271,97 +272,84 @@ static struct numname { int num; char const name[8]; } numname_table[] =
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
    isdigit unless it's important to use the locale's definition
    of "digit" even when the host does not conform to POSIX.  */
-#define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
+#define ISDIGIT(c) ((unsigned int)(c) - '0' <= 9)
 
 /* Convert the signal name SIGNAME to a signal number.  Return the
    signal number if successful, -1 otherwise.  */
 
-static int
-str2signum (char const *signame)
-{
-  if (ISDIGIT (*signame))
-    {
-      char *endp;
-      long int n = strtol (signame, &endp, 10);
-      if (! *endp && n <= SIGNUM_BOUND)
-        return n;
+static int str2signum(char const* signame) {
+    if (ISDIGIT(*signame)) {
+        char* endp;
+        long int n = strtol(signame, &endp, 10);
+        if (!*endp && n <= SIGNUM_BOUND)
+            return n;
     }
-  else
-    {
-      for (unsigned int i = 0; i < NUMNAME_ENTRIES; i++)
-        if (streq (numname_table[i].name, signame))
-          return numname_table[i].num;
+    else {
+        for (unsigned int i = 0; i < NUMNAME_ENTRIES; i++)
+            if (streq(numname_table[i].name, signame))
+                return numname_table[i].num;
 
-      {
-        int rtmin = SIGRTMIN;
-        int rtmax = SIGRTMAX;
+        {
+            int rtmin = SIGRTMIN;
+            int rtmax = SIGRTMAX;
 
-        if (0 < rtmin && strncmp (signame, "RTMIN", 5) == 0)
-          {
-            char *endp;
-            long int n = strtol (signame + 5, &endp, 10);
-            if (! *endp && 0 <= n && n <= rtmax - rtmin)
-              return rtmin + n;
-          }
-        else if (0 < rtmax && strncmp (signame, "RTMAX", 5) == 0)
-          {
-            char *endp;
-            long int n = strtol (signame + 5, &endp, 10);
-            if (! *endp && rtmin - rtmax <= n && n <= 0)
-              return rtmax + n;
-          }
-      }
+            if (0 < rtmin && strncmp(signame, "RTMIN", 5) == 0) {
+                char* endp;
+                long int n = strtol(signame + 5, &endp, 10);
+                if (!*endp && 0 <= n && n <= rtmax - rtmin)
+                    return rtmin + n;
+            }
+            else if (0 < rtmax && strncmp(signame, "RTMAX", 5) == 0) {
+                char* endp;
+                long int n = strtol(signame + 5, &endp, 10);
+                if (!*endp && rtmin - rtmax <= n && n <= 0)
+                    return rtmax + n;
+            }
+        }
     }
 
-  return -1;
+    return -1;
 }
 
 /* Convert the signal name SIGNAME to the signal number *SIGNUM.
    Return 0 if successful, -1 otherwise.  */
 
-int
-str2sig (char const *signame, int *signum)
-{
-  *signum = str2signum (signame);
-  return *signum < 0 ? -1 : 0;
+int str2sig(char const* signame, int* signum) {
+    *signum = str2signum(signame);
+    return *signum < 0 ? -1 : 0;
 }
 
 /* Convert SIGNUM to a signal name in SIGNAME.  SIGNAME must point to
    a buffer of at least SIG2STR_MAX bytes.  Return 0 if successful, -1
    otherwise.  */
 
-int
-sig2str (int signum, char *signame)
-{
-  for (unsigned int i = 0; i < NUMNAME_ENTRIES; i++)
-    if (numname_table[i].num == signum)
-      {
-        strcpy (signame, numname_table[i].name);
+int sig2str(int signum, char* signame) {
+    for (unsigned int i = 0; i < NUMNAME_ENTRIES; i++)
+        if (numname_table[i].num == signum) {
+            strcpy(signame, numname_table[i].name);
+            return 0;
+        }
+
+    {
+        int rtmin = SIGRTMIN;
+        int rtmax = SIGRTMAX;
+
+        if (!(rtmin <= signum && signum <= rtmax))
+            return -1;
+
+        int base;
+        if (signum <= rtmin + (rtmax - rtmin) / 2) {
+            strcpy(signame, "RTMIN");
+            base = rtmin;
+        }
+        else {
+            strcpy(signame, "RTMAX");
+            base = rtmax;
+        }
+
+        int delta = signum - base;
+        if (delta != 0)
+            sprintf(signame + 5, "%+d", delta);
         return 0;
-      }
-
-  {
-    int rtmin = SIGRTMIN;
-    int rtmax = SIGRTMAX;
-
-    if (! (rtmin <= signum && signum <= rtmax))
-      return -1;
-
-    int base;
-    if (signum <= rtmin + (rtmax - rtmin) / 2)
-      {
-        strcpy (signame, "RTMIN");
-        base = rtmin;
-      }
-    else
-      {
-        strcpy (signame, "RTMAX");
-        base = rtmax;
-      }
-
-    int delta = signum - base;
-    if (delta != 0)
-      sprintf (signame + 5, "%+d", delta);
-    return 0;
-  }
+    }
 }

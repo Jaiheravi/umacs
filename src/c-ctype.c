@@ -16,5 +16,5 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #define C_CTYPE_INLINE _GL_EXTERN_INLINE
-#include <config.h>
 #include "c-ctype.h"
+#include <config.h>

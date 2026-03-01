@@ -16,7 +16,7 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #define _GL_USE_STDLIB_ALLOC 1
-#include <config.h>
 #include "allocator.h"
+#include <config.h>
 #include <stdlib.h>
-struct allocator const stdlib_allocator = { malloc, realloc, free, NULL };
+struct allocator const stdlib_allocator = {malloc, realloc, free, NULL};

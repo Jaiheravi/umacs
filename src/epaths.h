@@ -76,7 +76,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #define PATH_INFO "./info"
 
 /* Where Emacs should store game score files.  */
-#define PATH_GAME ((char const *) 0)
+#define PATH_GAME ((char const*)0)
 
 /* Where Emacs should look for the application default file. */
 #define PATH_X_DEFAULTS ""
@@ -87,18 +87,18 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
    pseudo-directory.  Preserve the extra spaces, or epaths.in will not
    be generated correctly.  */
 
- # define  PATH_EXEC			(android_lib_dir)
- # define  PATH_LOADSEARCH		"/assets/lisp/"
- # define  PATH_SITELOADSEARCH		(android_site_load_path)
- # define  PATH_DUMPLOADSEARCH		"/assets/lisp/"
- # define  PATH_DATA			"/assets/etc/"
- # define  PATH_DOC			"/assets/etc/"
- # define  PATH_INFO			"/assets/info/"
- # define  PATH_GAME			(android_game_path)
- # define  PATH_BITMAPS			"/assets/bitmaps/"
+#define PATH_EXEC (android_lib_dir)
+#define PATH_LOADSEARCH "/assets/lisp/"
+#define PATH_SITELOADSEARCH (android_site_load_path)
+#define PATH_DUMPLOADSEARCH "/assets/lisp/"
+#define PATH_DATA "/assets/etc/"
+#define PATH_DOC "/assets/etc/"
+#define PATH_INFO "/assets/info/"
+#define PATH_GAME (android_game_path)
+#define PATH_BITMAPS "/assets/bitmaps/"
 
-extern char *android_site_load_path;
-extern char *android_lib_dir;
-extern char *android_game_path;
+extern char* android_site_load_path;
+extern char* android_lib_dir;
+extern char* android_game_path;
 
 #endif

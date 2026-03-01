@@ -26,7 +26,7 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
    case some misguided implementation depends on NDEBUG in some
    include file other than assert.h.  */
 #if !defined ENABLE_CHECKING && !defined NDEBUG
-# define NDEBUG
+#define NDEBUG
 #endif
 
 /* To help make dependencies clearer elsewhere, this file typically
@@ -35,18 +35,18 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
    would take some work.  */
 
 #if defined WINDOWSNT && !defined DEFER_MS_W32_H
-# include <ms-w32.h>
+#include <ms-w32.h>
 #endif
 
 /* GNUC_PREREQ (V, W, X) is true if this is GNU C version V.W.X or later.
    It can be used in a preprocessor expression.  */
 #ifndef __GNUC_MINOR__
-# define GNUC_PREREQ(v, w, x) false
-#elif ! defined __GNUC_PATCHLEVEL__
-# define GNUC_PREREQ(v, w, x) \
+#define GNUC_PREREQ(v, w, x) false
+#elif !defined __GNUC_PATCHLEVEL__
+#define GNUC_PREREQ(v, w, x)                                                   \
     ((v) < __GNUC__ + ((w) < __GNUC_MINOR__ + ((x) == 0))
 #else
-# define GNUC_PREREQ(v, w, x) \
+#define GNUC_PREREQ(v, w, x)                                                   \
     ((v) < __GNUC__ + ((w) < __GNUC_MINOR__ + ((x) <= __GNUC_PATCHLEVEL__)))
 #endif
 
@@ -65,32 +65,32 @@ typedef bool bool_bf;
    It is used only on arguments like cleanup that are handled here.
    This macro should be used only in #if expressions, as Oracle
    Studio 12.5's __has_attribute does not work in plain code.  */
-#if (defined __has_attribute \
-     && (!defined __clang_minor__ \
-         || 3 < __clang_major__ + (5 <= __clang_minor__)))
-# define HAS_ATTRIBUTE(a) __has_attribute (__##a##__)
+#if (defined __has_attribute &&                                                \
+     (!defined __clang_minor__ ||                                              \
+      3 < __clang_major__ + (5 <= __clang_minor__)))
+#define HAS_ATTRIBUTE(a) __has_attribute(__##a##__)
 #else
-# define HAS_ATTRIBUTE(a) HAS_ATTR_##a
-# define HAS_ATTR_cleanup GNUC_PREREQ (3, 4, 0)
-# define HAS_ATTR_no_address_safety_analysis false
-# define HAS_ATTR_no_sanitize false
-# define HAS_ATTR_no_sanitize_address GNUC_PREREQ (4, 8, 0)
-# define HAS_ATTR_no_sanitize_undefined GNUC_PREREQ (4, 9, 0)
+#define HAS_ATTRIBUTE(a) HAS_ATTR_##a
+#define HAS_ATTR_cleanup GNUC_PREREQ(3, 4, 0)
+#define HAS_ATTR_no_address_safety_analysis false
+#define HAS_ATTR_no_sanitize false
+#define HAS_ATTR_no_sanitize_address GNUC_PREREQ(4, 8, 0)
+#define HAS_ATTR_no_sanitize_undefined GNUC_PREREQ(4, 9, 0)
 #endif
 
 /* A substitute for __has_feature on compilers that lack it.  It is used only
    to define ADDRESS_SANITIZER below.  */
 #ifdef __has_feature
-# define HAS_FEATURE(a) __has_feature (a)
+#define HAS_FEATURE(a) __has_feature(a)
 #else
-# define HAS_FEATURE(a) false
+#define HAS_FEATURE(a) false
 #endif
 
 /* True if addresses are being sanitized.  */
-#if defined __SANITIZE_ADDRESS__ || HAS_FEATURE (address_sanitizer)
-# define ADDRESS_SANITIZER true
+#if defined __SANITIZE_ADDRESS__ || HAS_FEATURE(address_sanitizer)
+#define ADDRESS_SANITIZER true
 #else
-# define ADDRESS_SANITIZER false
+#define ADDRESS_SANITIZER false
 #endif
 
 /* We have to go this route, rather than the old hpux9 approach of
@@ -103,7 +103,7 @@ typedef bool bool_bf;
 #undef random
 #undef HAVE_RANDOM
 #undef HAVE_RINT
-#endif  /* HPUX */
+#endif /* HPUX */
 
 #ifdef MSDOS
 #ifndef __DJGPP__
@@ -119,23 +119,23 @@ You lose; /* Emacs for DOS must be compiled with DJGPP */
 #define strtold _strtold
 
 #if __DJGPP__ > 2 || __DJGPP_MINOR__ > 3
-# define HAVE_LSTAT 1
+#define HAVE_LSTAT 1
 #else
-# define lstat stat
+#define lstat stat
 /* DJGPP 2.03 and older don't have the next two.  */
-# define EOVERFLOW ERANGE
-# define SIZE_MAX  4294967295U
+#define EOVERFLOW ERANGE
+#define SIZE_MAX 4294967295U
 #endif
 
 /* Things that lib/reg* wants.  */
 
-#define mbrtowc(pwc, s, n, ps) mbtowc (pwc, s, n)
-#define wcrtomb(s, wc, ps) wctomb (s, wc)
-#define btowc(b) ((wchar_t) (b))
-#define towupper(chr) toupper (chr)
-#define towlower(chr) tolower (chr)
-#define iswalnum(chr) isalnum (chr)
-#define wctype(name) ((wctype_t) 0)
+#define mbrtowc(pwc, s, n, ps) mbtowc(pwc, s, n)
+#define wcrtomb(s, wc, ps) wctomb(s, wc)
+#define btowc(b) ((wchar_t)(b))
+#define towupper(chr) toupper(chr)
+#define towlower(chr) tolower(chr)
+#define iswalnum(chr) isalnum(chr)
+#define wctype(name) ((wctype_t)0)
 #define iswctype(wc, type) false
 #define mbsinit(ps) 1
 
@@ -151,24 +151,24 @@ You lose; /* Emacs for DOS must be compiled with DJGPP */
 
 /* End of gnulib-related stuff.  */
 
-#define emacs_raise(sig) msdos_fatal_signal (sig)
+#define emacs_raise(sig) msdos_fatal_signal(sig)
 
 /* DATA_START is needed by vm-limit.c. */
 #define DATA_START (&etext + 1)
-#endif  /* MSDOS */
+#endif /* MSDOS */
 
 #if defined HAVE_NTGUI && !defined DebPrint
-# ifdef EMACSDEBUG
-extern void _DebPrint (const char *fmt, ...);
-#  define DebPrint(stuff) _DebPrint stuff
-# else
-#  define DebPrint(stuff) ((void) 0)
-# endif
+#ifdef EMACSDEBUG
+extern void _DebPrint(const char* fmt, ...);
+#define DebPrint(stuff) _DebPrint stuff
+#else
+#define DebPrint(stuff) ((void)0)
+#endif
 #endif
 
 #if defined CYGWIN && defined HAVE_NTGUI
-# define NTGUI_UNICODE /* Cygwin runs only on UNICODE-supporting systems */
-# define _WIN32_WINNT 0x500 /* Win2k */
+#define NTGUI_UNICODE /* Cygwin runs only on UNICODE-supporting systems */
+#define _WIN32_WINNT 0x500 /* Win2k */
 /* The following was in /usr/include/string.h prior to Cygwin 1.7.33.  */
 #ifndef strnicmp
 #define strnicmp strncasecmp
@@ -178,49 +178,49 @@ extern void _DebPrint (const char *fmt, ...);
 #ifdef emacs /* Don't do this for lib-src.  */
 /* Tell regex.c to use a type compatible with Emacs.  */
 #define RE_TRANSLATE_TYPE Lisp_Object
-#define RE_TRANSLATE(TBL, C) char_table_translate (TBL, C)
-#define RE_TRANSLATE_P(TBL) (!BASE_EQ (TBL, make_fixnum (0)))
+#define RE_TRANSLATE(TBL, C) char_table_translate(TBL, C)
+#define RE_TRANSLATE_P(TBL) (!BASE_EQ(TBL, make_fixnum(0)))
 #endif
 
 /* Tell time_rz.c to use Emacs's getter and setter for TZ.
    Only Emacs uses time_rz so this is OK.  */
 #define getenv_TZ emacs_getenv_TZ
 #define setenv_TZ emacs_setenv_TZ
-extern char *emacs_getenv_TZ (void);
-extern int emacs_setenv_TZ (char const *);
+extern char* emacs_getenv_TZ(void);
+extern int emacs_setenv_TZ(char const*);
 
 #define NO_INLINE _GL_ATTRIBUTE_NOINLINE
 #define EXTERNALLY_VISIBLE _GL_ATTRIBUTE_EXTERNALLY_VISIBLE
 
-#if GNUC_PREREQ (4, 4, 0) && defined __GLIBC_MINOR__
-# define PRINTF_ARCHETYPE __gnu_printf__
-#elif GNUC_PREREQ (4, 4, 0) && defined __MINGW32__
-# ifdef MINGW_W64
+#if GNUC_PREREQ(4, 4, 0) && defined __GLIBC_MINOR__
+#define PRINTF_ARCHETYPE __gnu_printf__
+#elif GNUC_PREREQ(4, 4, 0) && defined __MINGW32__
+#ifdef MINGW_W64
 /* When __USE_MINGW_ANSI_STDIO is non-zero (as set by config.h),
    MinGW64 replaces printf* with its own versions that are
    __gnu_printf__ compatible, and emits warnings for MS native %I64d
    format spec.  */
-#  if __USE_MINGW_ANSI_STDIO
-#   define PRINTF_ARCHETYPE __gnu_printf__
-#  else
-#   define PRINTF_ARCHETYPE __ms_printf__
-#  endif
-# else	/* mingw.org's MinGW */
+#if __USE_MINGW_ANSI_STDIO
+#define PRINTF_ARCHETYPE __gnu_printf__
+#else
+#define PRINTF_ARCHETYPE __ms_printf__
+#endif
+#else /* mingw.org's MinGW */
 /* Starting from runtime v5.0.0, mingw.org's MinGW with GCC 6 and
    later turns on __USE_MINGW_ANSI_STDIO by default, replaces printf*
    with its own __mingw_printf__ version, which still recognizes
    %I64d.  */
-#  if GNUC_PREREQ (6, 0, 0) && __MINGW32_MAJOR_VERSION >= 5
-#   define PRINTF_ARCHETYPE __mingw_printf__
-#  else  /* __MINGW32_MAJOR_VERSION < 5 */
-#   define PRINTF_ARCHETYPE __ms_printf__
-#  endif  /* __MINGW32_MAJOR_VERSION < 5 */
-# endif	 /* MinGW */
+#if GNUC_PREREQ(6, 0, 0) && __MINGW32_MAJOR_VERSION >= 5
+#define PRINTF_ARCHETYPE __mingw_printf__
+#else /* __MINGW32_MAJOR_VERSION < 5 */
+#define PRINTF_ARCHETYPE __ms_printf__
+#endif /* __MINGW32_MAJOR_VERSION < 5 */
+#endif /* MinGW */
 #else
-# define PRINTF_ARCHETYPE __printf__
+#define PRINTF_ARCHETYPE __printf__
 #endif
-#define ATTRIBUTE_FORMAT_PRINTF(string_index, first_to_check) \
-  _GL_ATTRIBUTE_FORMAT ((PRINTF_ARCHETYPE, string_index, first_to_check))
+#define ATTRIBUTE_FORMAT_PRINTF(string_index, first_to_check)                  \
+    _GL_ATTRIBUTE_FORMAT((PRINTF_ARCHETYPE, string_index, first_to_check))
 
 #define ARG_NONNULL _GL_ATTRIBUTE_NONNULL
 
@@ -229,76 +229,74 @@ extern int emacs_setenv_TZ (char const *);
    via NAME may alias with other accesses with the traditional
    behavior, even if options like gcc -fstrict-aliasing are used.  */
 
-#define DECLARE_POINTER_ALIAS(name, type, addr) \
-  type _GL_ATTRIBUTE_MAY_ALIAS *name = (type *) (addr)
+#define DECLARE_POINTER_ALIAS(name, type, addr)                                \
+    type _GL_ATTRIBUTE_MAY_ALIAS* name = (type*)(addr)
 
 #if 3 <= __GNUC__
-# define ATTRIBUTE_SECTION(name) __attribute__ ((section (name)))
+#define ATTRIBUTE_SECTION(name) __attribute__((section(name)))
 #else
-# define ATTRIBUTE_SECTION(name)
+#define ATTRIBUTE_SECTION(name)
 #endif
 
-#define ATTRIBUTE_MALLOC_SIZE(args) \
-  _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_ALLOC_SIZE (args)
+#define ATTRIBUTE_MALLOC_SIZE(args)                                            \
+    _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_ALLOC_SIZE(args)
 
 /* Work around GCC bug 59600: when a function is inlined, the inlined
    code may have its addresses sanitized even if the function has the
    no_sanitize_address attribute.  This bug is fixed in GCC 4.9.0 and
    clang 3.4.  */
-#if (! ADDRESS_SANITIZER \
-     || (GNUC_PREREQ (4, 9, 0) \
-	 || 3 < __clang_major__ + (4 <= __clang_minor__)))
-# define ADDRESS_SANITIZER_WORKAROUND /* No workaround needed.  */
+#if (!ADDRESS_SANITIZER ||                                                     \
+     (GNUC_PREREQ(4, 9, 0) || 3 < __clang_major__ + (4 <= __clang_minor__)))
+#define ADDRESS_SANITIZER_WORKAROUND /* No workaround needed.  */
 #else
-# define ADDRESS_SANITIZER_WORKAROUND NO_INLINE
+#define ADDRESS_SANITIZER_WORKAROUND NO_INLINE
 #endif
 
 /* Attribute of functions whose code should not have addresses
    sanitized.  */
 
-#if HAS_ATTRIBUTE (no_sanitize_address)
-# define ATTRIBUTE_NO_SANITIZE_ADDRESS \
-    __attribute__ ((no_sanitize_address)) ADDRESS_SANITIZER_WORKAROUND
-#elif HAS_ATTRIBUTE (no_address_safety_analysis)
-# define ATTRIBUTE_NO_SANITIZE_ADDRESS \
-    __attribute__ ((no_address_safety_analysis)) ADDRESS_SANITIZER_WORKAROUND
+#if HAS_ATTRIBUTE(no_sanitize_address)
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS                                          \
+    __attribute__((no_sanitize_address)) ADDRESS_SANITIZER_WORKAROUND
+#elif HAS_ATTRIBUTE(no_address_safety_analysis)
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS                                          \
+    __attribute__((no_address_safety_analysis)) ADDRESS_SANITIZER_WORKAROUND
 #else
-# define ATTRIBUTE_NO_SANITIZE_ADDRESS
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS
 #endif
 
 /* Attribute of functions whose undefined behavior should not be sanitized.  */
 
-#if HAS_ATTRIBUTE (no_sanitize_undefined)
-# define ATTRIBUTE_NO_SANITIZE_UNDEFINED __attribute__ ((no_sanitize_undefined))
-#elif HAS_ATTRIBUTE (no_sanitize)
-# define ATTRIBUTE_NO_SANITIZE_UNDEFINED \
-    __attribute__ ((no_sanitize ("undefined")))
+#if HAS_ATTRIBUTE(no_sanitize_undefined)
+#define ATTRIBUTE_NO_SANITIZE_UNDEFINED __attribute__((no_sanitize_undefined))
+#elif HAS_ATTRIBUTE(no_sanitize)
+#define ATTRIBUTE_NO_SANITIZE_UNDEFINED                                        \
+    __attribute__((no_sanitize("undefined")))
 #else
-# define ATTRIBUTE_NO_SANITIZE_UNDEFINED
+#define ATTRIBUTE_NO_SANITIZE_UNDEFINED
 #endif
 
 /* gcc -fsanitize=address does not work with vfork in Fedora 28 x86-64.  See:
    https://lists.gnu.org/r/emacs-devel/2017-05/msg00464.html
    For now, assume that this problem occurs on all platforms.  */
 #if ADDRESS_SANITIZER && !defined vfork
-# define vfork fork
+#define vfork fork
 #endif
 
 /* vfork is deprecated on at least macOS 11.6 and later, but it still works
    and is faster than fork, so silence the warning as if we knew what we
    are doing.  */
 #ifdef DARWIN_OS
-#define VFORK()								\
-  (_Pragma("clang diagnostic push")					\
-   _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")	\
-   vfork ()								\
-   _Pragma("clang diagnostic pop"))
+#define VFORK()                                                                \
+    (_Pragma("clang diagnostic push")                                          \
+         _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")     \
+             vfork() _Pragma("clang diagnostic pop"))
 #else
-#define VFORK() vfork ()
+#define VFORK() vfork()
 #endif
 
-#if ! (defined __FreeBSD__ || defined GNU_LINUX || defined __MINGW32__)
-# undef PROFILING
+#if !(defined __FreeBSD__ || defined GNU_LINUX || defined __MINGW32__)
+#undef PROFILING
 #endif
 
 /* Some versions of GNU/Linux define noinline in their headers.  */
@@ -349,33 +347,36 @@ extern int emacs_setenv_TZ (char const *);
    GNU-specific keywords.  Buggy non-GCC compilers use static
    functions, which bloats the code but is good enough.  */
 
-# ifndef INLINE
-#  define INLINE _GL_INLINE
-# endif
-# define EXTERN_INLINE _GL_EXTERN_INLINE
-# define INLINE_HEADER_BEGIN _GL_INLINE_HEADER_BEGIN
-# define INLINE_HEADER_END _GL_INLINE_HEADER_END
+#ifndef INLINE
+#define INLINE _GL_INLINE
+#endif
+#define EXTERN_INLINE _GL_EXTERN_INLINE
+#define INLINE_HEADER_BEGIN _GL_INLINE_HEADER_BEGIN
+#define INLINE_HEADER_END _GL_INLINE_HEADER_END
 
 #else
 
 /* Use 'static inline' instead of 'extern inline' because 'static inline'
    has much better performance for Emacs when compiled with 'gcc -Og'.  */
 
-# ifndef INLINE
-#  define INLINE EXTERN_INLINE
-# endif
-# define EXTERN_INLINE static inline
-# define INLINE_HEADER_BEGIN
-# define INLINE_HEADER_END
+#ifndef INLINE
+#define INLINE EXTERN_INLINE
+#endif
+#define EXTERN_INLINE static inline
+#define INLINE_HEADER_BEGIN
+#define INLINE_HEADER_END
 
 #endif
 
 /* 'int x UNINIT;' is equivalent to 'int x;', except it cajoles GCC
    into not warning incorrectly about use of an uninitialized variable.  */
 #if defined GCC_LINT || defined lint
-# define UNINIT = {0,}
+#define UNINIT                                                                 \
+    = {                                                                        \
+        0,                                                                     \
+    }
 #else
-# define UNINIT /* empty */
+#define UNINIT /* empty */
 #endif
 
 /* Emacs needs neither glibc strftime behavior for AM and PM indicators,
@@ -386,20 +387,24 @@ extern int emacs_setenv_TZ (char const *);
 #ifdef MSDOS
 /* These are required by file-has-acl.c but defined in dirent.h and
    errno.h, which are not generated on DOS.  */
-#define _GL_DT_NOTDIR 0x100   /* Not a directory */
+#define _GL_DT_NOTDIR 0x100 /* Not a directory */
 #define ENOTSUP ENOSYS
-# define IFTODT(mode) \
-   (S_ISREG (mode) ? DT_REG : S_ISDIR (mode) ? DT_DIR \
-    : S_ISLNK (mode) ? DT_LNK : S_ISBLK (mode) ? DT_BLK \
-    : S_ISCHR (mode) ? DT_CHR : S_ISFIFO (mode) ? DT_FIFO \
-    : S_ISSOCK (mode) ? DT_SOCK : DT_UNKNOWN)
+#define IFTODT(mode)                                                           \
+    (S_ISREG(mode)        ? DT_REG                                             \
+         : S_ISDIR(mode)  ? DT_DIR                                             \
+         : S_ISLNK(mode)  ? DT_LNK                                             \
+         : S_ISBLK(mode)  ? DT_BLK                                             \
+         : S_ISCHR(mode)  ? DT_CHR                                             \
+         : S_ISFIFO(mode) ? DT_FIFO                                            \
+         : S_ISSOCK(mode) ? DT_SOCK                                            \
+                          : DT_UNKNOWN)
 #endif /* MSDOS */
 
 #if defined WINDOWSNT && !(defined OMIT_CONSOLESAFE && OMIT_CONSOLESAFE == 1)
-# if !defined _UCRT
-#  include <stdarg.h>
-#  include <stdio.h>
-#  include <stddef.h>
+#if !defined _UCRT
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdio.h>
 
 /* Workarounds for MSVCRT bugs.
 
@@ -408,27 +413,22 @@ extern int emacs_setenv_TZ (char const *);
    Gnulib stdio-h module, which does the below in Gnulib's stdio.h
    file, which is not used by the MS-Windows build.  */
 
-extern size_t gl_consolesafe_fwrite (const void *ptr, size_t size,
-				     size_t nmemb, FILE *fp)
-  ARG_NONNULL ((1, 4));
-extern int gl_consolesafe_fprintf (FILE *restrict fp,
-				   const char *restrict format, ...)
-  ATTRIBUTE_FORMAT_PRINTF (2, 3)
-  ARG_NONNULL ((1, 2));
-extern int gl_consolesafe_printf (const char *restrict format, ...)
-  ATTRIBUTE_FORMAT_PRINTF (1, 2)
-  ARG_NONNULL ((1));
-extern int gl_consolesafe_vfprintf (FILE *restrict fp,
-				    const char *restrict format, va_list args)
-  ATTRIBUTE_FORMAT_PRINTF (2, 0)
-  ARG_NONNULL ((1, 2));
-extern int gl_consolesafe_vprintf (const char *restrict format, va_list args)
-  ATTRIBUTE_FORMAT_PRINTF (1, 0)
-  ARG_NONNULL ((1));
-#  define fwrite gl_consolesafe_fwrite
-#  define fprintf gl_consolesafe_fprintf
-#  define printf gl_consolesafe_printf
-#  define vfprintf gl_consolesafe_vfprintf
-#  define vprintf gl_consolesafe_vprintf
-# endif	/* !_UCRT */
-#endif	/* WINDOWSNT */
+extern size_t gl_consolesafe_fwrite(const void* ptr, size_t size, size_t nmemb,
+                                    FILE* fp) ARG_NONNULL((1, 4));
+extern int gl_consolesafe_fprintf(FILE* restrict fp,
+                                  const char* restrict format, ...)
+    ATTRIBUTE_FORMAT_PRINTF(2, 3) ARG_NONNULL((1, 2));
+extern int gl_consolesafe_printf(const char* restrict format, ...)
+    ATTRIBUTE_FORMAT_PRINTF(1, 2) ARG_NONNULL((1));
+extern int gl_consolesafe_vfprintf(FILE* restrict fp,
+                                   const char* restrict format, va_list args)
+    ATTRIBUTE_FORMAT_PRINTF(2, 0) ARG_NONNULL((1, 2));
+extern int gl_consolesafe_vprintf(const char* restrict format, va_list args)
+    ATTRIBUTE_FORMAT_PRINTF(1, 0) ARG_NONNULL((1));
+#define fwrite gl_consolesafe_fwrite
+#define fprintf gl_consolesafe_fprintf
+#define printf gl_consolesafe_printf
+#define vfprintf gl_consolesafe_vfprintf
+#define vprintf gl_consolesafe_vprintf
+#endif /* !_UCRT */
+#endif /* WINDOWSNT */

@@ -1572,9 +1572,7 @@ struct face_cache {
 #define FACE_EXTENSIBLE_P(F) (!NILP(F->lface[LFACE_EXTEND_INDEX]))
 
 /* True if FACE is suitable for displaying ASCII characters.  */
-INLINE bool FACE_SUITABLE_FOR_ASCII_CHAR_P(struct face* face) {
-    return true;
-}
+INLINE bool FACE_SUITABLE_FOR_ASCII_CHAR_P(struct face* face) { return true; }
 
 /* Return the id of the realized face on frame F that is like the face
    FACE, but is suitable for displaying character CHARACTER at buffer or

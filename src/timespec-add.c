@@ -26,29 +26,24 @@
 #include <stdckdint.h>
 #include "intprops.h"
 
-struct timespec
-timespec_add (struct timespec a, struct timespec b)
-{
-  int nssum = a.tv_nsec + b.tv_nsec;
-  int carry = TIMESPEC_HZ <= nssum;
-  time_t rs;
-  bool v = ckd_add (&rs, a.tv_sec, b.tv_sec);
-  int rns;
-  if (v == ckd_add (&rs, rs, carry))
-    rns = nssum - TIMESPEC_HZ * carry;
-  else
-    {
-      if ((TYPE_MINIMUM (time_t) + TYPE_MAXIMUM (time_t)) / 2 < rs)
-        {
-          rs = TYPE_MINIMUM (time_t);
-          rns = 0;
+struct timespec timespec_add(struct timespec a, struct timespec b) {
+    int nssum = a.tv_nsec + b.tv_nsec;
+    int carry = TIMESPEC_HZ <= nssum;
+    time_t rs;
+    bool v = ckd_add(&rs, a.tv_sec, b.tv_sec);
+    int rns;
+    if (v == ckd_add(&rs, rs, carry))
+        rns = nssum - TIMESPEC_HZ * carry;
+    else {
+        if ((TYPE_MINIMUM(time_t) + TYPE_MAXIMUM(time_t)) / 2 < rs) {
+            rs = TYPE_MINIMUM(time_t);
+            rns = 0;
         }
-      else
-        {
-          rs = TYPE_MAXIMUM (time_t);
-          rns = TIMESPEC_HZ - 1;
+        else {
+            rs = TYPE_MAXIMUM(time_t);
+            rns = TIMESPEC_HZ - 1;
         }
     }
 
-  return make_timespec (rs, rns);
+    return make_timespec(rs, rns);
 }

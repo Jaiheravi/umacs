@@ -19,26 +19,25 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include "lisp.h"
 
-struct position
-  {
+struct position {
     ptrdiff_t bufpos;
     ptrdiff_t bytepos;
     EMACS_INT hpos;
     EMACS_INT vpos;
     EMACS_INT prevhpos;
     int contin;
-  };
+};
 
-struct position *compute_motion (ptrdiff_t from, ptrdiff_t frombyte,
-				 EMACS_INT fromvpos, EMACS_INT fromhpos,
-				 bool did_motion, ptrdiff_t to,
-				 EMACS_INT tovpos, EMACS_INT tohpos,
-                                 EMACS_INT width, ptrdiff_t hscroll,
-                                 int tab_offset, struct window *);
-struct position *vmotion (ptrdiff_t from, ptrdiff_t from_byte,
-			  EMACS_INT vtarget, struct window *);
-ptrdiff_t skip_invisible (ptrdiff_t pos, ptrdiff_t *next_boundary_p,
-                          ptrdiff_t to, Lisp_Object window);
+struct position* compute_motion(ptrdiff_t from, ptrdiff_t frombyte,
+                                EMACS_INT fromvpos, EMACS_INT fromhpos,
+                                bool did_motion, ptrdiff_t to, EMACS_INT tovpos,
+                                EMACS_INT tohpos, EMACS_INT width,
+                                ptrdiff_t hscroll, int tab_offset,
+                                struct window*);
+struct position* vmotion(ptrdiff_t from, ptrdiff_t from_byte, EMACS_INT vtarget,
+                         struct window*);
+ptrdiff_t skip_invisible(ptrdiff_t pos, ptrdiff_t* next_boundary_p,
+                         ptrdiff_t to, Lisp_Object window);
 
 /* Value of point when current_column was called */
 extern ptrdiff_t last_known_column_point;
@@ -48,15 +47,14 @@ extern ptrdiff_t last_known_column_point;
 /* Return true if the display table DISPTAB specifies the same widths
    for characters as WIDTHTAB.  We use this to decide when to
    invalidate the buffer's column_cache.  */
-bool disptab_matches_widthtab (struct Lisp_Char_Table *disptab,
-			       struct Lisp_Vector *widthtab);
+bool disptab_matches_widthtab(struct Lisp_Char_Table* disptab,
+                              struct Lisp_Vector* widthtab);
 
 /* Recompute BUF's width table, using the display table DISPTAB.  */
-void recompute_width_table (struct buffer *buf,
-                            struct Lisp_Char_Table *disptab);
+void recompute_width_table(struct buffer* buf, struct Lisp_Char_Table* disptab);
 
-extern ptrdiff_t current_column (void);
-extern void line_number_display_width (struct window *, int *, int *);
-extern void invalidate_current_column (void);
-extern bool indented_beyond_p (ptrdiff_t, ptrdiff_t, EMACS_INT);
-extern void syms_of_indent (void);
+extern ptrdiff_t current_column(void);
+extern void line_number_display_width(struct window*, int*, int*);
+extern void invalidate_current_column(void);
+extern bool indented_beyond_p(ptrdiff_t, ptrdiff_t, EMACS_INT);
+extern void syms_of_indent(void);

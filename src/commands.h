@@ -21,10 +21,10 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include "lisp.h"
 
-#define Ctl(c) ((c)&037)
+#define Ctl(c) ((c) & 037)
 
 /* Nonzero if input is coming from the keyboard.  */
 
-#define INTERACTIVE (NILP (Vexecuting_kbd_macro) && !noninteractive)
+#define INTERACTIVE (NILP(Vexecuting_kbd_macro) && !noninteractive)
 
 #endif /* EMACS_COMMANDS_H */

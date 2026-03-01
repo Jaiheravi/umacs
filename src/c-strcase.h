@@ -20,7 +20,7 @@
 
 /* This file uses _GL_ATTRIBUTE_PURE.  */
 #if !_GL_CONFIG_H_INCLUDED
- #error "Please include config.h first."
+#error "Please include config.h first."
 #endif
 
 #include <stddef.h>
@@ -37,20 +37,21 @@
 
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 
-/* Compare strings S1 and S2, ignoring case, returning less than, equal to or
-   greater than zero if S1 is lexicographically less than, equal to or greater
-   than S2.  */
-extern int c_strcasecmp (const char *s1, const char *s2) _GL_ATTRIBUTE_PURE;
+    /* Compare strings S1 and S2, ignoring case, returning less than, equal to
+       or greater than zero if S1 is lexicographically less than, equal to or
+       greater than S2.  */
+    extern int c_strcasecmp(const char* s1, const char* s2) _GL_ATTRIBUTE_PURE;
 
-/* Compare no more than N characters of strings S1 and S2, ignoring case,
-   returning less than, equal to or greater than zero if S1 is
-   lexicographically less than, equal to or greater than S2.  */
-extern int c_strncasecmp (const char *s1, const char *s2, size_t n)
-  _GL_ATTRIBUTE_PURE;
+    /* Compare no more than N characters of strings S1 and S2, ignoring case,
+       returning less than, equal to or greater than zero if S1 is
+       lexicographically less than, equal to or greater than S2.  */
+    extern int c_strncasecmp(const char* s1, const char* s2,
+                             size_t n) _GL_ATTRIBUTE_PURE;
 
 
 #ifdef __cplusplus

@@ -29,19 +29,18 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
    We need one more byte for string terminator `\0'.  */
 #define KEY_DESCRIPTION_SIZE ((2 * 6) + 1 + (CHARACTERBITS / 3) + 1 + 1)
 
-#define KEYMAPP(m) (!NILP (get_keymap (m, false, false)))
+#define KEYMAPP(m) (!NILP(get_keymap(m, false, false)))
 extern Lisp_Object current_global_map;
-extern char *push_key_description (EMACS_INT, char *);
-extern Lisp_Object access_keymap (Lisp_Object, Lisp_Object, bool, bool, bool);
-extern Lisp_Object get_keymap (Lisp_Object, bool, bool);
-extern ptrdiff_t current_minor_maps (Lisp_Object **, Lisp_Object **);
-extern void initial_define_lispy_key (Lisp_Object, const char *, const char *);
-extern void syms_of_keymap (void);
+extern char* push_key_description(EMACS_INT, char*);
+extern Lisp_Object access_keymap(Lisp_Object, Lisp_Object, bool, bool, bool);
+extern Lisp_Object get_keymap(Lisp_Object, bool, bool);
+extern ptrdiff_t current_minor_maps(Lisp_Object**, Lisp_Object**);
+extern void initial_define_lispy_key(Lisp_Object, const char*, const char*);
+extern void syms_of_keymap(void);
 
-typedef void (*map_keymap_function_t)
-     (Lisp_Object key, Lisp_Object val, Lisp_Object args, void *data);
-extern void map_keymap (Lisp_Object, map_keymap_function_t, Lisp_Object,
-			void *, bool);
-extern void map_keymap_canonical (Lisp_Object map,
-				  map_keymap_function_t fun,
-				  Lisp_Object args, void *data);
+typedef void (*map_keymap_function_t)(Lisp_Object key, Lisp_Object val,
+                                      Lisp_Object args, void* data);
+extern void map_keymap(Lisp_Object, map_keymap_function_t, Lisp_Object, void*,
+                       bool);
+extern void map_keymap_canonical(Lisp_Object map, map_keymap_function_t fun,
+                                 Lisp_Object args, void* data);

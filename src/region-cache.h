@@ -65,17 +65,16 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 struct buffer;
 
 /* Allocate, initialize and return a new, empty region cache.  */
-struct region_cache *new_region_cache (void);
+struct region_cache* new_region_cache(void);
 
 /* Free a region cache.  */
-void free_region_cache (struct region_cache *);
+void free_region_cache(struct region_cache*);
 
 /* Assert that the region of BUF between START and END (absolute
    buffer positions) is "known," for the purposes of CACHE (e.g. "has
    no newlines", in the case of the line cache).  */
-extern void know_region_cache (struct buffer *BUF,
-                               struct region_cache *CACHE,
-                               ptrdiff_t START, ptrdiff_t END);
+extern void know_region_cache(struct buffer* BUF, struct region_cache* CACHE,
+                              ptrdiff_t START, ptrdiff_t END);
 
 /* Indicate that a section of BUF has changed, to invalidate CACHE.
    HEAD is the number of chars unchanged at the beginning of the buffer.
@@ -85,9 +84,9 @@ extern void know_region_cache (struct buffer *BUF,
    (This way of specifying regions makes more sense than absolute
    buffer positions in the presence of insertions and deletions; the
    args to pass are the same before and after such an operation.)  */
-extern void invalidate_region_cache (struct buffer *BUF,
-                                     struct region_cache *CACHE,
-                                     ptrdiff_t HEAD, ptrdiff_t TAIL);
+extern void invalidate_region_cache(struct buffer* BUF,
+                                    struct region_cache* CACHE, ptrdiff_t HEAD,
+                                    ptrdiff_t TAIL);
 
 /* The scanning functions.
 
@@ -102,11 +101,11 @@ extern void invalidate_region_cache (struct buffer *BUF,
    is known, for the purposes of CACHE, and return zero otherwise.
    If NEXT is non-zero, set *NEXT to the nearest
    position after POS where the knowledge changes.  */
-extern int region_cache_forward (struct buffer *buf, struct region_cache *c,
-				 ptrdiff_t pos, ptrdiff_t *next);
+extern int region_cache_forward(struct buffer* buf, struct region_cache* c,
+                                ptrdiff_t pos, ptrdiff_t* next);
 
 /* Likewise, except before POS rather than after POS.  */
-extern int region_cache_backward (struct buffer *buf, struct region_cache *c,
-				  ptrdiff_t pos, ptrdiff_t *next);
+extern int region_cache_backward(struct buffer* buf, struct region_cache* c,
+                                 ptrdiff_t pos, ptrdiff_t* next);
 
 #endif /* EMACS_REGION_CACHE_H */

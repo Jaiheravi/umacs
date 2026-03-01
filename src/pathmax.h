@@ -16,7 +16,7 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _PATHMAX_H
-# define _PATHMAX_H
+#define _PATHMAX_H
 
 /* POSIX:2008 defines PATH_MAX to be the maximum number of bytes in a filename,
    including the terminating NUL byte.
@@ -40,37 +40,37 @@
  */
 
 /* This file uses HAVE_SYS_PARAM_H.  */
-# if !_GL_CONFIG_H_INCLUDED
-#  error "Please include config.h first."
-# endif
+#if !_GL_CONFIG_H_INCLUDED
+#error "Please include config.h first."
+#endif
 
-# include <unistd.h>
+#include <unistd.h>
 
-# include <limits.h>
+#include <limits.h>
 
-# ifndef _POSIX_PATH_MAX
-#  define _POSIX_PATH_MAX 256
-# endif
+#ifndef _POSIX_PATH_MAX
+#define _POSIX_PATH_MAX 256
+#endif
 
 /* Don't include sys/param.h if it already has been.  */
-# if defined HAVE_SYS_PARAM_H && !defined PATH_MAX && !defined MAXPATHLEN
-#  include <sys/param.h>
-# endif
+#if defined HAVE_SYS_PARAM_H && !defined PATH_MAX && !defined MAXPATHLEN
+#include <sys/param.h>
+#endif
 
-# if !defined PATH_MAX && defined MAXPATHLEN
-#  define PATH_MAX MAXPATHLEN
-# endif
+#if !defined PATH_MAX && defined MAXPATHLEN
+#define PATH_MAX MAXPATHLEN
+#endif
 
-# ifdef __hpux
+#ifdef __hpux
 /* On HP-UX, PATH_MAX designates the maximum number of bytes in a filename,
    *not* including the terminating NUL byte, and is set to 1023.
    Additionally, when _XOPEN_SOURCE is defined to 500 or more, PATH_MAX is
    not defined at all any more.  */
-#  undef PATH_MAX
-#  define PATH_MAX 1024
-# endif
+#undef PATH_MAX
+#define PATH_MAX 1024
+#endif
 
-# if defined _WIN32 && ! defined __CYGWIN__
+#if defined _WIN32 && !defined __CYGWIN__
 /* The page "Naming Files, Paths, and Namespaces" on msdn.microsoft.com,
    section "Maximum Path Length Limitation",
    <https://docs.microsoft.com/en-us/windows/desktop/FileIO/naming-a-file#maximum-path-length-limitation>
@@ -81,8 +81,8 @@
      - _MAX_PATH in <stdlib.h>,
      - MAX_PATH in <windef.h>.
    Undefine the original value, because mingw's <limits.h> gets it wrong.  */
-#  undef PATH_MAX
-#  define PATH_MAX 260
-# endif
+#undef PATH_MAX
+#define PATH_MAX 260
+#endif
 
 #endif /* _PATHMAX_H */
