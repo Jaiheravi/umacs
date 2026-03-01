@@ -92,7 +92,6 @@ add_executable(ez
         src/fingerprint.c
         src/doprnt.c
         src/dynlib.c
-        src/careadlinkat.c
         src/scroll.c
         src/comp.c
         src/sig2str.c

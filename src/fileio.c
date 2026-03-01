@@ -98,7 +98,6 @@ along with GNU Emacs.  If not, see <https://www.gnu.org/licenses/>.  */
 #endif
 
 #include <allocator.h>
-#include <careadlinkat.h>
 #include <filename.h>
 #include <stat-time.h>
 #include "systime.h"
@@ -2910,16 +2909,7 @@ static Lisp_Object emacs_readlinkat(int fd, char const* filename) {
     char readlink_buf[1024];
     char* buf;
 
-    buf = careadlinkat(fd, filename, readlink_buf, sizeof readlink_buf,
-                       &emacs_norealloc_allocator,
-#if defined HAVE_ANDROID && !defined ANDROID_STUBIFY
-                       android_readlinkat
-#else /* !HAVE_ANDROID || ANDROID_STUBIFY */
-                       readlinkat
-#endif /* HAVE_ANDROID && !ANDROID_STUBIFY */
-    );
-    if (!buf)
-        return Qnil;
+    return Qnil;
 
     val = build_unibyte_string(buf);
     if (buf != readlink_buf)
