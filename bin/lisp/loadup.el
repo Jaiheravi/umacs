@@ -136,7 +136,6 @@
 (load "international/mule")
 (load "international/mule-conf")
 (load "env")
-(load "format")
 (load "bindings")
 (load "window")  ; Needed here for `replace-buffer-in-windows'.
 ;; We are now capable of resizing the mini-windows, so give the
